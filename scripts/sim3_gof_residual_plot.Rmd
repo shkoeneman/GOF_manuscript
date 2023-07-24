@@ -1,0 +1,47 @@
+---
+title: "Script to Generate Residual Plot for Simulation 5"
+author: "Scott Koeneman"
+date: "February 24, 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(Matrix)
+library(ggplot2)
+library(reshape2)
+```
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+#Set some initial params
+intercept <- 2
+b1 <- 2.0
+b2 <- 2.0
+true_sig <- 2
+set.seed(4112023)
+
+#Draw data
+dataset <- data.frame(x = runif(1000,min = 0, max = 5), z = runif(1000,min = 0, max = 5))
+
+#Generate outocomes based on covariates and parameters
+dataset$y <- intercept + b1*dataset$x + b2*dataset$z + rnorm(1000, mean = 0,
+                                                             sd = true_sig + runif(1000,min = 0, max = 5))
+#Fit model and look at residual plots
+model <- lm(y ~ x + z, data = dataset)
+#Fitted values vs residuals
+plot(fitted(model), resid(model))
+#Make a nicer plot to output
+plot_data <- data.frame(fitted = fitted(model),
+                        residuals = resid(model))
+p <- ggplot(plot_data, aes(x=fitted, y=residuals)) +
+  geom_point(size = 1.0) +
+  labs(title = "",
+       x = "Fitted Value",
+       y = "Residual Value") +
+  theme_bw() +
+  theme(axis.title = element_text(size = 13)) +
+  theme(legend.text = element_text(size = 13)) 
+p
+ggsave("../figures/sim5_rsidual_plot.pdf")
+```
