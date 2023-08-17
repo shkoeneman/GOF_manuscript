@@ -21,6 +21,7 @@
 \parskip=0pt
 
 \usepackage{floatrow}
+\usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
@@ -379,23 +380,19 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		test the hypothesis that a given normal linear regression model is correctly specified.
 
 		Under the null hypothesis that a normal linear regression model is correctly specified, the estimator $\widehat{Var}[GOF]$ should be close to the theoretical value $2n$ for a
-		sufficient sample size. Thus, we need some way to probabilistically determine whether a fitted model demonstrates this property that indicates correct specification, or whether it
-		appears to violate the null hypothesis.
-		
-		We propose the use of the non-parametric bootstrap to obtain an empirical estimate for the sampling distribution of $\widehat{Var}[GOF]$. Once this empirical distribution
+		sufficient sample size. We propose the use of the non-parametric bootstrap to obtain an empirical estimate for the sampling distribution of $\widehat{Var}[GOF]$. Once this empirical distribution
 		has been obtained, the null hypothesis can be tested by observing whether a bootstrap interval for $Var[GOF]$ contains the theoretical value $2n$, as the approximation
 		$Var[GOF] \approx 2n$ should hold for sufficient sample sizes under the null hypothesis. If a $100*(1-\alpha)$\% bootstrap confidence interval does not contain 
 		$2n$, we reject the null hypothesis and conclude that the model is misspecified; however, if the interval does contain $2n$, we do not have sufficient evidence to reject
-		the null hypothesis, and the proposed model does not demonstrate lack-of-fit. Note that in the case of a model that is merely overspecified, the null hypothesis is technically
-		true as the model contains requisite structure.
+		the null hypothesis, and the proposed model does not demonstrate lack-of-fit.
 
 		A full summary of the proposed procedure can be found below.
-		\pagebreak
-		\begin{algorithm*}
+		%\pagebreak
+		\begin{algorithm*}[h]
 			\caption*{$\bf{Algorithm}$ Bootstrap Goodness-of-Fit Test for a Normal Linear Regression Model}
 			\begin{algorithmic}[1]
 			  \Statex For test level $\alpha$, candidate normal linear model $M$, bootstrap iterations $B$, sample size $n$, and a null hypothesis that $M$
-			  is correctly specified or overspecified:
+			  is adequately specified:
 			  \State Resample, with replacement, outcomes with covariates to generate a bootstrap sample of size $n$.
 			  \State Fit model $M$ to this bootstrap sample, and with this fitted model, calculate $\widehat{Var}[GOF]$
 			  and record this statistic.
@@ -411,11 +408,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		all assumptions of normal linear regression. If any of them are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
 		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity.
 		
-		The following section will demonstrate the efficacy of this procedure to roughly maintain the desired size when the null hypothesis is true. Further simulations will display power
-		of the test to reject the null hypothesis when it is false in a variety of different scenarios. However, it should be noted that this test will come with added computational
-		complexity over other goodness-of-fit tests due to the need to perform the bootstrap.
-		
-		While the following simulations will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
+		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
 		and may use any bootstrap interval they choose so long as it is theoretically justifiable. Additionally, the non-parametric bootstrap is employed in the algorithm detailed above to avoid further
 		assumptions. Limited testing results suggest that the residual bootstrap may also work just as well in this procedure. However, pending further investigation, the non-parametric
 		bootstrap is recommended at the current time. All simulations presented in this work will use the non-parametric bootstrap flavor of the procedure.
@@ -432,39 +425,29 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Simulation Studies}
 
-Four simulations will be employed to assess the efficacy of the bootstrap procedure developed in the previous section. In the first simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
+Four simulations will be employed to assess the efficacy of the bootstrap procedure developed in the previous section. In each simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
 be generated for $i = 1,...,n$ according to
 \begin{equation*}
 	y_i = 2.0 + 2.0 x_{i1} + 2.0 x_{i2} + \epsilon_i , 
 \end{equation*}
-where $\epsilon_i \stackrel{iid}{\sim} N(0,4)$ is a randomly generated normal error, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
+with the nature of the error term $\epsilon$ and the fitted candidate model varying between different simulations.
+
+In the first simulation, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
 a $Uniform(0,5)$ distribution. Note this formulation is one of a normal linear regression model with an intercept and an effect for each covariate present. With the generated data in hand, we will
 proceed to fit a normal linear regression model that includes an intercept and effects for $x_{i1}$ and $x_{i2}$. This model is properly specified, and should not exhibit gross lack-of-fit.
 
-In the second simulation scenario, the $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will be generated for $i = 1,...,n$ according to
-\begin{equation*}
-	y_i = 2.0 + 2.0 x_{i1} + 2.0 x_{i2} + \epsilon_i , 
-\end{equation*}
-where $\epsilon_i \stackrel{iid}{\sim} N(0,4)$ is a randomly generated normal error, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
+In the second simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
 a $Uniform(0,5)$ distribution. However, in this case the fitted model will be a normal linear regression model with an intercept and effect for only
 $x_{i1}$. The covariate $x_{i2}$ will be omitted from the model, and could be viewed as a characteristic that affects the true generating process, but
 was unobserved in data collection. This omission will induce mean misspecification into this fitted model as the mean structure will be underspecified.
 
-In the third simulation scenario, the $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will be generated for $i = 1,...,n$ according to
-\begin{equation*}
-	y_i = 2.0 + 2.0 x_{i1} + 2.0 x_{i2} + \epsilon_i , 
-\end{equation*}
-where $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$ is a randomly generated normal error, and $x_{i1}$, $x_{i2}$, and $x_{i3}$ are completely $iid$ covariates
+In the third simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$, and $x_{i1}$, $x_{i2}$, and $x_{i3}$ are completely $iid$ covariates
 generated according to a $Uniform(0,5)$ distribution. Note that heteroskedasticity is introduced into this model courtesy of $x_{i3}$ affecting the error variance. The fitted model for
 this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$, but will be fit assuming uniform variance.
 This will result in unbiased estimates, and standard inference will be valid as well, as the heteroskedasticity present is related to a variable that isn't included in the model matrix; however,
 these estimates are not guaranteed to be the most efficient.
 
-In the final simulation scenario, the $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will be generated for $i = 1,...,n$ according to
-\begin{equation*}
-	y_i = 2.0 + 2.0 x_{i1} + 2.0 x_{i2} + \epsilon_i , 
-\end{equation*}
-where $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + 0.5 x_{i2})^2 \right)$ is a randomly generated normal error, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
+In the final simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + 0.5 x_{i2})^2 \right)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
 a $Uniform(0,5)$ distribution. The fitted model for this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$,
 but will be fit assuming homoskedasticity. In this case the heteroskedasticity present is related to a covariate in the model matrix, and thus any normal linear model fit to the data will not be properly
 specified if it assumes homoskedasticity, leading to potentially improper inference.
@@ -601,7 +584,7 @@ goodness-of-fit procedure for normal linear regression models.
 This procedure has the potential to assist in model selection. For example, if one were to consider a normal linear regression framework to model a certain outcome, one may
 choose to employ the bootstrap test on the largest possible model that one may consider, as if this model is misspecified, then all nested models will also be misspecified.
 If the test does not reject its null hypothesis of proper specification, one could proceed with the normal linear regression framework and select a final model using
-an information criteria such as AIC or BIC.
+an information criteria such as AIC or BIC, or by employing another method such as cross validation.
 
 This bootstrap procedure is not without its drawbacks. While the test is able to detect heteroskedasticity induced by unobserved covariates, this may be viewed as a detriment,
 as this form of heteroskedasticity will not affect bias or invalidate classical likelihood inference, and will only affect efficiency of estimates. Thus, if the test rejects its
@@ -609,7 +592,7 @@ null hypothesis but one still would like  to move forward with a normal linear r
 to hedge against performing improper inference. Additionally, the test may be overpowered for real-life datasets with large sample sizes, resulting in rejection of the null hypothesis
 when in fact a linear regression is a reasonable model. This is a feature common to many goodness-of-fit tests, and must be remembered when performing an analysis on observed data.
 
-Future work extending what has been done above involves finding similar procedures that can be used for other modeling frameworks, and finding further applications for the variance for
+Potential future work involves finding similar procedures that can be used for other modeling frameworks, and finding further applications for the variance for
 the goodness-of-fit term present in likelihood-based information criteria.
 
 
@@ -759,7 +742,7 @@ for completeness and as a matter of theoretical interest.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Supplementary Materials}
 
-There are no additional supplemental materials for this movie.
+There are no additional supplemental materials for this work.
 \par
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Acknowledgements}
