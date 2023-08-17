@@ -91,19 +91,17 @@ $\ $\par
 \vspace{.4cm} 
 \centerline{Scott H. Koeneman and Joseph E. Cavanaugh} 
 \vspace{.4cm} 
-\centerline{\it Affiliation(s)}
+\centerline{\it Thomas Jefferson University and the University of Iowa}
  \vspace{.55cm} \fontsize{9}{11.5pt plus.8pt minus.6pt}\selectfont
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{quotation}
 \noindent {\it Abstract:}
-{\bf Contents of the Abstract.}\\
-Lorem ipsum dolor sit amet, debet putant in nec, fugit gloriatur eloquentiam no vix. Hinc mucius disputando sit ad. Qui quas ubique ancillae id. Ad mel doctus tacimates, vis fabellas interesset ei.
-Nam tamquam prompta omittantur no. Te oratio liberavisse ius. Quo ea eruditi fierent, dicant exerci forensibus mel ex. Quod clita scripta ea his, in sea semper prompta inciderint. Eam ut mundi mnesarchum. Cum illud augue sonet eu.
-In usu dicat choro putent, no atqui viderer eleifend nec. Ei mea cibo senserit. Consul dissentiunt sea ei. Et discere scriptorem quo. Agam nonumy eirmod no vim, cu per odio abhorreant.
-Sit id scripta delenit, ad stet fierent nam, ex sale qualisque qui. Ei animal invidunt consulatu vis, cu vel decore euismod. Eos et autem altera, per ex quem nibh praesent. Vix te vide deseruisse, est justo possit iuvaret cu.
-Usu eripuit repudiare ne. Nobis oportere salutatus qui ex. Has eu quando appellantur mediocritatem, sit no regione singulis. Ei nibh idque sed, in libris voluptaria mea.
+In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
+to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
+investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
+to other methods of assessing the goodness-of-fit of a normal linear regression model.
 
 
 \vspace{9pt}
@@ -138,8 +136,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\end{equation*}
 		The $-2 \ell(\hat{\theta}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
 		conforms to the observed data $y$ (\cite{Cavanaugh}). This term is also present in other likelihood-based information such as the \textit{Bayesian information criteria} (\cite{Schwarz}). The goodness-of-fit
-		term will only grow smaller, indicating better conformity to the data, as complexity is added to the model, and thus while it is a reasonable measure of goodness-of-fit, other considerations are needed to avoid overfitting. Note that this
-		quantity is a statistic as it depends on the data $y$, and the estimate $\hat{\theta}$ which was determined using the data $y$ itself.
+		term will only grow smaller, indicating better conformity to the data, as complexity is added to the model, and thus while it is a reasonable measure of goodness-of-fit, other considerations are needed to avoid overfitting.
 
 		Linear regression analysis makes a number of assumptions about the data at hand. Perhaps the most basic assumption is that each outcome is independent given the set of predictors at hand.
 		Additionally, it is assumed that the outcomes, conditioned on the covariates, have a mean that is a linear function of the covariates, with this property being referred to as \textit{linearity},
@@ -161,15 +158,13 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		Hypothesis tests for the goodness-of-fit of a linear model offer an alternative to visual methods. These tests posit a null hypothesis that the model adequately accommodates the data and that
 		the associated assumptions are satisfied, with an alternative that the assumptions are violated in some fundamental way. One such test is the \textit{Breusch-Pagan test}, which posits a null hypothesis
 		that a linear regression model does not violate homoskedasticity (\cite{Breusch}). This test involves performing an auxiliary linear regression on a transformation of the squared residuals from
-		the candidate linear regression model against the covariates of interest. This is followed by the computation of a test statistic defined as half of the explained sum of squares of the auxiliary
-		regression, a quantity that has an asymptotic chi-squared distribution under the null hypothesis of homoskedasticity. Essentially, the more of the variation in the squared residuals that is explained
-		by the auxiliary regression, the more one suspects violations to homoskedasticity.
+		the candidate linear regression model against the covariates of interest. Essentially, the more of the variation in the squared residuals that is explained by the auxiliary regression, the more one suspects violations to homoskedasticity.
 
 		However, one limitation of the Breusch-Pagan test is that it is only designed to detect a relationship between the covariates and the squared residuals that is linear, and thus it will not
 		produce efficacious results if the heteroskedasticity present is not linear (\cite{Waldman}). An alternative to the Breusch-Pagan test in this matter is the \textit{White test} for homoskedasticity,
 		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test (\cite{White1980}). The White test is similar to the Breusch-Pagan test in that it involves
 		an auxiliary regression with the squared residuals as the outcome, but here, the regressors are all of the covariates in the original fitted model in addition to their squares and cross
-		products. This produces a test statistic that is also asymptotically distributed as chi-squared under the null hypothesis, but that is sensitive to deviations to the null hypothesis in the form of
+		products. This produces a test statistic that is sensitive to deviations to the null hypothesis in the form of
 		heteroskedasticity related to the squares and cross products of regressors. Additionally, the test may indicate misspecification of the model if the cross products of certain
 		regressors should be included in the model, but are not.
 
@@ -183,10 +178,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		In addition, both the White and Breusch-Pagan tests cannot detect heteroskedasticity induced by unobserved covariates, as their auxiliary regressions only use what has been observed. Such heteroskedasticity
 		may not affect the bias and consistency of effect estimates or the validity of inference, but may lead to a loss of efficiency of estimates. 
 
-		The above presents a brief overview of techniques related to the assessment of the goodness-of-fit of normal linear regression models, but many other methods exist. Assessment of goodness-of-fit
-		of modeling frameworks is vital in model selection so that one does not make an incorrect assumption from the outset and proceed with a parametric family that may exhibit gross lack-of-fit.
-
-		When employing likelihood theory to obtain parameter estimates, one can often leverage the properties of maximum likelihood estimators (MLEs) to produce reasonable estimates of the variance of the
+		When employing likelihood theory to obtain parameter estimates for a model, one can often leverage the properties of maximum likelihood estimators (MLEs) to produce reasonable estimates of the variance of the
 		estimators, and thus perform inference (\cite{Millar}). However, these properties are only guaranteed to hold when the model is properly specified, and improper or inefficient estimates may result when assumptions
 		do not hold. This has given rise to \textit{robust variance estimators} that rely on fewer assumptions than classical likelihood theory, yet can still quantify the variability of a statistic
 		at hand.
@@ -206,8 +198,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\begin{equation*}
 			B(\theta) = E \left[ \frac{\partial f(y_t,\theta)}{\partial \theta_i} \frac{\partial f(y_t,\theta)}{\partial \theta_j} \right] 
 		\end{equation*}
-		where $i = 1,...,p$ and $j = 1,...,p$ respectively. Note that these matrices are akin to the expectation of the Hessian matrix with respect to the log-likelihood and the expectation of
-		the outer product of the score vector. These matrices then combine to define $C(\theta)$ as
+		where $i = 1,...,p$ and $j = 1,...,p$ respectively. These matrices then combine to define $C(\theta)$ as
 		\begin{equation*}
 			C(\theta) = A(\theta)^{-1} B(\theta) A(\theta)^{-1} ,
 		\end{equation*}
@@ -250,8 +241,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\end{equation}
 		where $\hat{\sigma}^2$ denotes the maximum likelihood estimate for the error variance $\sigma^2$. Note that the only term here that is random is
 		the $n \log(\hat{\sigma}^2)$ term. Thus, if we can quantify the variability of this term, we can quantify the variability of the entire goodness-of-fit
-		term. Additionally, we can go even further and quantify the variability of an entire likelihood-based information criterion with a constant penalty
-		term for this fitted model.
+		term.
 
 		To achieve this end, we first consider $\hat{\sigma}^2$. As the linear model is assumed to not be misspecified, and $\hat{\sigma}^2$ is a maximum likelihood
 		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information (\cite{Fisher}). In the case of a single
@@ -277,25 +267,19 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\begin{equation*}
 			\sqrt{n} (\hat{\sigma}^2 - \sigma^2) \xrightarrow[]{d} N(0, 2 \sigma ^4 )
 		\end{equation*}
-		should hold. Thus, we have established an asymptotic variance for $\hat{\sigma}^2$.
+		should hold.
 
-		However, further work is required to arrive at what we seek. To find the variance of $-2 \ell (\hat{\theta}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
-		Additionally, the above asymptotic relation involves the true $\sigma^2$ to which we will not have access in most modeling scenarios.
+		To find the variance of $-2 \ell (\hat{\theta}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
+		Additionally, the above asymptotic distribution involves the true $\sigma^2$ to which we will not have access in most modeling scenarios.
 
 		We will solve both of these issues by employing the delta method (\cite{Rao}). We propose a transformation of the form
 		\begin{equation*}
 			g(x) = \log(x) .
 		\end{equation*}
-		Note that this transformation has the derivative
-		\begin{equation*}
-			g'(x) = \frac{1}{x} .
-		\end{equation*}
 		Thus, applying the delta method to our above asymptotic distribution with $g(x)$ as the function of interest, we see that
 		\begin{equation*}
 			\sqrt{n} ( \log (\hat{\sigma}^2) - \log(\sigma^2)) \xrightarrow[]{d} N(0, 2) .
 		\end{equation*}
-		Note that the asymptotic distribution on the right-hand side is now completely free of the parameter $\sigma^2$, with the variance of this asymptotic distribution reducing
-		to the constant 2.
 
 		Armed with the above asymptotic relationship and assuming that this asymptotic property approximately holds in a setting with a finite $n$, we have that
 		\begin{equation*}
@@ -312,12 +296,12 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 
 		It should be noted that this approximation does rely on asymptotic properties. In the Appendix, an exact variance for $-2 \ell (\hat{\theta})$ is found which does
 		not rely on asymptotic properties. However, this variance is more complicated to compute than the simple approximation $2n$, and was not found to provide any meaningful
-		benefit over $2n$ when used in procedures developed later in this chapter. Nevertheless, the derivation of this variance is presented for completeness.
+		benefit over $2n$ when used in procedures developed later in this work.
 
 		With the previous derivation in hand, we now develop an estimator for the variance of $n\log(\hat{\sigma}^2)$, and thus $-2 \ell (\hat{\theta})$,
 		that need not assume a given fitted normal linear regression model is correctly specified.
 
-		Assume that we once again fit a linear regression model with assumed parameters $\theta' = [\beta', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
+		Assume that we once again fit a linear regression model with parameters $\theta' = [\beta', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
 		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$. This estimator will be constructed using the White robust sandwich variance estimator, employing
 		much of the notation related to this development that was introduced in the first section of this work (\cite{White1980}).
 
@@ -345,7 +329,6 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\begin{equation*}
 			B_n(\theta) = \frac{1}{n} \sum_{i=1}^{n} U_i(\theta) U_i(\theta)' .
 		\end{equation*}
-		Note that this matrix is an estimator for the expectation of the outer product of the score vector.
 
 		Thus, with $B_n(\theta)$ and $A_n(\theta)$ defined, these matrices can be evaluated at the maximum likelihood estimator $\hat{\theta}$ and be used to define
 		\begin{equation*}
@@ -365,11 +348,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 
 		We will again employ the delta method to transform the asymptotic distribution to a form that is more suitable. We once more define a transformation of
 		\begin{equation*}
-			g(x) = \log(x) ,
-		\end{equation*}
-		and note that this function has a first derivative of
-		\begin{equation*}
-			g'(x) = \frac{1}{x} .
+			g(x) = \log(x) .
 		\end{equation*}
 		Applying this transformation to the asymptotic distribution presented in (2.2), we arrive at the relation
 		\begin{equation*}
@@ -394,8 +373,6 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\begin{equation*}
 			\widehat{Var}[GOF] = \frac{n}{\hat{\sigma}^4} s_n(\hat{\theta}) .
 		\end{equation*}
-		This notation will be used because this statistic is estimating $Var[GOF]$, the true variance of the likelihood goodness-of-fit
-		term.
 
 		We have established an asymptotic variance for the likelihood goodness-of-fit term in the case of a correctly specified normal linear regression model, and an
 		estimator for this variance that does not assume the model is correctly specified. We will now synthesize these two developments to form a general goodness-of-fit procedure to
@@ -413,8 +390,9 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		true as the model contains requisite structure.
 
 		A full summary of the proposed procedure can be found below.
+		\pagebreak
 		\begin{algorithm*}
-			\caption{Bootstrap Goodness-of-Fit Test for a Normal Linear Regression Model}
+			\caption*{$\bf{Algorithm}$ Bootstrap Goodness-of-Fit Test for a Normal Linear Regression Model}
 			\begin{algorithmic}[1]
 			  \Statex For test level $\alpha$, candidate normal linear model $M$, bootstrap iterations $B$, sample size $n$, and a null hypothesis that $M$
 			  is correctly specified or overspecified:
@@ -890,17 +868,17 @@ Waldman, D.M. (1983).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vskip .65cm
 \noindent
-first author affiliation
+Thomas Jefferson University, Division of Biostatistics
 \vskip 2pt
 \noindent
-E-mail: (first author email)
+E-mail: Scott.Koeneman@jefferson.edu
 \vskip 2pt
 
 \noindent
-second author affiliation
+University of Iowa, Department of Biostatistics
 \vskip 2pt
 \noindent
-E-mail: (second author email)
+E-mail: joe-cavanuagh@uiowa.edu
 
 
 % \vskip .3cm
