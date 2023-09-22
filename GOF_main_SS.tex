@@ -102,7 +102,8 @@ $\ $\par
 In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
 to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
 investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
-to other methods of assessing the goodness-of-fit of a normal linear regression model.
+to other methods of assessing the goodness-of-fit of a normal linear regression model. The technique can be employed using the \verb|DBModelSelect| R package,
+available freely via the Comprehensive R Archive Network.
 
 
 \vspace{9pt}
@@ -126,95 +127,90 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction and Background}
 
-    	Broadly, the term \textit{goodness-of-fit} as it pertains to statistical modeling refers to the degree to which a certain model
-		and its associated assumptions align with the observed data. Assessments of this property may take the form of visual diagnostics, quantitative diagnostics, or formal hypothesis tests to help
-		determine whether the assumptions of a given model are met.
+	\subsection*{Goodness-of-Fit}
 
-		The notion of goodness-of-fit is relevant in the model selection realm of information criteria. Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
-		number of estimated parameters, the \textit{Akaike information criterion} (AIC) for a fitted model can be expressed as
+    	Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
+		and its associated assumptions align with the observed data. The notion of goodness-of-fit is relevant in the model selection realm of information criteria, particularly to the Akaike
+		information criterion (\cite{Akaike}). Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
+		number of estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
 		\begin{equation*}
 			AIC = -2 \ell(\hat{\theta}|y) + 2 p.
 		\end{equation*}
 		The $-2 \ell(\hat{\theta}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
-		conforms to the observed data $y$ (\cite{Cavanaugh}). This term is also present in other likelihood-based information such as the \textit{Bayesian information criteria} (\cite{Schwarz}). The goodness-of-fit
-		term will only grow smaller, indicating better conformity to the data, as complexity is added to the model, and thus while it is a reasonable measure of goodness-of-fit, other considerations are needed to avoid overfitting.
+		conforms to the observed data $y$ (\cite{Cavanaugh}). This term is also present in other likelihood-based information such as the Bayesian information criteria (\cite{Schwarz}).
+		The goodness-of-fit term will only grow smaller, indicating better conformity to the data, as complexity is added to the model, and thus while it is a reasonable measure of
+		goodness-of-fit, other considerations are needed to avoid overfitting.
 
-		Linear regression analysis makes a number of assumptions about the data at hand. Perhaps the most basic assumption is that each outcome is independent given the set of predictors at hand.
-		Additionally, it is assumed that the outcomes, conditioned on the covariates, have a mean that is a linear function of the covariates, with this property being referred to as \textit{linearity},
-		with errors that are normally distributed with a mean of zero. These errors are assumed to be independent and identically distributed with a constant variance across all observations, with this
-		constant variance property being referred to as \textit{homoskedasticity} (\cite{Kutner}). While this work will focus on assessments of the goodness-of-fit of traditional normal linear regression models, it is worth noting
+		Linear regression analysis makes a number of assumptions about the data at hand, among them conditional independence and linearity, independence of errors that are normally distributed with a mean of zero,
+		and homoskedasticity, that being constant variance. While this work will focus on assessments of the goodness-of-fit and assumptions of traditional normal linear regression models, it is worth noting
 		that assessments of goodness-of-fit exist for many other modeling paradigms as well, and many of the same principles apply.
 		
-		One method of visually assessing the assumptions of linearity and homoskedasticity when using linear
-		regression is to plot the residuals against either their corresponding predictor values or the corresponding observed values of the outcome, with these figures being called \textit{residual plots} (\cite{Miles}). Across different values
+		Residual plots serve as a visual method for assessing the appropriateness of a fitted linear regression model (\cite{Miles}). Across different values
 		of the predictors and observed values, the residuals should not exhibit any specific pattern other than a mean of zero and constant variance if the assumptions of the linear regression model are met.
-		Thus, deviations from this pattern in the form of a residual plot that exhibits curvature, or a change in spread, can indicate violations
-		to linearity and homoskedasticity, respectively. 
+		Thus, deviations from this pattern in the form of a residual plot that exhibits curvature, or a change in spread, can indicate violations to linearity and homoskedasticity, respectively. 
 
 		However, this method of visual inspection carries with it certain limitations. When there are a large number of predictors present in a model, it may be impractical to visually inspect every
-		possible residual plot with any degree of scrutiny. Additionally, there may be patterns in deviations that are undetectable upon visual inspection, such as a curved pattern that is less noticeable
-		due to the scale of the predictors. If \textit{heteroskedasticity}, meaning the absence of homoskedasticity, is induced by covariates that have not been observed, a visual inspection will likely
+		possible residual plot with any degree of scrutiny. If heteroskedasticity is induced by covariates that have not been observed, a visual inspection will likely
 		not reveal this violation of assumptions.
 
 		Hypothesis tests for the goodness-of-fit of a linear model offer an alternative to visual methods. These tests posit a null hypothesis that the model adequately accommodates the data and that
-		the associated assumptions are satisfied, with an alternative that the assumptions are violated in some fundamental way. One such test is the \textit{Breusch-Pagan test}, which posits a null hypothesis
+		the associated assumptions are satisfied, with an alternative that the assumptions are violated in some fundamental way. One such test is the Breusch-Pagan test, which posits a null hypothesis
 		that a linear regression model does not violate homoskedasticity (\cite{Breusch}). This test involves performing an auxiliary linear regression on a transformation of the squared residuals from
-		the candidate linear regression model against the covariates of interest. Essentially, the more of the variation in the squared residuals that is explained by the auxiliary regression, the more one suspects violations to homoskedasticity.
+		the candidate linear regression model against the covariates of interest.
 
 		However, one limitation of the Breusch-Pagan test is that it is only designed to detect a relationship between the covariates and the squared residuals that is linear, and thus it will not
-		produce efficacious results if the heteroskedasticity present is not linear (\cite{Waldman}). An alternative to the Breusch-Pagan test in this matter is the \textit{White test} for homoskedasticity,
-		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test (\cite{White1980}). The White test is similar to the Breusch-Pagan test in that it involves
-		an auxiliary regression with the squared residuals as the outcome, but here, the regressors are all of the covariates in the original fitted model in addition to their squares and cross
-		products. This produces a test statistic that is sensitive to deviations to the null hypothesis in the form of
-		heteroskedasticity related to the squares and cross products of regressors. Additionally, the test may indicate misspecification of the model if the cross products of certain
-		regressors should be included in the model, but are not.
+		produce efficacious results if the heteroskedasticity present is not linear (\cite{Waldman}). An alternative to the Breusch-Pagan test in this matter is the White test for homoskedasticity,
+		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test (\cite{White1980}). The White test produces a test statistic that is sensitive to deviations to
+		the null hypothesis in the form of heteroskedasticity related to the squares and cross products of regressors. Additionally, the test may indicate misspecification of the model if the cross products
+		of certain regressors should be included in the model, but are not.
 
 		The various ways in which the White test can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
 		When a hypothesis is rejected, we can be reasonably confident that an assumption is violated; however, by simply performing the test, we do not glean much information as to how exactly the
-		model may be misspecified. In the case of rejection of the White test, one may not know if we reject because cross-products should be included as covariates, or if perhaps there is heteroskedasticity
-		present related to one of the covariates already present. This is in contrast to the method of visually observing residual plots wherein specific issues may be easier to identify.
+		model may be misspecified. This is in contrast to the method of visually observing residual plots wherein specific issues may be easier to identify.
 		If a plot of the residuals versus a covariate exhibits a curved pattern, one may posit a new model that accounts for this curved relationship (\cite{Miles}).
 		However, hypothesis tests offer little direction other than that the current model exhibits lack-of-fit in some manner, and further investigation is necessary to determine next steps.
 
 		In addition, both the White and Breusch-Pagan tests cannot detect heteroskedasticity induced by unobserved covariates, as their auxiliary regressions only use what has been observed. Such heteroskedasticity
 		may not affect the bias and consistency of effect estimates or the validity of inference, but may lead to a loss of efficiency of estimates. 
 
+		\subsection*{Robust Variance Estimation}
+	
 		When employing likelihood theory to obtain parameter estimates for a model, one can often leverage the properties of maximum likelihood estimators (MLEs) to produce reasonable estimates of the variance of the
 		estimators, and thus perform inference (\cite{Millar}). However, these properties are only guaranteed to hold when the model is properly specified, and improper or inefficient estimates may result when assumptions
-		do not hold. This has given rise to \textit{robust variance estimators} that rely on fewer assumptions than classical likelihood theory, yet can still quantify the variability of a statistic
+		do not hold. This has given rise to robust variance estimators that rely on fewer assumptions than classical likelihood theory, yet can still quantify the variability of a statistic
 		at hand.
 
 		Huber first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown (\cite{Huber}). White
 		expanded upon this notion by deriving covariance matrix estimates for maximum likelihood estimators that are robust to a variety of different types of misspecification and only assume
-		conditional independence and certain other regularity conditions (\cite{White1980}). Defining $\theta_*$ as the \textit{pseudo-true} parameter and $\hat{\theta}_n$ as the MLE for a sample of size
+		conditional independence and certain other regularity conditions (\cite{White1980}). Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
 		$n$, White showed the asymptotic relation
 		\begin{equation*}
 			\sqrt{n} (\hat{\theta}_n - \theta_*) \xrightarrow[]{d} N(0, C(\theta_* ) ) .
 		\end{equation*}
-		The large sample covariance matrix $C(\theta)$ can be defined using the matrices 
+		The large sample covariance matrix $C(\theta)$ can be defined using the matrices $A(\theta)$ and $B(\theta)$, where the $(i,j)$ element of $A(\theta)$ is defined as
 		\begin{equation*}
-			A(\theta) = E \left[ \frac{\partial^2 f(y_t,\theta)}{\partial \theta_i \partial \theta_j} \right] 
+			A(\theta)_{i,j} = E \left[ \frac{\partial^2 f(y_t,\theta)}{\partial \theta_i \partial \theta_j} \right] 
 		\end{equation*}
-		and
+		and the $(i,j)$ element of $B(\theta)$ is defined as
 		\begin{equation*}
-			B(\theta) = E \left[ \frac{\partial f(y_t,\theta)}{\partial \theta_i} \frac{\partial f(y_t,\theta)}{\partial \theta_j} \right] 
+			B(\theta)_{i,j} = E \left[ \frac{\partial f(y_t,\theta)}{\partial \theta_i} \frac{\partial f(y_t,\theta)}{\partial \theta_j} \right] 
 		\end{equation*}
 		where $i = 1,...,p$ and $j = 1,...,p$ respectively. These matrices then combine to define $C(\theta)$ as
 		\begin{equation*}
 			C(\theta) = A(\theta)^{-1} B(\theta) A(\theta)^{-1} ,
 		\end{equation*}
-		and thus evaluating this quantity at $\theta_*$, one arrives at the robust asymptotic variance estimate. The resulting estimator, and those that are similar in form, are often called \textit{sandwich}
+		and thus evaluating this quantity at $\theta_*$, one arrives at the robust asymptotic variance estimate. The resulting estimator, and those that are similar in form, are often called sandwich
 		variance estimators due to one quantity being sandwiched in between two identical others to form the statistic.
 
-		As in general one will not know the pseudo-true parameter $\theta_*$, White indicates that the matrices
+		As in general one will not know the pseudo-true parameter $\theta_*$, White forumulates the matrices $A_n(\theta)$ and $B_n(\theta)$, with the $(i,j)$ element of $A_n(\theta)$ defined as
 		\begin{equation*}
-			A_n(\theta) = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial^2 f(y_t,\theta)}{\partial \theta_i \partial \theta_j}
+			A_n(\theta)_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial^2 f(y_t,\theta)}{\partial \theta_i \partial \theta_j}
 		\end{equation*}
-		and
+		and the $(i,j)$ element of $B_n(\theta)$ as
 		\begin{equation*}
-			B_n(\theta) = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial f(y_t,\theta)}{\partial \theta_i} \frac{\partial f(y_t,\theta)}{\partial \theta_j} 
+			B_n(\theta)_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial f(y_t,\theta)}{\partial \theta_i} \frac{\partial f(y_t,\theta)}{\partial \theta_j} .
 		\end{equation*}
-		can be calculated from the data and evaluated at the MLE to form
+		White proposes calculating $A_n(\theta)$ and $B_n(\theta)$ from the data, and evaluating them at the MLE, to produce
 		\begin{equation*}
 			C_n(\hat{\theta}) = A_n(\hat{\theta})^{-1} B_n(\hat{\theta}) A_n(\hat{\theta})^{-1} .
 		\end{equation*}
@@ -406,7 +402,10 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		This procedure can be used to assess the general hypothesis that a normal linear regression model is properly specified against the alternative that it displays lack-of-fit.
 		Unlike other goodness-of-fit tests and procedures, this method does not test a specific assumption of linear regression such as normality or homoskedasticity, but rather
 		all assumptions of normal linear regression. If any of them are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
-		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity.
+		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity. 
+
+		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| package (\cite{Koeneman}), available for download via the Comprehensive R Archive Network.
+		The \verb|BootGOFTestLM| function provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
 		
 		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
 		and may use any bootstrap interval they choose so long as it is theoretically justifiable. Additionally, the non-parametric bootstrap is employed in the algorithm detailed above to avoid further
@@ -457,7 +456,7 @@ Type~I error rates in the cases where the null hypothesis of each is true, and r
 Type~I error rates or power of each test will be calculated based on the proportion of times each test rejected its null hypothesis. Each simulation will be performed for $n = 100, 500, 1000$ and $2500$, with $1000$
 bootstrap iterations for all simulation. The simulation will be performed $1000$ times for each value of $n$.
 
-Each simulation was performed in Julia, version 1.8.1 (\cite{Bezanson}). The code for the simulations can be found at \url{https://github.com/shkoeneman/GOF_manuscript/tree/main/scripts}. The results for the first simulation
+The code for the simulations can be found at \url{https://github.com/shkoeneman/GOF_manuscript/tree/main/scripts}. The results for the first simulation
 can be found in the table below.
 
 \begin{table}[H]
@@ -479,10 +478,10 @@ can be found in the table below.
 	}
 \end{table}
 
-The bootstrap test exhibits slight anti-conservative behavior across all values of $n$ with the empirically determined Type~I error rate exceeding the desired Type~I error rate
-of $\alpha = 0.05$ in all scenarios. However, as $n$ increases, the empirical Type~I error rate appears to be decreasing towards the desired value. Additionally, the
+The bootstrap test exhibits anti-conservative behavior across all values of $n$ with the empirically determined Type~I error rate exceeding the desired Type~I error rate
+of $\alpha = 0.05$ in all scenarios. However, as $n$ increases, the empirical Type~I error rate appears to be decreasing towards the desired value, albeit perhaps somewhat slowly. Additionally, the
 behavior of the test is consistently anti-conservative for the scenarios shown. Thus, when using the procedure, one may keep in mind that the test may be more prone to
-rejection than one might expect, particularly for small sample sizes before asymptotic properties of the bootstrap truly manifest. The White and Breusch-Pagan tests roughly maintain
+rejection than one might expect, particularly for small sample sizes before asymptotic properties of the test truly manifest. The White and Breusch-Pagan tests roughly maintain
 the desired Type~I error rate across all values of $n$.
 
 The results for the second simulation can be found in the table below.
@@ -506,13 +505,22 @@ The results for the second simulation can be found in the table below.
 	}
 \end{table}
 
-The power of the bootstrap test in this scenario of mean misspecification is rather modest for low values of $n$ displayed in the table. However, power rises quickly to high levels
+The power of the bootstrap test in this scenario of mean misspecification is rather low for $n = 100$. However, power rises quickly to high levels
 with the test appearing to possess near-perfect power as the value of $n$ approaches 2500. Thus, the bootstrap test appears to possess the ability to detect this mean
 misspecification on account of an unobserved covariate, and the power to detect this misspecification rises as the sample size increases as one would expect.
 
 In contrast, the White test and Breusch-Pagan test both seem to only maintain their Type~I error rates established in Simulation 3. This performance was to be expected
 as the null hypotheses of these tests are not violated in this scenario. However, this simulation setting does demonstrate how the inability of a goodness-of-fit test to detect lack of
 fit does not mean lack-of-fit is not present, as these two tests are limited in the scope of misspecification they are able to detect.
+
+Figure 1 presents a residual plot generated by fitting the specified model of the third simulation to data generated according to the specification of the third simulation. Note the seemingly
+patternless, constant variance spread, indicating that one would not find reason to think any assumption of linear regression was violated. 
+
+\begin{figure}[H]
+%\includegraphics[angle=-90, scale=0.45]{carat}\par
+\centerline{\epsfig{file=./figures/sim3_residual_plot.pdf,width=4.5in}}\par  %<- modified by Ivan  (You need to put figure in the same folder; or you must specify the path to the figure.)
+\caption{Simulation 3 Residual Plot.}
+\end{figure}
 
 The results for the third simulation can be found in the table below.
 
@@ -535,14 +543,14 @@ The results for the third simulation can be found in the table below.
 	}
 \end{table}
 
-The bootstrap test seems to only exhibit power in line with its empirical Type~I error rate displayed in Simulation 3 for $n = 100$, but the power of the test rises
-rapidly, reaching near-perfect levels by the time $n = 1000$. In contrast, the White test and Breusch-Pagan test exhibit only power in line with their Type~I error
-rates established in Simulation 3, and thus do not seem to be able to detect this form of heteroskedasticity, which is rather subtle and may only affect efficiency
-of estimates as opposed to bias.
+The bootstrap test seems to only exhibit power in line with its empirical Type~I error rate displayed in Simulation 3 for $n = 100$, and appears to require a relatively high sample size to produce
+adequate power. However, the test does seem to be able to detect this violation of homoskedasticity. In contrast, the White test and Breusch-Pagan test exhibit only power in line with their Type~I error
+rates established in Simulation 3, and thus do not seem to be able to detect this form of heteroskedasticity, as the residual plot could not. This reveals how the subtleness of this homoskedasticity,
+which should not affect bias of estimates, but may affect efficiency and therefore inference.
 
-This limitation in detection is on account of how these tests are performed, as they rely on looking for heteroskedasticity that is induced by observed covariates.
+This limitation in detection is on account of how the Breusch-Pagan and White tests and residual plots are constructed, as they rely on looking for heteroskedasticity that is induced by observed covariates.
 When heteroskedasticity is induced by an unobserved covariate that is not used in the model, the White test and Breusch-Pagan test cannot ascertain that their
-null hypotheses of homoskedasticity are violated. However, the bootstrap test is able to reject its more general null hypothesis.
+null hypotheses of homoskedasticity are violated, and residual plots do not show any visible homoskedasticity. However, the bootstrap test is able to reject its more general null hypothesis.
 
 The results for the fourth and final simulation can be found in the table below.
 
@@ -566,9 +574,9 @@ The results for the fourth and final simulation can be found in the table below.
 \end{table}
 
 In this scenario, the White test and Breusch-Pagan test both greatly outperform the bootstrap test in terms of power for lower values of $n$, with the bootstrap test
-eventually matching the power of the other tests are $n = 2500$. This is likely due to the heteroskedasticity being induced by a covariate that is also in the 
-proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. However, the bootstrap test is still able to detect this form of
-misspecification in addition to other forms.
+eventually roughly matching the power of the other tests are $n = 2500$. This is likely due to the heteroskedasticity being induced by a covariate that is also in the 
+proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. While the bootstrap test is able to detect this misspecification,
+it requires a very large sample size to have adequate power.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -579,7 +587,8 @@ to develop this test, we first derived an asymptotic variance for the goodness-o
 that the fitted regression model is properly specified. The test functions by assessing whether the fitted model's estimated variance of this goodness-of-fit term conforms to the
 theoretical value under proper specification. Simulation studies demonstrated the ability of this bootstrap test to detect a wide variety of violations of assumptions used in
 normal linear regression. These violations include mean misspecification and violations to homoskedasticity, and this new procedure has the potential to serve as an omnibus
-goodness-of-fit procedure for normal linear regression models.
+goodness-of-fit procedure for normal linear regression models. Additionally, we developed the \verb|BootGOFTestLM| function of the R package \verb|DBModelSelect| to provide
+an efficient and convenient method of performing the test.
 
 This procedure has the potential to assist in model selection. For example, if one were to consider a normal linear regression framework to model a certain outcome, one may
 choose to employ the bootstrap test on the largest possible model that one may consider, as if this model is misspecified, then all nested models will also be misspecified.
@@ -601,12 +610,9 @@ the goodness-of-fit term present in likelihood-based information criteria.
 \section*{Appendix}
 
 This Appendix will derive an exact variance for the goodness-of-fit term $-2 \ell (\hat{\theta} )$ in the case of a properly specified
-linear model. We assume that this linear regression model has a full rank $n$ by $r$ design matrix $X$, outcome vector $y$, true parameters $\beta$ and $\sigma^2$,
-and maximum likelihood estimates $\hat{\beta}$ and $\hat{\sigma}^2$. It can be shown that the estimate $\hat{\sigma}^2$ can be expressed as
-\begin{equation*}
-	\hat{\sigma}^2 =  \frac{1}{n} (y-X\hat{\beta})'(y-X\hat{\beta}) = \frac{1}{n} y'(I_n - X(X'X)^{-1}X')y ,
-\end{equation*}
-where $I_n$ is an $n$ by $n$ identity matrix. We let
+linear model. While a similar derivation has been presented in other work (\cite{McQuarrie}), the following derivation differs substantially and is presented for completeness.
+We assume that a given linear regression model has a full rank $n$ by $r$ design matrix $X$, outcome vector $y$, true parameters $\beta$ and $\sigma^2$,
+and maximum likelihood estimates $\hat{\beta}$ and $\hat{\sigma}^2$. We let
 \begin{equation*}
 	A = \frac{1}{\sigma^2} (I_n - X(X'X)^{-1}X') 
 \end{equation*}
@@ -614,126 +620,52 @@ such that we can construct the quadratic form
 \begin{equation*}
 	y'Ay = \frac{n \hat{\sigma}^2}{\sigma^2} .
 \end{equation*}
-Let $V = \sigma^2 I_n$ be the covariance matrix of the random multivariate normal outcome vector $y$, and note that $AV$ is idempotent. Let $\mu = X \beta$ be the
-true mean of the outcome vector $y$. By the properties of quadratic forms of multivariate normal random variables, it can be seen that
-\begin{equation*}
-	y'Ay = \frac{n \hat{\sigma}^2}{\sigma^2} \sim \chi^2_{rank \left( A \right) } (\mu 'A\mu) ,
-\end{equation*}
-where $rank \left( A \right)$ is the degrees of freedom and $\mu 'A \mu$ is the non-centrality parameter of this chi-squared distribution.
-
-Note that, as we assume $X$ is full rank, $rank(X) = r$. Furthermore, it can be seen that
-\begin{equation*}
-	\begin{split}
-	tr\left[ X(X'X)^{-1}X' \right] & = tr \left[ X'X(X'X)^{-1} \right]  \\ 
-	& = tr \left[ I_r \right] \\
-	& = r .
-	\end{split}
-\end{equation*}
-Thus, noting that $\sigma^2 A$ is idempotent, it can be seen that
-\begin{equation*}
-	\begin{split}
-	tr \left[ \sigma^2 A \right] & = tr \left[ I_n - X(X'X)^{-1}X' \right]  \\ 
-	& = n-r \\
-	& = rank \left( \sigma^2 A \right) .
-	\end{split}
-\end{equation*}
-Therefore, as $rank \left( \sigma^2 A \right) = rank \left( A \right)$ since $\sigma^2$ is a scalar constant, then $rank \left( A \right) = n-r$. This value will be the degrees of
-freedom in the chi-squared distribution presented above.
-
-Now, we observe the non-centrality parameter $\mu 'A \mu = (X \beta)'A(X \beta)$. Note that
-\begin{equation*}
-	\begin{split}
-	A(X \beta) & = \frac{1}{\sigma^2} (I_n - X (X' X)^{-1} X')X\beta  \\ 
-	& = \frac{1}{\sigma^2} (X \beta - X \beta) \\
-	& = 0 .
-	\end{split}
-\end{equation*}
-Thus, by extension $\mu 'A \mu = 0$, and this distribution is a central chi-squared distribution.
-
-We have shown that
+By the properties of quadratic forms of multivariate normal random variables, it can be seen that
 \begin{equation}
-	\frac{n \hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-r} .
+	y'Ay = \frac{n \hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-r} .
 \end{equation}
-Note that if we take the natural logarithm of the left-hand side and take its variance, we see that
+Note that if we take the natural logarithm of the left-hand side and evaluate its variance, we see that
 \begin{equation}
-	\begin{split}
-		Var \left[ \log(\frac{n \hat{\sigma}^2}{\sigma^2}) \right] & = Var \left[ \log n + \log \hat{\sigma}^2 - \log \sigma^2 \right]  \\ 
-		& = Var \left[ \log \hat{\sigma}^2 \right] \\
-	\end{split}
+	Var \left[ \log(\frac{n \hat{\sigma}^2}{\sigma^2}) \right]  = Var \left[ \log \hat{\sigma}^2 \right]
 \end{equation}
 due to constant terms being irrelevant to the variance calculation. This enclosed form is very close to the $n \log \hat{\sigma}^2$ that is required
 to determine the variance of the likelihood goodness of fit term $-2 \ell (\hat{\theta} )$ in the case of a normal linear regression model.
 Thus, if we can calculate $Var \left[ \log \hat{\sigma}^2 \right]$, which is itself the variance
 of the natural logarithm of a variable distributed as $\chi^2_{n-r}$, we can easily obtain $Var \left[ n \log \hat{\sigma}^2 \right]$.
 
-Thus, we now derive the variance of the logarithm of a central chi-squared random variable. Let $W \sim \chi^2_{\nu}$, and let $Y = \log(W)$. Note that
-the moment generating function of $Y$ can be expressed as
+Let $W \sim \chi^2_{\nu}$, and let $Y = \log(W)$. Note that the moment generating function of $Y$ can be expressed as
 \begin{equation*}
 	M_Y (t) = E \left[ e^{yt} \right] = E \left[ e^{t\log(w)} \right] = E \left[ e^{\log w^t} \right] = E \left[ w^t \right] .
 \end{equation*}
 Thus, the moment generating function of $Y$ evaluated at $t$ is the $t^{th}$ moment of $W$. The moments of $W$ will have the
-closed form (Lancaster, 1969) of
+closed form of
 \begin{equation*}
 	E \left[ w^t \right] = 2^t \frac{\Gamma (t + \frac{\nu}{2})}{\Gamma (\frac{\nu}{2})} = E \left[ e^{yt} \right] = M_Y (t) .
 \end{equation*}
-We will use this relation to find the moments of $Y$, the logarithm of a central chi-squared random variable.
 
-Taking the first derivative with respect to $t$, we see that
+Taking the first derivative with respect to $t$ of the moment generating function $M_Y (t)$ and evaluating at $t=0$, we find the first moment of $Y$ to be
 \begin{equation*}
-	\frac{\partial M_Y(t)}{\partial t} = (2^t \log 2) \frac{\Gamma (t + \frac{\nu}{2})}{\Gamma (\frac{\nu}{2})} + 2^t \frac{\Gamma ' (t + \frac{\nu}{2})}{\Gamma (\frac{\nu}{2})} .
+	E \left[ Y^1 \right] =  \log 2 + \psi^{(0)} \left( \frac{\nu}{2} \right) ,
 \end{equation*}
-Note that in general $\frac{\Gamma ' (z)}{\Gamma (z)} = \psi^{(0)}(z)$, where $\psi^{(0)}(z)$ is the digamma function. With this relation in mind, we see that the first moment of
-$Y$ can be calculated as
-\begin{equation*}
-	E \left[ Y^1 \right] =  \left. \frac{\partial M_Y(t)}{\partial t} \right|_{t=0} = \log 2 + \psi^{(0)} \left( \frac{\nu}{2} \right) .
-\end{equation*}
-Thus, we have a form for the first moment of the logarithm of a central chi-squared random variable.
-
-Now moving on to calculating the second moment of $Y$, we take the next derivative of the moment generating function with respect to $t$ and see that
-\begin{equation*}
-	\begin{split}
-		\frac{\partial^2 M_Y(t)}{\partial t^2} = (\log 2)^2 2^t  \frac{\Gamma (t + \frac{\nu}{2})}{\Gamma (\frac{\nu}{2})} + 2^{t+1} \log 2 \frac{\Gamma ' (t + \frac{\nu}{2})}{\Gamma (\frac{\nu}{2})} + \\ 
-		2^t \frac{\Gamma '' (t + \frac{\nu}{2})}{\Gamma (\frac{\nu}{2})} .\\
-	\end{split}
-\end{equation*}
-This above expression evaluated at $t = 0$ can be simplified by introducing the trigamma function $ \psi^{(1)}(z)$. Noting that the trigamma function is the derivative with respect
-to $z$ of the digamma function $\psi^{(0)}(z) = \frac{\Gamma ' (z)}{\Gamma (z)}$, it can be seen that
-\begin{equation*}
-	\psi^{(1)}(z) = \frac{\partial \psi^{(0)}(z)}{\partial z} = \frac{\Gamma (z) \Gamma '' (z) - \Gamma '(z) \Gamma '(z)}{(\Gamma(z))^2} .
-\end{equation*}
-By re-arranging this relation, we see that
-\begin{equation*}
-	\Gamma ''(z) = \psi^{(1)}(z) \Gamma(z) + \frac{(\Gamma '(z))^2}{\Gamma(z)} .
-\end{equation*}
-Thus, moving to calculate the second moment of $Y$, we see that
-\begin{equation*}
-	E \left[ Y^2 \right] =  \left. \frac{\partial^2 M_Y(t)}{\partial t^2} \right|_{t=0} =
-	(\log 2)^2 + \psi^{(0)} \left( \frac{\nu}{2} \right) 2 \log 2  + \frac{\Gamma '' (\frac{\nu}{2})}{\Gamma (\frac{\nu}{2})} .
-\end{equation*}
-Using the identity established above involving the trigamma function, we see that this moment can be expressed as
+where $\psi^{(0)}(z)$ is the digamma function. Thus, we have a form for the first moment of the logarithm of a central chi-squared random variable. By taking another
+derivative with respect to $t$ and evaluating at $t=0$, we find the second moment to be
 \begin{equation*}
 	E \left[ Y^2 \right] =
-	(\log 2)^2 + \psi^{(0)} \left( \frac{\nu}{2} \right) 2 \log 2  + \psi^{(1)} \left( \frac{\nu}{2} \right) + \left( \psi^{(0)} \left( \frac{\nu}{2} \right) \right)^2 .
+	(\log 2)^2 + \psi^{(0)} \left( \frac{\nu}{2} \right) 2 \log 2  + \psi^{(1)} \left( \frac{\nu}{2} \right) + \left( \psi^{(0)} \left( \frac{\nu}{2} \right) \right)^2 ,
 \end{equation*}
+where $\psi^{(1)}(z)$ is the digamma function.
 
-Thus, with both the first and second moments of $Y$ in hand, we may calculate the variance. The variance of $Y$, the log of a central chi-squared random variable with
+Therefore, the variance of $Y$, the log of a central chi-squared random variable with
 $\nu$ degrees of freedom, is found to be
 \begin{equation*}
-	Var \left[ Y \right ] = E \left[ Y^2 \right] - \left( E \left[ Y \right] \right)^2 = \psi^{(1)} \left( \frac{\nu}{2} \right) .
+	Var \left[ Y \right] = E \left[ Y^2 \right] - \left( E \left[ Y \right] \right)^2 = \psi^{(1)} \left( \frac{\nu}{2} \right) .
 \end{equation*}
-The variance will simply be the trigamma function evaluated at half of the degrees of freedom. This value can be calculated using software to approximate the trigamma function,
-although it should be noted that this calculation may be unstable for certain values of the degrees of freedom.
+This value can be calculated using software to approximate the trigamma function, although it should be noted that this calculation may be unstable for certain values of the degrees of freedom.
 
-Recalling the distributional result established in (A.1) and relation in (A.2), it is clear that
-\begin{equation*}
-	Var \left[ \log \hat{\sigma}^2 \right] = \psi^{(1)} \left( \frac{n-r}{2} \right)
-\end{equation*}
-based on the variance that has been derived above. Multiplying each side by $n^2$, we see that
+Recalling the distributional result established in (4.3) and the relation in (4.4), it is clear that
 \begin{equation*}
 	Var \left[ n \log \hat{\sigma}^2 \right] = Var \left[ -2 \ell (\hat{\theta} ) \right] = n^2 \psi^{(1)} \left( \frac{n-r}{2} \right).
 \end{equation*}
-Thus, we have established the exact variance of the likelihood goodness-of-fit term in the case of a correctly specified linear model. This exact variance is in contrast to the
-approximate variance found in the main body of this work.
 
 However, while this variance is exact, it still involves an approximation as the trigamma function must be approximated. Additionally, it was found that
 this variance provided no benefit when used in the bootstrap goodness-of-fit procedure developed in this work. Thus, this derivation is presented here only
@@ -775,10 +707,10 @@ natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 %%  Another method
 \begin{thebibliography}{}
 
-\bibitem[Bezanson et al.(2017)]{Bezanson}
-Bezanson, J., Edelman, A., Karpinski, S., and Shah, V.B. (2017).
- Julia: A Fresh Approach to Numerical Computing.
-{\em SIAM Review}~{\bf 59}, 65--98.
+\bibitem[Akaike(1974)]{Akaike}
+Akaike, H. (1974).
+ A new look at the statistical identification model.
+{\em IEEE Transactions on Automatic Control}~{\bf 19}, 716--723.
 
 \bibitem[Breusch and Pagan(1989)]{Breusch}
 Breusch, T.S., and Pagan, A.R. (1989).
@@ -805,10 +737,20 @@ Huber, P.J. (1967).
  The behavior of maximum likelihood estimates under nonstandard conditions.
 {\em Proceedings of the Fifth Berkeley Symposium on Mathematical Statistics and Probability}~{\bf 5}, 221--233.
 
+\bibitem[Koeneman(2023)]{Koeneman}
+Koeneman, S.H. (2023).
+ {\em DBModelSelect: Distribution-Based Model Selection}.
+R package version 0.2.0, \url{https://CRAN.R-project.org/package=DBModelSelect}.
+
 \bibitem[Kutner et al.(2005)]{Kutner}
 Kutner, M.H., Nachtsheim, C.R., Neter, J., and Li, W. (2005).
  {\em Applied Linear Statistical Models}.
 5th Edition. McGraw-Hill Irwin, New York.
+
+\bibitem[McQuarrie and Tsai(1998)]{McQuarrie}
+McQuarrie, A.D.R., and Tsai, C-L (1998).
+ {\em Regression and Time Series Model Selection.}
+1st Edition. World Scientific, New Jersey.
 
 \bibitem[Miles(2014)]{Miles}
 Miles, J. (2014).
@@ -851,14 +793,14 @@ Waldman, D.M. (1983).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vskip .65cm
 \noindent
-Thomas Jefferson University, Division of Biostatistics
+Division of Biostatistics, Department of Pharmacology, Physiology, and Cancer Biology, Sidney Kimmel Medical College, Thomas Jefferson University
 \vskip 2pt
 \noindent
 E-mail: Scott.Koeneman@jefferson.edu
 \vskip 2pt
 
 \noindent
-University of Iowa, Department of Biostatistics
+Department of Biostatistics, College of Public Health, University of Iowa 
 \vskip 2pt
 \noindent
 E-mail: joe-cavanuagh@uiowa.edu

@@ -43,5 +43,5 @@ p <- ggplot(plot_data, aes(x=fitted, y=residuals)) +
   theme(axis.title = element_text(size = 13)) +
   theme(legend.text = element_text(size = 13)) 
 p
-ggsave("../figures/sim5_rsidual_plot.pdf")
+ggsave("../figures/sim3_residual_plot.pdf")
 ```
