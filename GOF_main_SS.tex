@@ -404,8 +404,8 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		all assumptions of normal linear regression. If any of them are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
 		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity. 
 
-		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| package (\cite{Koeneman}), available for download via the Comprehensive R Archive Network.
-		The \verb|BootGOFTestLM| function provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
+		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| (\cite{Koeneman}), available for download via CRAN and Github.
+		The \verb|BootGOFTestLM| function in this package provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
 		
 		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
 		and may use any bootstrap interval they choose so long as it is theoretically justifiable. Additionally, the non-parametric bootstrap is employed in the algorithm detailed above to avoid further
