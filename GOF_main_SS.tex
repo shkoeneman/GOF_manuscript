@@ -102,13 +102,13 @@ $\ $\par
 In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
 to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
 investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
-to other methods of assessing the goodness-of-fit of a normal linear regression model. The technique can be employed using the \verb|DBModelSelect| R package,
+to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \verb|DBModelSelect| R package,
 available freely via the Comprehensive R Archive Network.
 
 
 \vspace{9pt}
 \noindent {\it Key words and phrases:}
-Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
+Information Criteria, Bootstrap, Normal Distribution
 \par
 \end{quotation}\par
 
@@ -132,20 +132,20 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
     	Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
 		and its associated assumptions align with the observed data. The notion of goodness-of-fit is relevant in the model selection realm of information criteria, particularly to the Akaike
 		information criterion (\cite{Akaike}). Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
-		number of estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
+		number of functionally independent estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
 		\begin{equation*}
 			AIC = -2 \ell(\hat{\theta}|y) + 2 p.
 		\end{equation*}
 		The $-2 \ell(\hat{\theta}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
-		conforms to the observed data $y$ (\cite{Cavanaugh}). This term is also present in other likelihood-based information such as the Bayesian information criteria (\cite{Schwarz}).
-		The goodness-of-fit term will only grow smaller, indicating better conformity to the data, as complexity is added to the model, and thus while it is a reasonable measure of
-		goodness-of-fit, other considerations are needed to avoid overfitting.
+		conforms to the observed data $y$ (\cite{Cavanaugh}). This term is also present in other likelihood-based information criteria such as the Bayesian information criterion (\cite{Schwarz}).
+		The goodness-of-fit term will only grow smaller, indicating better conformity to the data as complexity is added to the model. Thus, this goodness-of-fit term ironically does
+		not encompass full goodness-of-fit considerations, and other considerations are needed to avoid overfitting and to detect violations of model assumptions.
 
-		Linear regression analysis makes a number of assumptions about the data at hand, among them conditional independence and linearity, independence of errors that are normally distributed with a mean of zero,
-		and homoskedasticity, that being constant variance. While this work will focus on assessments of the goodness-of-fit and assumptions of traditional normal linear regression models, it is worth noting
+		Linear regression analysis imposes a number of assumptions about the data at hand, among them conditional independence and linearity, independence of errors that are normally distributed with a mean of zero,
+		and homoskedasticity, that being constant error variance. While this work will focus on assessments of the goodness-of-fit and assumptions of traditional normal linear regression models, it is worth noting
 		that assessments of goodness-of-fit exist for many other modeling paradigms as well, and many of the same principles apply.
 		
-		Residual plots serve as a visual method for assessing the appropriateness of a fitted linear regression model (\cite{Miles}). Across different values
+		Residual plots serve as a subjective visual method for assessing the appropriateness of a fitted linear regression model (\cite{Miles}). Across different values
 		of the predictors and observed values, the residuals should not exhibit any specific pattern other than a mean of zero and constant variance if the assumptions of the linear regression model are met.
 		Thus, deviations from this pattern in the form of a residual plot that exhibits curvature, or a change in spread, can indicate violations to linearity and homoskedasticity, respectively. 
 
@@ -159,7 +159,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		the candidate linear regression model against the covariates of interest.
 
 		However, one limitation of the Breusch-Pagan test is that it is only designed to detect a relationship between the covariates and the squared residuals that is linear, and thus it will not
-		produce efficacious results if the heteroskedasticity present is not linear (\cite{Waldman}). An alternative to the Breusch-Pagan test in this matter is the White test for homoskedasticity,
+		produce efficacious results if the heteroskedasticity present is not linear (\cite{Waldman}). An alternative to the Breusch-Pagan test in this regard is the White test for homoskedasticity,
 		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test (\cite{White1980}). The White test produces a test statistic that is sensitive to deviations to
 		the null hypothesis in the form of heteroskedasticity related to the squares and cross products of regressors. Additionally, the test may indicate misspecification of the model if the cross products
 		of certain regressors should be included in the model, but are not.
@@ -167,27 +167,27 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		The various ways in which the White test can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
 		When a hypothesis is rejected, we can be reasonably confident that an assumption is violated; however, by simply performing the test, we do not glean much information as to how exactly the
 		model may be misspecified. This is in contrast to the method of visually observing residual plots wherein specific issues may be easier to identify.
-		If a plot of the residuals versus a covariate exhibits a curved pattern, one may posit a new model that accounts for this curved relationship (\cite{Miles}).
+		For example, if a plot of the residuals versus a covariate exhibits a curved pattern, one may posit a new model that accounts for this curved relationship (\cite{Miles}).
 		However, hypothesis tests offer little direction other than that the current model exhibits lack-of-fit in some manner, and further investigation is necessary to determine next steps.
 
 		In addition, both the White and Breusch-Pagan tests cannot detect heteroskedasticity induced by unobserved covariates, as their auxiliary regressions only use what has been observed. Such heteroskedasticity
-		may not affect the bias and consistency of effect estimates or the validity of inference, but may lead to a loss of efficiency of estimates. 
+		may not affect the bias and consistency of effect estimates, but may lead to a loss of efficiency of estimates. 
 
 		\subsection*{Robust Variance Estimation}
 	
 		When employing likelihood theory to obtain parameter estimates for a model, one can often leverage the properties of maximum likelihood estimators (MLEs) to produce reasonable estimates of the variance of the
-		estimators, and thus perform inference (\cite{Millar}). However, these properties are only guaranteed to hold when the model is properly specified, and improper or inefficient estimates may result when assumptions
+		estimators, and thus perform inference (\cite{Millar}). However, these properties are only guaranteed to hold when the model is properly specified, and inefficient or biased estimates may result when assumptions
 		do not hold. This has given rise to robust variance estimators that rely on fewer assumptions than classical likelihood theory, yet can still quantify the variability of a statistic
 		at hand.
 
 		Huber first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown (\cite{Huber}). White
 		expanded upon this notion by deriving covariance matrix estimates for maximum likelihood estimators that are robust to a variety of different types of misspecification and only assume
 		conditional independence and certain other regularity conditions (\cite{White1980}). Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
-		$n$, White showed the asymptotic relation
+		$n$, White established the asymptotic relation
 		\begin{equation*}
 			\sqrt{n} (\hat{\theta}_n - \theta_*) \xrightarrow[]{d} N(0, C(\theta_* ) ) .
 		\end{equation*}
-		The large sample covariance matrix $C(\theta)$ can be defined using the matrices $A(\theta)$ and $B(\theta)$, where the $(i,j)$ element of $A(\theta)$ is defined as
+		The large sample covariance matrix $C(\theta)$ can be defined using two positive definite matrices $A(\theta)$ and $B(\theta)$, where the $(i,j)$ element of $A(\theta)$ is defined as
 		\begin{equation*}
 			A(\theta)_{i,j} = E \left[ \frac{\partial^2 f(y_t,\theta)}{\partial \theta_i \partial \theta_j} \right] 
 		\end{equation*}
@@ -218,7 +218,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\begin{equation*}
 			C_n(\hat{\theta}_n) \xrightarrow[]{a.s.} C(\theta_* ) .
 		\end{equation*}
-		Thus, we have a variance estimator for the MLE that is both robust to much misspecification and can be calculated using the data, but yet also will be approximately equivalent to the standard
+		Thus, we have a variance estimator for the MLE that is both robust to model misspecification and can be calculated using the data, but yet also will be approximately equivalent to the standard
 		likelihood theory estimator if the model is correctly specified. This sandwich estimator, and others like it, can be used to perform inference related to the parameters if one calls into question
 		the strong assumptions involved in using the traditional maximum likelihood estimator. However, if these assumptions cannot be met and the model appears to be misspecified, one may ponder
 		the merit of performing inference on the pseudo-true parameters in the first place. Therefore, robust variance estimators serve as a hedge against slight deviances from a model
@@ -227,7 +227,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Derivations and Test Formulation}
 
-		We will first explore the variance of the log-likelihood goodness-of-fit term present in likelihood-based information criteria. We will assume that we are in a
+		We will first explore the variance of the log-likelihood goodness-of-fit term present in likelihood-based information criteria. We will assume a
 		scenario where a normal linear regression model is being fit to the data of interest, and that this model is not misspecified. Thus, this model is of the proper
 		parametric family and contains the requisite mean structure, although the mean structure may contain extraneous variables in the
 		case of an overspecified model.
@@ -237,12 +237,12 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 			-2 \ell (\hat{\theta}  ) = n \log(2 \pi) + n + n \log(\hat{\sigma}^2 ) ,
 		\end{equation}
 		where $\hat{\sigma}^2$ denotes the maximum likelihood estimate for the error variance $\sigma^2$. Note that the only term here that is random is
-		the $n \log(\hat{\sigma}^2)$ term. Thus, if we can quantify the variability of this term, we can quantify the variability of the entire goodness-of-fit
+		the statistic $n \log(\hat{\sigma}^2)$. Thus, if we can quantify the variability of this term, we can quantify the variability of the entire goodness-of-fit
 		term.
 
 		To achieve this end, we first consider $\hat{\sigma}^2$. As the linear model is assumed to not be misspecified, and $\hat{\sigma}^2$ is a maximum likelihood
-		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information (\cite{Fisher}). In the case of a single
-		observation, the Fisher information as it relates to the parameter vector $\theta' = [\beta', \sigma^2]$, where $\beta$ represents the regression coefficients
+		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information (\cite{Fisher}). The Fisher information as it relates
+		to the parameter vector $\theta' = [\beta', \sigma^2]$, where $\beta$ represents the regression coefficients
 		present in the model, can be shown to be
 		\begin{equation*}
 			- E \left[ \frac{\partial^2 \ell (\hat{\theta}  )}{\partial \theta^2} \right] = \mathcal{I}_{n}(\theta) =
@@ -252,11 +252,10 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 			\end{bmatrix}
 			,
 		\end{equation*}
-		where $X$ is the design matrix of the regression, and $0$ is a vector of zeroes. Thus, if we assume we have a single observation
-		such that $n=1$, we may take the inverse of the Fisher information matrix and isolate the element related to the error variance $\sigma^2$. We see that
-		this element will be
+		where $X$ is the design matrix of the regression, and $0$ is a vector of zeroes. Thus, we may take the inverse of the Fisher information matrix and isolate
+		the element related to the error variance $\sigma^2$. We see that this element will be
 		\begin{equation*}
-			\mathcal{I}_{1}^{-1}(\sigma ^2) = 2 \sigma ^4 .
+			\mathcal{I}^{-1}(\sigma ^2) = \frac{2 \sigma ^4}{n} .
 		\end{equation*}
 		
 		Using the above relation, and applying the property of asymptotic normality of the MLE $\hat{\sigma}^2$ in this case of a properly specified normal linear
@@ -267,9 +266,9 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		should hold.
 
 		To find the variance of $-2 \ell (\hat{\theta}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
-		Additionally, the above asymptotic distribution involves the true $\sigma^2$ to which we will not have access in most modeling scenarios.
+		Additionally, the above asymptotic distribution involves the true $\sigma^2$ to which we will not have access in practical scenarios.
 
-		We will solve both of these issues by employing the delta method (\cite{Rao}). We propose a transformation of the form
+		We will address both of these issues by employing the delta method (\cite{Rao}). We propose a transformation of the form
 		\begin{equation*}
 			g(x) = \log(x) .
 		\end{equation*}
@@ -288,7 +287,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 			Var \left[ -2 \ell (\hat{\theta}  ) \right] \approx 2n
 		\end{equation*}
 		is justified. Furthermore, $2n$ could also serve as an approximation to the variance of AIC or BIC for this correctly specified linear regression model. This approximation
-		is extremely easy to compute, and has the same form no matter the complexity of the design matrix $X$ or value of the true parameters $\theta$, making it useful as a
+		has the same form no matter the complexity of the design matrix $X$ or value of the true parameters $\theta$, making it useful as a
 		general tool.
 
 		It should be noted that this approximation does rely on asymptotic properties. In the Appendix, an exact variance for $-2 \ell (\hat{\theta})$ is found which does
@@ -299,8 +298,8 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		that need not assume a given fitted normal linear regression model is correctly specified.
 
 		Assume that we once again fit a linear regression model with parameters $\theta' = [\beta', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
-		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$. This estimator will be constructed using the White robust sandwich variance estimator, employing
-		much of the notation related to this development that was introduced in the first section of this work (\cite{White1980}).
+		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$ that is robust to model misspecification. This estimator will be constructed using the White robust
+		sandwich variance estimator, employing much of the notation related to this development that was introduced in the first section of this work (\cite{White1980}).
 
 		We let $I_{n} (\theta)$ denote the observed information matrix with regards to our specified linear regression model. With $X$ denoting the $n$ by $r$ design matrix, we see that
 		the quantity $A_n (\theta)$ used in the White estimator is found to be 
@@ -322,7 +321,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 			\end{bmatrix}
 			.
 		\end{equation*}
-		With these score components defined, we can then use the preceding to represent the matrix $B_n (\theta)$ used in the White estimator as
+		With these components defined, we can then use the preceding to represent the matrix $B_n (\theta)$ used in the White estimator as
 		\begin{equation*}
 			B_n(\theta) = \frac{1}{n} \sum_{i=1}^{n} U_i(\theta) U_i(\theta)' .
 		\end{equation*}
@@ -334,8 +333,10 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 				& = n I_n^{-1}(\hat{\theta}) \left[ \sum_{i=1}^{n} U_i(\hat{\theta}) U_i(\hat{\theta})' \right] I_n^{-1}(\hat{\theta}) ,
 			\end{split}
 		\end{equation*}
-		where $C_n(\hat{\theta})$ will be a $r+1$ by $r+1$ matrix that can be used as an estimator of the asymptotic variance-covariance matrix of $\hat{\theta}$. This estimator is robust to misspecification
-		of the model. Consider the bottom rightmost element of this matrix, that being the $(r+1)^{th}$ element of the $(r+1)^{th}$ column of the matrix. This element will correspond to the large-sample
+		where $C_n(\hat{\theta})$ will be a $(r+1)$ by $(r+1)$ matrix that can be used as an estimator of the asymptotic variance-covariance matrix of $\hat{\theta}$. This estimator is robust to misspecification
+		of the model.
+		
+		Consider the bottom rightmost element of this matrix, that being the $(r+1)^{th}$ element of the $(r+1)^{th}$ column of the matrix. This element will correspond to the large-sample
 		robust variance of $\hat{\sigma}^2$. Let $s(\theta)$ refer to this corresponding element in the case of the theoretical matrix $C(\theta)$, and $s_n(\hat{\theta})$ refer to this
 		corresponding element of the estimator $C_n(\hat{\theta})$. By White's results, it can then be seen that
 		\begin{equation}
@@ -355,15 +356,15 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		\begin{equation*}
 			n\log(\hat{\sigma}^2) \; \dot\sim \; N \left( n\log(\sigma_* ^2), \frac{n}{\sigma_*^4} s(\theta_*) \right) ,
 		\end{equation*}
-		which could be suitable for use in finite sample sizes that are sufficiently large. However, $\sigma_*^2$ and $s(\theta_*)$ are likely to be unknown in practical modeling
+		which could be suitable for use in finite sample sizes that are sufficiently large. However, $\sigma_*^2$ and $s(\theta_*)$ are unlikely to be unknown in practical modeling
 		applications. Thus, estimating these quantities with $\hat{\sigma}^2$ and $s_n(\hat{\theta})$ respectively, a reasonable estimate for the variance of $n\log(\hat{\sigma}^2)$ can
-		be found to be
+		be proposed as
 		\begin{equation*}
 			Var \left[ n\log(\hat{\sigma}^2) \right] \approx \frac{n}{\hat{\sigma}^4} s_n(\hat{\theta}) .
 		\end{equation*}
 		By the relation presented in (2.1), it is clear that this variance estimate is also suitable for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$, and therefore
-		likelihood-based information criteria as a whole that possess a constant penalty term. This estimator should converge to our previously derived value $2n$ in the case of a correctly
-		specified model, as the sandwich estimator component will converge to the expected Fisher information used earlier, and the MLE $\hat{\sigma}^2$ should converge to the true
+		likelihood-based information criteria as a whole that possess a constant penalty term. This estimator should approximate our previously derived value $2n$ in the case of a correctly
+		specified model, as the sandwich estimator component will approximate the expected Fisher information used earlier, and the MLE $\hat{\sigma}^2$ should converge to the true
 		parameter value $\sigma^2$. However, this sandwich estimator need not assume correct specification, and should be relatively robust to model misspecification.
 		
 		For the remainder of this work, this sandwich estimator will be referred to as $\widehat{Var}[GOF]$, such that
@@ -399,7 +400,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 
 		This procedure can be used to assess the general hypothesis that a normal linear regression model is properly specified against the alternative that it displays lack-of-fit.
 		Unlike other goodness-of-fit tests and procedures, this method does not test a specific assumption of linear regression such as normality or homoskedasticity, but rather
-		all assumptions of normal linear regression. If any of them are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
+		many assumptions of normal linear regression. If some assumptions are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
 		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity. 
 
 		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| (\cite{Koeneman}), available for download via CRAN and Github.
@@ -408,7 +409,7 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
 		and may use any bootstrap interval they choose so long as it is theoretically justifiable. Additionally, the non-parametric bootstrap is employed in the algorithm detailed above to avoid further
 		assumptions. Limited testing results suggest that the residual bootstrap may also work just as well in this procedure. However, pending further investigation, the non-parametric
-		bootstrap is recommended at the current time. All simulations presented in this work will use the non-parametric bootstrap flavor of the procedure.
+		bootstrap is recommended at the current time. All simulations presented in this work will use the non-parametric bootstrap implementation of the procedure.
 
 %\begin{figure}[t!]
 %\includegraphics [angle=-90, scale=0.45]{carat}\par
@@ -422,27 +423,26 @@ Linear Regression, Goodness-of-Fit, Information Criteria, Bootstrap, Normal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Simulation Studies}
 
-Four simulations will be employed to assess the efficacy of the bootstrap procedure developed in the previous section. In each simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
+Four simulation settings will be employed to assess the efficacy of the bootstrap procedure developed in the previous section. In each simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
 be generated for $i = 1,...,n$ according to
 \begin{equation*}
 	y_i = 2.0 + 2.0 x_{i1} + 2.0 x_{i2} + \epsilon_i , 
 \end{equation*}
 with the nature of the error term $\epsilon$ and the fitted candidate model varying between different simulations.
 
-In the first simulation, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
-a $Uniform(0,5)$ distribution. Note this formulation is one of a normal linear regression model with an intercept and an effect for each covariate present. With the generated data in hand, we will
-proceed to fit a normal linear regression model that includes an intercept and effects for $x_{i1}$ and $x_{i2}$. This model is properly specified, and should not exhibit gross lack-of-fit.
+In the first simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
+a $Uniform(0,5)$ distribution. With the generated data in hand, we will proceed to fit a normal linear regression model that includes an intercept and effects for $x_{i1}$ and $x_{i2}$. This model
+is properly specified, and should not exhibit gross lack-of-fit.
 
-In the second simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
+In the second simulation scenario, once again each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
 a $Uniform(0,5)$ distribution. However, in this case the fitted model will be a normal linear regression model with an intercept and effect for only
-$x_{i1}$. The covariate $x_{i2}$ will be omitted from the model, and could be viewed as a characteristic that affects the true generating process, but
-was unobserved in data collection. This omission will induce mean misspecification into this fitted model as the mean structure will be underspecified.
+$x_{i1}$. The covariate $x_{i2}$ will be omitted from the model, and could be viewed as a factor that affects the true generating process, but
+was unobserved in data collection. This omission will induce mean misspecification for this fitted model as the mean structure will be underspecified.
 
 In the third simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$, and $x_{i1}$, $x_{i2}$, and $x_{i3}$ are completely $iid$ covariates
 generated according to a $Uniform(0,5)$ distribution. Note that heteroskedasticity is introduced into this model courtesy of $x_{i3}$ affecting the error variance. The fitted model for
-this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$, but will be fit assuming uniform variance.
-This will result in unbiased estimates, and standard inference will be valid as well, as the heteroskedasticity present is related to a variable that isn't included in the model matrix; however,
-these estimates are not guaranteed to be the most efficient, and could be improved by including information regarding $x_{i3}$.
+this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$, but will be fit assuming constant variance.
+This will result in unbiased regression parameter estimates; however, these estimates are not guaranteed to be the most efficient, and could be improved by including information regarding $x_{i3}$.
 
 In the final simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + 0.5 x_{i2})^2 \right)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
 a $Uniform(0,5)$ distribution. The fitted model for this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$,
@@ -452,7 +452,7 @@ specified if it assumes homoskedasticity, leading to potentially improper infere
 In each simulation, the bootstrap goodness-of-fit test, White test, and Breusch-Pagan test will each be performed at the $\alpha = .05$ level on the  fitted model. We expect the tests to roughly maintain their
 Type~I error rates in the cases where the null hypothesis of each is true, and reveal the power of the test in the simulations where the null hypothesis is violated. After many simulation iterations, the
 Type~I error rates or power of each test will be calculated based on the proportion of times each test rejected its null hypothesis. Each simulation will be performed for $n = 100, 500, 1000$ and $2500$, with $1000$
-bootstrap iterations for all simulation. The simulation will be performed $1000$ times for each value of $n$.
+bootstrap iterations for all sets. The simulation will be generate $1000$ samples for each value of $n$, performing the tests each time.
 
 The code for the simulations can be found at \url{https://github.com/shkoeneman/GOF_manuscript/tree/main/scripts}. The results for the first simulation
 can be found in the table below.
@@ -477,8 +477,8 @@ can be found in the table below.
 \end{table}
 
 The bootstrap test exhibits anti-conservative behavior across all values of $n$ with the empirically determined Type~I error rate exceeding the desired Type~I error rate
-of $\alpha = 0.05$ in all scenarios. However, as $n$ increases, the empirical Type~I error rate appears to be decreasing towards the desired value, albeit perhaps somewhat slowly. Additionally, the
-behavior of the test is consistently anti-conservative for the scenarios shown. Thus, when using the procedure, one may keep in mind that the test may be more prone to
+of $\alpha = 0.05$ in all scenarios. However, as $n$ increases, the empirical Type~I error rate appears to be decreasing towards the desired value, albeit perhaps somewhat slowly. Thus, when
+using the procedure, one should keep in mind that the test may be more prone to
 rejection than one might expect, particularly for small sample sizes before asymptotic properties of the test truly manifest. The White and Breusch-Pagan tests roughly maintain
 the desired Type~I error rate across all values of $n$.
 
@@ -508,10 +508,10 @@ with the test appearing to possess near-perfect power as the value of $n$ approa
 misspecification on account of an unobserved covariate, and the power to detect this misspecification rises as the sample size increases as one would expect.
 
 In contrast, the White test and Breusch-Pagan test both seem to only maintain their Type~I error rates established in Simulation 3. This performance was to be expected
-as the null hypotheses of these tests are not violated in this scenario. However, this simulation setting does demonstrate how the inability of a goodness-of-fit test to detect lack of
+as the null hypotheses of these tests are not violated in this scenario. However, this simulation setting does demonstrate how the inability of a goodness-of-fit test to detect improper
 fit does not mean lack-of-fit is not present, as these two tests are limited in the scope of misspecification they are able to detect.
 
-Figure 1 presents a residual plot generated by fitting the specified model of the third simulation to data generated according to the specification of the third simulation. Note the seemingly
+Figure 1 presents a residual plot generated by fitting the specified model for the third simulation setting to data generated as described for this setting. Note the seemingly
 patternless, constant variance spread, indicating that one would not find reason to think any assumption of linear regression was violated. 
 
 \begin{figure}[H]
@@ -542,13 +542,13 @@ The results for the third simulation can be found in the table below.
 \end{table}
 
 The bootstrap test seems to only exhibit power in line with its empirical Type~I error rate displayed in Simulation 3 for $n = 100$, and appears to require a relatively high sample size to produce
-adequate power. However, the test does seem to be able to detect this violation of homoskedasticity. In contrast, the White test and Breusch-Pagan test exhibit only power in line with their Type~I error
+adequate power. However, the test does seem to eventually be able to detect this violation of homoskedasticity. In contrast, the White test and Breusch-Pagan test exhibit only power in line with their Type~I error
 rates established in Simulation 3, and thus do not seem to be able to detect this form of heteroskedasticity, as the residual plot could not. This reveals how the subtleness of this homoskedasticity,
-which should not affect bias of estimates, but may affect efficiency and therefore inference.
+which should not affect bias of estimates, but may affect efficiency.
 
-This limitation in detection is on account of how the Breusch-Pagan and White tests and residual plots are constructed, as they rely on looking for heteroskedasticity that is induced by observed covariates.
+This limitation in detection is on account of how the Breusch-Pagan and White tests and residual plots are constructed, as they rely on the detection of heteroskedasticity that is induced by observed covariates.
 When heteroskedasticity is induced by an unobserved covariate that is not used in the model, the White test and Breusch-Pagan test cannot ascertain that their
-null hypotheses of homoskedasticity are violated, and residual plots do not show any visible heteroskedasticity. However, the bootstrap test is able to reject its more general null hypothesis.
+null hypotheses of homoskedasticity are violated, and residual plots do not show any visible heteroskedasticity. However, the bootstrap test is able to reject its null hypothesis.
 
 The results for the fourth and final simulation can be found in the table below.
 
@@ -582,25 +582,24 @@ it requires a very large sample size to have adequate power.
 
 In this work, we have developed a new bootstrap-based goodness-of-fit procedure to assess the goodness-of-fit of a fitted normal linear regression model. In order
 to develop this test, we first derived an asymptotic variance for the goodness-of-fit term present in likelihood-based information criteria such as AIC under the assumption
-that the fitted regression model is properly specified. The test functions by assessing whether an estimated variance conforms to the
-theoretical value under proper specification. Simulation studies demonstrated the ability of this bootstrap test to detect a wide variety of violations of assumptions used in
-normal linear regression. These violations include mean misspecification and violations to homoskedasticity, and this new procedure has the potential to serve as an omnibus
+that the fitted regression model is properly specified. The test functions by assessing whether a robust estimated variance conforms to the
+theoretical value under proper specification. Simulation studies demonstrated the ability of this bootstrap test to detect a wide variety of violations of assumptions inherent to
+normal linear regression. These violations include mean misspecification and violations to homoskedasticity. As such, this new procedure has the potential to serve as an omnibus
 goodness-of-fit procedure for normal linear regression models. Additionally, we developed the \verb|BootGOFTestLM| function of the R package \verb|DBModelSelect| to provide
 an efficient and convenient method of performing the test.
 
 This procedure has the potential to assist in model selection. For example, if one were to consider a normal linear regression framework to model a certain outcome, one may
 choose to employ the bootstrap test on the largest possible model in consideration, as if this model is misspecified, then all nested models will also be misspecified.
 If the test does not reject its null hypothesis of proper specification, one could proceed with the normal linear regression framework and select a final model using
-an information criteria such as AIC or BIC, or by employing another method such as cross validation.
+an information criterion such as Mallows' Cp, or by employing another method such as cross validation.
 
 This bootstrap procedure is not without its drawbacks. While the test is able to detect heteroskedasticity induced by unobserved covariates, this may be viewed as a detriment,
-as this form of heteroskedasticity will not affect bias or invalidate classical likelihood inference, and will only affect efficiency of estimates. Thus, if the test rejects its
+as this form of heteroskedasticity will not affect bias, and only efficiency. Without knowledge of unobserved covariates, one may not be able to improve efficiency. Thus, if the test rejects its
 null hypothesis but one still would like  to move forward with a normal linear regression model, it is recommended to use robust estimates for the variance of estimated effects
 to hedge against performing improper inference. Simulations showed that the bootstrap test may be underpowered for small sample sizes. Additionally, the test may be overpowered for real-life datasets with large sample sizes, resulting in rejection of the null hypothesis
 when in fact a linear regression is a reasonable model. This is a feature common to many goodness-of-fit tests, and must be remembered when performing an analysis on observed data.
 
-Potential future work involves finding similar procedures that can be used for other modeling frameworks, and finding further applications for the variance for
-the goodness-of-fit term present in likelihood-based information criteria.
+Potential future work involves finding similar procedures that can be used for other modeling frameworks.
 
 
 
@@ -785,13 +784,13 @@ Waldman, D.M. (1983).
 \end{thebibliography}
 
 
-
+\pagebreak
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vskip .65cm
 \noindent
-Division of Biostatistics, Department of Pharmacology, Physiology, and Cancer Biology, Sidney Kimmel Medical College, Thomas Jefferson University
+Division of Biostatistics and Bioinformatics, Department of Pharmacology, Physiology, and Cancer Biology, Sidney Kimmel Medical College, Thomas Jefferson University
 \vskip 2pt
 \noindent
 E-mail: Scott.Koeneman@jefferson.edu
