@@ -1,0 +1,448 @@
+---
+title: "Testing IM Tests"
+author: "Scott Koeneman"
+date: "2023-10-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list=objects())
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+WhiteIMTest <- function(model){
+  if(!inherits(x,"lm")){
+    stop("Model supplied is not a linear model. A model of class lm must be supplied.")
+  }
+  
+  #Get needed quantities
+  n <- nobs(model)
+  y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+  X <- model.matrix(model)
+  p <- ncol(X)
+  b <- matrix(coef(model), nrow = p, ncol = 1)
+  sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+  
+  #Get test statistic
+  teststat <- IMTestStat(b, n, y, X, p, sighat2)
+  
+  #Get p-value
+  teststat$p.value <- 1-dchisq(teststat$TestStat, df = teststat$df)
+}
+
+vech <- function(x){
+    return(t(t(x[!upper.tri(x)])))
+}
+
+GInv <- function(X, tol = sqrt(.Machine$double.eps)){
+    if (length(dim(X)) > 2L || !(is.numeric(X) || is.complex(X))) 
+        stop("'X' must be a numeric or complex matrix")
+    if (!is.matrix(X)) 
+        X <- as.matrix(X)
+    Xsvd <- svd(X)
+    if (is.complex(X)) 
+        Xsvd$u <- Conj(Xsvd$u)
+    Positive <- Xsvd$d > max(tol * Xsvd$d[1L], 0)
+    if (all(Positive)) 
+        Xsvd$v %*% (1/Xsvd$d * t(Xsvd$u))
+    else if (!any(Positive)) 
+        array(0, dim(X)[2L:1L])
+    else Xsvd$v[, Positive, drop = FALSE] %*% ((1/Xsvd$d[Positive]) * 
+        t(Xsvd$u[, Positive, drop = FALSE]))
+}
+
+ACalc <- function(b, n, y, X, p, sighat2){
+  A <- Reduce("+", AComps(b, n, y, X, p, sighat2))*(1/n)
+  return(A)
+}
+
+AComps <- function(b, n, y, X, p, sighat2){
+  
+  comps <- lapply(1:n, FUN = function(ii){
+  mat <- matrix(0, nrow = p+1, ncol = p+1)
+  lil_X <- matrix(X[ii,], nrow = 1, ncol = p)
+  lil_y <- y[ii]
+  mat[1:p,1:p] <- -(t(lil_X)%*%lil_X)/sighat2
+  mat[1:p,p+1] <- t(t(lil_y-lil_X%*%b)%*%lil_X/(sighat2^2))
+  mat[p+1,1:p] <- t(lil_y-lil_X%*%b)%*%lil_X/(sighat2^2)
+  mat[p+1,p+1] <- 1/(2*sighat2^2) - t(lil_y-lil_X%*%b)%*%(lil_y-lil_X%*%b)/(sighat2^3)
+  return(mat)
+  })
+  
+  return(comps)
+  
+}
+
+BCalc <- function(b, n, y, X, p, sighat2){
+  B <- Reduce("+", BComps(b, n, y, X, p, sighat2))*(1/n)
+  return(B)
+}
+
+BComps <- function(b, n, y, X, p, sighat2){
+  comps <- lapply(1:n, FUN = function(x){
+    score_term <- matrix(c((y[x] - (X[x,]%*%b))%*%t(X[x,])/sighat2,
+                           (y[x] - (X[x,]%*%b))^2/(2*sighat2^2) - (1/(2*sighat2))),
+                         nrow = p+1, ncol = 1)
+    return(score_term%*%t(score_term))
+  })
+  return(comps)
+}
+
+ScoreComps <- function(b, n, y, X, p, sighat2){
+  comps <- lapply(1:n, FUN = function(x){
+    score_term <- matrix(c((y[x] - (X[x,]%*%b))%*%t(X[x,])/sighat2,
+                           (y[x] - (X[x,]%*%b))^2/(2*sighat2^2) - (1/(2*sighat2))),
+                         nrow = p+1, ncol = 1)
+    return(score_term)
+  })
+  return(comps)
+}
+
+DCalc <- function(b_sig, n, y, X, p, sighat2){
+  b <- b_sig[1:(length(b_sig)-1)]
+  sighat2 <- b_sig[length(b_sig)]
+  Acomps <- AComps(b, n, y, X, p, sighat2)
+  Bcomps <- BComps(b, n, y, X, p, sighat2)
+  total <- Reduce("+", lapply(1:n, FUN = function(ii){
+    return(Acomps[[ii]] + Bcomps[[ii]])
+  }))
+  D <- (1/n)*vech(total)
+  #D <- (1/n)*diag(total)
+  return(D)
+}
+
+DComps <- function(b, n, y, X, p, sighat2){
+  Acomps <- AComps(b, n, y, X, p, sighat2)
+  Bcomps <- BComps(b, n, y, X, p, sighat2)
+  comps <- lapply(1:n, FUN = function(ii){
+    return(Acomps[[ii]] + Bcomps[[ii]])
+  })
+  return(comps)
+}
+
+VComps <- function(b, n, y, X, p, sighat2){
+  A <- ACalc(b, n, y, X, p, sighat2)
+  Dcomps <- DComps(b, n, y, X, p, sighat2)
+  Scorecomps <- ScoreComps(b, n, y, X, p, sighat2)
+  DGrad <- numDeriv::jacobian(DCalc, c(b,sighat2), n = n, y = y, X = X, p = p, sighat2 = sighat2)
+  comps <- lapply(1:n, FUN = function(ii){
+    d <- Dcomps[[ii]]
+    #d <- matrix(diag(d), ncol = 1 )
+    d <- matrix(vech(d), ncol = 1 )
+    score <- Scorecomps[[ii]]
+    term <- d - (DGrad %*% solve(A) %*% score)
+    return(term%*%t(term))
+  })
+  return(comps)
+}
+VCalc <- function(b, n, y, X, p, sighat2){
+  V <- Reduce("+", VComps(b, n, y, X, p, sighat2))*(1/n)
+  return(V)
+}
+IMTestStat <-  function(b, n, y, X, p, sighat2){
+  D <- matrix(DCalc(c(b,sighat2), n, y, X, p, sighat2), ncol = 1)
+  V <- VCalc(b, n, y, X, p, sighat2)
+  return(list(TestStat = n*as.numeric(t(D)%*%GInv(V)%*%D),
+              df = nrow(D)))
+}
+
+OPGTest <- function(b, n, y, X, p, sighat2){
+  #Get regressors
+  scorecomps <- ScoreComps(b, n, y, X, p, sighat2)
+  gmat <- do.call(rbind,lapply(scorecomps,t))
+  dcomps <- DComps(b, n, y, X, p, sighat2)
+  zmat <- do.call(cbind,lapply(dcomps,vech))
+  zmat <- t(zmat)
+  #Perform regression
+  ones <- numeric(n) + 1
+  regmat <- cbind(gmat,zmat)
+  OPG_reg <- lm(ones ~ regmat + 0)
+  test_stat <- n*(summary(OPG_reg))$r.squared
+  return(list(TestStat = test_stat,
+              df = ncol(zmat)))
+}
+
+############################################################
+### Parametric Bootstrap Variant from King/Dhaene Papers ###
+############################################################
+
+#Try bootstrap covar
+
+BootDCalc <- function(b, n, y, X, p, sighat2){
+  sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+  Acomps <- AComps(b, n, y, X, p, sighat2)
+  Bcomps <- BComps(b, n, y, X, p, sighat2)
+  total <- Reduce("+", lapply(1:n, FUN = function(ii){
+    return(Acomps[[ii]] + Bcomps[[ii]])
+  }))
+  #D <- sqrt(1/n)*diag(total)
+  D <- sqrt(1/n)*vech(total)
+  return(D)
+}
+
+BootIMTest <- function(b, n, y, X, p, sighat2, boot_iters = 500){
+  
+  mu <- X%*%b
+  
+  out <- lapply(1:boot_iters, FUN = function(x){
+    boot_y <- rnorm(n, mu, sqrt(sighat2))
+    boot_model <- lm(boot_y ~ X + 0)
+    boot_n <- nobs(boot_model)
+    boot_X <- X
+    boot_p <- ncol(boot_X)
+    boot_b <- matrix(coef(boot_model), nrow = boot_p, ncol = 1)
+    boot_sighat2 <- as.numeric(t(boot_y-(boot_X%*%boot_b)) %*% (boot_y-(boot_X%*%boot_b))*(1/boot_n))
+    return(BootDCalc(boot_b, boot_n, boot_y, boot_X, boot_p, boot_sighat2))
+  })
+  out <- t(do.call(cbind, out))
+  boot_d <- BootDCalc(b, n, y, X, p, sighat2)
+  test_stat <- t(boot_d)%*%GInv(cov(out))%*%boot_d
+  
+  df1 <- nrow(boot_d)
+  df2 <- boot_iters - 1
+  f_stat <- ((boot_iters - df1)/(df1*df2))*test_stat
+  pval <- pf(f_stat, df1 = df1, df2 = boot_iters-df1, lower.tail = FALSE)
+  
+  return(list(TestStat = test_stat,
+              pval = pval))
+  
+}
+
+
+###################
+### Simulations ###
+###################
+
+#Set up parallel cluster
+library(parallel)
+cl <- makeCluster(detectCores()-1)
+clusterExport(cl, objects()[objects() != "cl"])
+#Set up seeds
+seed_list <- seq(100, 100*(detectCores()-1),by=100)
+invisible(parLapply(cl,seed_list,fun = function(x){set.seed(x)}))
+
+#Perform tests many times
+test_iters <- 1000
+ns <- c(50, 100, 250, 500, 750, 1000, 2500)
+
+####################
+### Type I Error ###
+####################
+
+out_table <- data.frame(
+  n = ns,
+  Classic = numeric(length(ns)),
+  OPG = numeric(length(ns)),
+  BootV = numeric(length(ns)),
+  BootGOF = numeric(length(ns))
+)
+
+for(ii in 1:length(ns)){
+  n <- ns[ii]
+  clusterExport(cl, "n")
+  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
+    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
+    model <- lm(y ~ x1 + x2, data = data)
+    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+    X <- model.matrix(model)
+    p <- ncol(X)
+    b <- matrix(coef(model), nrow = p, ncol = 1)
+    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+    return(data.frame(
+      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+      White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
+    ))
+  })
+  reject_props <- colMeans(do.call(rbind, rejects))
+  out_table$n[ii] <- n
+  out_table[ii,2:7] <- reject_props
+}
+#Print out table
+print(out_table)
+write.csv(out_table,"../data/Sim1Table.csv")
+
+############################################
+### Power when Missing Covariate in Mean ###
+############################################
+
+
+out_table <- data.frame(
+  n = ns,
+  Classic = numeric(length(ns)),
+  OPG = numeric(length(ns)),
+  BootV = numeric(length(ns)),
+  BootGOF = numeric(length(ns))
+)
+
+for(ii in 1:length(ns)){
+  n <- ns[ii]
+  clusterExport(cl, "n")
+  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
+    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
+    model <- lm(y ~ x1, data = data)
+    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+    X <- model.matrix(model)
+    p <- ncol(X)
+    b <- matrix(coef(model), nrow = p, ncol = 1)
+    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+    return(data.frame(
+      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+      White = as.numeric( (whitestrap::white_test(model))$p_value < 0.05)
+    ))
+  })
+  reject_props <- colMeans(do.call(rbind, rejects))
+  out_table$n[ii] <- n
+  out_table[ii,2:7] <- reject_props
+}
+#Print out table
+print(out_table)
+write.csv(out_table,"../data/Sim2Table.csv")
+
+###################################################################
+### Power when Missing Covariate in Mean - Correlated Surrogate ###
+###################################################################
+
+
+out_table <- data.frame(
+  n = ns,
+  Classic = numeric(length(ns)),
+  OPG = numeric(length(ns)),
+  BootV = numeric(length(ns)),
+  BootGOF = numeric(length(ns))
+)
+
+for(ii in 1:length(ns)){
+  n <- ns[ii]
+  clusterExport(cl, "n")
+  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
+    data$x3 <- 0.3*data$x2 + 0.7*runif(n,0,5)
+    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
+    model <- lm(y ~ x1 + x3, data = data)
+    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+    X <- model.matrix(model)
+    p <- ncol(X)
+    b <- matrix(coef(model), nrow = p, ncol = 1)
+    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+    return(data.frame(
+      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+      White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
+    ))
+  })
+  reject_props <- colMeans(do.call(rbind, rejects))
+  out_table$n[ii] <- n
+  out_table[ii,2:7] <- reject_props
+}
+#Print out table
+print(out_table)
+write.csv(out_table,"../data/Sim3Table.csv")
+
+######################################################
+### Power when Missing Covariate in Error Variance ###
+######################################################
+
+
+out_table <- data.frame(
+  n = ns,
+  Classic = numeric(length(ns)),
+  OPG = numeric(length(ns)),
+  BootV = numeric(length(ns)),
+  BootGOF = numeric(length(ns))
+)
+
+for(ii in 1:length(ns)){
+  n <- ns[ii]
+  clusterExport(cl, "n")
+  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5), x3 = runif(n,0,5))
+    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2 + data$x3)
+    model <- lm(y ~ x1 + x2, data = data)
+    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+    X <- model.matrix(model)
+    p <- ncol(X)
+    b <- matrix(coef(model), nrow = p, ncol = 1)
+    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+    return(data.frame(
+      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+      White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
+    ))
+  })
+  reject_props <- colMeans(do.call(rbind, rejects))
+  out_table$n[ii] <- n
+  out_table[ii,2:7] <- reject_props
+}
+#Print out table
+print(out_table)
+write.csv(out_table,"../data/Sim4Table.csv")
+
+#######################################################
+### Power when Observed Covariate in Error Variance ###
+#######################################################
+
+# Crashed before this initially, set a new seed for replicability of full simulation
+seed_list <- seq(1000, 1000*(detectCores()-1),by=1000)
+invisible(parLapply(cl,seed_list,fun = function(x){set.seed(x)}))
+
+out_table <- data.frame(
+  n = ns,
+  Classic = numeric(length(ns)),
+  OPG = numeric(length(ns)),
+  BootV = numeric(length(ns)),
+  BootGOF = numeric(length(ns))
+)
+
+for(ii in 1:length(ns)){
+  n <- ns[ii]
+  clusterExport(cl, "n")
+  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
+    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2 + 0.5*data$x2)
+    model <- lm(y ~ x1 + x2, data = data)
+    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+    X <- model.matrix(model)
+    p <- ncol(X)
+    b <- matrix(coef(model), nrow = p, ncol = 1)
+    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+    return(data.frame(
+      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+      White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
+    ))
+  })
+  reject_props <- colMeans(do.call(rbind, rejects))
+  out_table$n[ii] <- n
+  out_table[ii,2:7] <- reject_props
+}
+#Print out table
+print(out_table)
+write.csv(out_table,"../data/Sim5Table.csv")
+
+```

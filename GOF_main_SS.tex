@@ -108,7 +108,7 @@ available freely via the Comprehensive R Archive Network.
 
 \vspace{9pt}
 \noindent {\it Key words and phrases:}
-Information Criteria, Bootstrap, Normal Distribution
+Information Criteria, Resampling, Normal Distribution
 \par
 \end{quotation}\par
 
@@ -138,7 +138,7 @@ Information Criteria, Bootstrap, Normal Distribution
 		\end{equation*}
 		The $-2 \ell(\hat{\theta}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
 		conforms to the observed data $y$ (\cite{Cavanaugh}). This term is also present in other likelihood-based information criteria such as the Bayesian information criterion (\cite{Schwarz}).
-		The goodness-of-fit term will only grow smaller, indicating better conformity to the data as complexity is added to the model. Thus, this goodness-of-fit term ironically does
+		The goodness-of-fit term will only grow smaller, indicating better conformity to the data, as complexity is added to the model. Thus, this goodness-of-fit term ironically does
 		not encompass full goodness-of-fit considerations, and other considerations are needed to avoid overfitting and to detect violations of model assumptions.
 
 		Linear regression analysis imposes a number of assumptions about the data at hand, among them conditional independence and linearity, independence of errors that are normally distributed with a mean of zero,
@@ -164,7 +164,13 @@ Information Criteria, Bootstrap, Normal Distribution
 		the null hypothesis in the form of heteroskedasticity related to the squares and cross products of regressors. Additionally, the test may indicate misspecification of the model if the cross products
 		of certain regressors should be included in the model, but are not.
 
-		The various ways in which the White test can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
+		Another type of goodness-of-fit test is found in the information matrix test. The information matrix test compares the differences between the elements of the observed information matrix and the elements
+		of the outer product of the score vector, with a null hypothesis that the model is correctly specified (\cite{White1982}). This test is more general than the tests for heteroskedasticity, as the null
+		hypothesis can be violated in a number of ways. There are several ways to perform the information matrix test, including varying which elements of the abovementioned matrices to assess, using an 
+		auxiliary regression to assist in calculation of the test statistic (\cite{Chesher}), and employing a parametric bootstrap to aid in calculation of the test statistic (\cite{Dhaene}). While able to
+		detect misspecification of various kinds, information matrix tests can struggle with power in certain scenarios.
+
+		The various ways in which goodness-of-fit tests can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
 		When a hypothesis is rejected, we can be reasonably confident that an assumption is violated; however, by simply performing the test, we do not glean much information as to how exactly the
 		model may be misspecified. This is in contrast to the method of visually observing residual plots wherein specific issues may be easier to identify.
 		For example, if a plot of the residuals versus a covariate exhibits a curved pattern, one may posit a new model that accounts for this curved relationship (\cite{Miles}).
@@ -182,18 +188,18 @@ Information Criteria, Bootstrap, Normal Distribution
 
 		Huber first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown (\cite{Huber}). White
 		expanded upon this notion by deriving covariance matrix estimates for maximum likelihood estimators that are robust to a variety of different types of misspecification and only assume
-		conditional independence and certain other regularity conditions (\cite{White1980}). Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
+		conditional independence and certain other regularity conditions (\cite{White1982}). Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
 		$n$, White established the asymptotic relation
 		\begin{equation*}
 			\sqrt{n} (\hat{\theta}_n - \theta_*) \xrightarrow[]{d} N(0, C(\theta_* ) ) .
 		\end{equation*}
 		The large sample covariance matrix $C(\theta)$ can be defined using two positive definite matrices $A(\theta)$ and $B(\theta)$, where the $(i,j)$ element of $A(\theta)$ is defined as
 		\begin{equation*}
-			A(\theta)_{i,j} = E \left[ \frac{\partial^2 f(y_t,\theta)}{\partial \theta_i \partial \theta_j} \right] 
+			A(\theta)_{i,j} = E \left[ \frac{\partial^2 f(y,\theta)}{\partial \theta_i \partial \theta_j} \right] 
 		\end{equation*}
 		and the $(i,j)$ element of $B(\theta)$ is defined as
 		\begin{equation*}
-			B(\theta)_{i,j} = E \left[ \frac{\partial f(y_t,\theta)}{\partial \theta_i} \frac{\partial f(y_t,\theta)}{\partial \theta_j} \right] 
+			B(\theta)_{i,j} = E \left[ \frac{\partial f(y,\theta)}{\partial \theta_i} \frac{\partial f(y,\theta)}{\partial \theta_j} \right] 
 		\end{equation*}
 		where $i = 1,...,p$ and $j = 1,...,p$ respectively. These matrices then combine to define $C(\theta)$ as
 		\begin{equation*}
@@ -719,6 +725,16 @@ Cavanaugh, J.E., and Neath, A.A. (2019).
  The Akaike information criterion: Background, derivation, properties, application, interpretation, and refinements.
 {\em WIREs Comput Stat}, 11:e1460.
 
+\bibitem[Chesher(1983)]{Chesher}
+Chesher, A. (1983).
+ The Information Matrix Test: Simplified Calculation via a Score Test Interpretation.
+{\em Economics Letters}~{\bf 13}, 45--48.
+
+\bibitem[Dhaene and Hoorelbeke(2004)]{Dhaene}
+Dhaene, G., and Hoorelbeke, D. (2004).
+ The information matrix test with bootstrap-based covariance matrix estimation.
+{\em Economics Letters}~{\bf 82}, 341--347.
+
 \bibitem[Fisher(1922)]{Fisher}
 Fisher, R.A. (1922).
  On the Mathematical Foundations of Theoretical Statistics.
@@ -773,6 +789,11 @@ Schwarz, G.E. (1978).
 White, H. (1980).
  A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity.
 {\em Econometrica}~{\bf 48}, 817--838.
+
+\bibitem[White(1982)]{White1982}
+White, H. (1982).
+ Maximum Likelihood Estimation of Misspecified Models.
+{\em Econometrica}~{\bf 50}, 1--25.
 
 \bibitem[Waldman(1983)]{Waldman}
 Waldman, D.M. (1983).
