@@ -231,135 +231,138 @@ ns <- c(50, 100, 250, 500, 750, 1000, 2500)
 ### Type I Error ###
 ####################
 
-out_table <- data.frame(
-  n = ns,
-  Classic = numeric(length(ns)),
-  OPG = numeric(length(ns)),
-  BootV = numeric(length(ns)),
-  BootGOF = numeric(length(ns))
-)
-
-for(ii in 1:length(ns)){
-  n <- ns[ii]
-  clusterExport(cl, "n")
-  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
-    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
-    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
-    model <- lm(y ~ x1 + x2, data = data)
-    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
-    X <- model.matrix(model)
-    p <- ncol(X)
-    b <- matrix(coef(model), nrow = p, ncol = 1)
-    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
-    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
-    return(data.frame(
-      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
-      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
-      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
-      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
-      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
-      White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
-    ))
-  })
-  reject_props <- colMeans(do.call(rbind, rejects))
-  out_table$n[ii] <- n
-  out_table[ii,2:7] <- reject_props
-}
-#Print out table
-print(out_table)
-write.csv(out_table,"../data/Sim1Table.csv")
+# out_table <- data.frame(
+#   n = ns,
+#   Classic = numeric(length(ns)),
+#   OPG = numeric(length(ns)),
+#   BootV = numeric(length(ns)),
+#   BootGOF = numeric(length(ns))
+# )
+# 
+# for(ii in 1:length(ns)){
+#   n <- ns[ii]
+#   clusterExport(cl, "n")
+#   rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+#     data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
+#     data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
+#     model <- lm(y ~ x1 + x2, data = data)
+#     y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+#     X <- model.matrix(model)
+#     p <- ncol(X)
+#     b <- matrix(coef(model), nrow = p, ncol = 1)
+#     sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+#     boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+#     return(data.frame(
+#       Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+#       OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 10) < 0.05),
+#       BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+#       BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+#       BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+#       White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
+#     ))
+#   })
+#   reject_props <- colMeans(do.call(rbind, rejects))
+#   out_table$n[ii] <- n
+#   out_table[ii,2:7] <- reject_props
+# }
+# #Print out table
+# print(out_table)
+# write.csv(out_table,"../data/Sim1Table.csv")
 
 ############################################
 ### Power when Missing Covariate in Mean ###
 ############################################
 
 
-out_table <- data.frame(
-  n = ns,
-  Classic = numeric(length(ns)),
-  OPG = numeric(length(ns)),
-  BootV = numeric(length(ns)),
-  BootGOF = numeric(length(ns))
-)
-
-for(ii in 1:length(ns)){
-  n <- ns[ii]
-  clusterExport(cl, "n")
-  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
-    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
-    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
-    model <- lm(y ~ x1, data = data)
-    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
-    X <- model.matrix(model)
-    p <- ncol(X)
-    b <- matrix(coef(model), nrow = p, ncol = 1)
-    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
-    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
-    return(data.frame(
-      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
-      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
-      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
-      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
-      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
-      White = as.numeric( (whitestrap::white_test(model))$p_value < 0.05)
-    ))
-  })
-  reject_props <- colMeans(do.call(rbind, rejects))
-  out_table$n[ii] <- n
-  out_table[ii,2:7] <- reject_props
-}
-#Print out table
-print(out_table)
-write.csv(out_table,"../data/Sim2Table.csv")
+# out_table <- data.frame(
+#   n = ns,
+#   Classic = numeric(length(ns)),
+#   OPG = numeric(length(ns)),
+#   BootV = numeric(length(ns)),
+#   BootGOF = numeric(length(ns))
+# )
+# 
+# for(ii in 1:length(ns)){
+#   n <- ns[ii]
+#   clusterExport(cl, "n")
+#   rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+#     data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
+#     data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
+#     model <- lm(y ~ x1, data = data)
+#     y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+#     X <- model.matrix(model)
+#     p <- ncol(X)
+#     b <- matrix(coef(model), nrow = p, ncol = 1)
+#     sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+#     boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+#     return(data.frame(
+#       Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+#       OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+#       BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+#       BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+#       BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+#       White = as.numeric( (whitestrap::white_test(model))$p_value < 0.05)
+#     ))
+#   })
+#   reject_props <- colMeans(do.call(rbind, rejects))
+#   out_table$n[ii] <- n
+#   out_table[ii,2:7] <- reject_props
+# }
+# #Print out table
+# print(out_table)
+# write.csv(out_table,"../data/Sim2Table.csv")
 
 ###################################################################
 ### Power when Missing Covariate in Mean - Correlated Surrogate ###
 ###################################################################
 
 
-out_table <- data.frame(
-  n = ns,
-  Classic = numeric(length(ns)),
-  OPG = numeric(length(ns)),
-  BootV = numeric(length(ns)),
-  BootGOF = numeric(length(ns))
-)
-
-for(ii in 1:length(ns)){
-  n <- ns[ii]
-  clusterExport(cl, "n")
-  rejects <- parLapply(cl, 1:test_iters, fun = function(x){
-    data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
-    data$x3 <- 0.3*data$x2 + 0.7*runif(n,0,5)
-    data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
-    model <- lm(y ~ x1 + x3, data = data)
-    y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
-    X <- model.matrix(model)
-    p <- ncol(X)
-    b <- matrix(coef(model), nrow = p, ncol = 1)
-    sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
-    boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
-    return(data.frame(
-      Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
-      OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
-      BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
-      BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
-      BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
-      White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
-    ))
-  })
-  reject_props <- colMeans(do.call(rbind, rejects))
-  out_table$n[ii] <- n
-  out_table[ii,2:7] <- reject_props
-}
-#Print out table
-print(out_table)
-write.csv(out_table,"../data/Sim3Table.csv")
+# out_table <- data.frame(
+#   n = ns,
+#   Classic = numeric(length(ns)),
+#   OPG = numeric(length(ns)),
+#   BootV = numeric(length(ns)),
+#   BootGOF = numeric(length(ns))
+# )
+# 
+# for(ii in 1:length(ns)){
+#   n <- ns[ii]
+#   clusterExport(cl, "n")
+#   rejects <- parLapply(cl, 1:test_iters, fun = function(x){
+#     data <- data.frame(x1 = runif(n,0,5), x2 = runif(n,0,5))
+#     data$x3 <- 0.3*data$x2 + 0.7*runif(n,0,5)
+#     data$y <- 2 + 2*data$x1 + 2*data$x2 + rnorm(n,0,2)
+#     model <- lm(y ~ x1 + x3, data = data)
+#     y <- matrix(model.response(model.frame(model)), nrow = n, ncol = 1)
+#     X <- model.matrix(model)
+#     p <- ncol(X)
+#     b <- matrix(coef(model), nrow = p, ncol = 1)
+#     sighat2 <- as.numeric(t(y-(X%*%b)) %*% (y-(X%*%b))*(1/n))
+#     boot_test <- DBModelSelect::BootGOFTestLM(model, data = data)
+#     return(data.frame(
+#       Classic = as.numeric(1-pchisq(IMTestStat(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+#       OPG = as.numeric(1-pchisq(OPGTest(b, n, y, X, p, sighat2)$TestStat,df = 6) < 0.05),
+#       BootV = as.numeric(BootIMTest(b, n, y, X, p, sighat2)$pval < 0.05),
+#       BootGOF = as.numeric(boot_test$boot_int[1] > 2*n | boot_test$boot_int[2] < 2*n),
+#       BreuschPagan = as.numeric( (lmtest::bptest(model))$p.value < 0.05),
+#       White = as.numeric( (whitestrap::white_test(model))$p_value <0.05 )
+#     ))
+#   })
+#   reject_props <- colMeans(do.call(rbind, rejects))
+#   out_table$n[ii] <- n
+#   out_table[ii,2:7] <- reject_props
+# }
+# #Print out table
+# print(out_table)
+# write.csv(out_table,"../data/Sim3Table.csv")
 
 ######################################################
 ### Power when Missing Covariate in Error Variance ###
 ######################################################
 
+# Crashed before this initially, set a new seed for replicability of full simulation
+seed_list <- seq(1000, 1000*(detectCores()-1),by=1000)
+invisible(parLapply(cl,seed_list,fun = function(x){set.seed(x)}))
 
 out_table <- data.frame(
   n = ns,
@@ -402,10 +405,6 @@ write.csv(out_table,"../data/Sim4Table.csv")
 #######################################################
 ### Power when Observed Covariate in Error Variance ###
 #######################################################
-
-# Crashed before this initially, set a new seed for replicability of full simulation
-seed_list <- seq(1000, 1000*(detectCores()-1),by=1000)
-invisible(parLapply(cl,seed_list,fun = function(x){set.seed(x)}))
 
 out_table <- data.frame(
   n = ns,
