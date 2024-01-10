@@ -34,6 +34,7 @@
 \usepackage{multicol,multirow}
 \usepackage{tabularx}
 \usepackage{graphicx}
+\usepackage{graphics}
 \usepackage{makecell}
 \usepackage{caption}
 
@@ -70,7 +71,7 @@
 
 \renewcommand{\baselinestretch}{2}
 
-\markright{ \hbox{\footnotesize\rm Statistica Sinica
+\markright{ \hbox{\footnotesize\rm %Statistica Sinica
 %{\footnotesize\bf 24} (201?), 000-000
 }\hfill\\[-13pt]
 \hbox{\footnotesize\rm
@@ -166,15 +167,13 @@ Information Criteria, Resampling, Normal Distribution
 
 		Another type of goodness-of-fit test is found in the information matrix test. The information matrix test compares the differences between the elements of the observed information matrix and the elements
 		of the outer product of the score vector, with a null hypothesis that the model is correctly specified (\cite{White1982}). This test is more general than the tests for heteroskedasticity, as the null
-		hypothesis can be violated in a number of ways. There are several ways to perform the information matrix test, including varying which elements of the abovementioned matrices to assess, using an 
+		hypothesis can be violated in a number of fashions. There are several ways to perform the information matrix test, including varying which elements of the abovementioned matrices to assess, using an 
 		auxiliary regression to assist in calculation of the test statistic (\cite{Chesher}), and employing a parametric bootstrap to aid in calculation of the test statistic (\cite{Dhaene}). While able to
 		detect misspecification of various kinds, information matrix tests can struggle with power in certain scenarios.
 
 		The various ways in which goodness-of-fit tests can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
 		When a hypothesis is rejected, we can be reasonably confident that an assumption is violated; however, by simply performing the test, we do not glean much information as to how exactly the
 		model may be misspecified. This is in contrast to the method of visually observing residual plots wherein specific issues may be easier to identify.
-		For example, if a plot of the residuals versus a covariate exhibits a curved pattern, one may posit a new model that accounts for this curved relationship (\cite{Miles}).
-		However, hypothesis tests offer little direction other than that the current model exhibits lack-of-fit in some manner, and further investigation is necessary to determine next steps.
 
 		In addition, both the White and Breusch-Pagan tests cannot detect heteroskedasticity induced by unobserved covariates, as their auxiliary regressions only use what has been observed. Such heteroskedasticity
 		may not affect the bias and consistency of effect estimates, but may lead to a loss of efficiency of estimates. 
@@ -445,7 +444,12 @@ a $Uniform(0,5)$ distribution. However, in this case the fitted model will be a 
 $x_{i1}$. The covariate $x_{i2}$ will be omitted from the model, and could be viewed as a factor that affects the true generating process, but
 was unobserved in data collection. This omission will induce mean misspecification for this fitted model as the mean structure will be underspecified.
 
-In the third simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$, and $x_{i1}$, $x_{i2}$, and $x_{i3}$ are completely $iid$ covariates
+In the third simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
+a $Uniform(0,5)$ distribution. However, we will generate a third variable $x_{i3}$ such that $x_{i3} = 0.3 x_{i2} + 0.7 U$, where $U$ is drawn according to a $Uniform(0,5)$ distribution.
+Then, the fitted model will be a normal linear regression model with an intercept and effects for $x_{i1}$ and $x_{i3}$. This model is misspecified as while the covariate $x_{i3}$ 
+may serve as a surrogate for $x_{i2}$ due to their relation, we are still missing information used in the true generating process.
+
+In the fourth simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$, and $x_{i1}$, $x_{i2}$, and $x_{i3}$ are completely $iid$ covariates
 generated according to a $Uniform(0,5)$ distribution. Note that heteroskedasticity is introduced into this model courtesy of $x_{i3}$ affecting the error variance. The fitted model for
 this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$, but will be fit assuming constant variance.
 This will result in unbiased regression parameter estimates; however, these estimates are not guaranteed to be the most efficient, and could be improved by including information regarding $x_{i3}$.
@@ -455,9 +459,9 @@ a $Uniform(0,5)$ distribution. The fitted model for this simulation will be a no
 but will be fit assuming homoskedasticity. In this case the heteroskedasticity present is related to a covariate in the model matrix, and thus any normal linear model fit to the data will not be properly
 specified if it assumes homoskedasticity, leading to potentially improper inference.
 
-In each simulation, the bootstrap goodness-of-fit test, White test, and Breusch-Pagan test will each be performed at the $\alpha = .05$ level on the  fitted model. We expect the tests to roughly maintain their
+In each simulation, the bootstrap goodness-of-fit test, White test, Breusch-Pagan, classical information matrix test, auxiliary regression information matrix test, and parametric bootstrap information matrix test will each be performed at the $\alpha = .05$ level on the  fitted model. We expect the tests to roughly maintain their
 Type~I error rates in the cases where the null hypothesis of each is true, and reveal the power of the test in the simulations where the null hypothesis is violated. After many simulation iterations, the
-Type~I error rates or power of each test will be calculated based on the proportion of times each test rejected its null hypothesis. Each simulation will be performed for $n = 100, 500, 1000$ and $2500$, with $1000$
+Type~I error rates or power of each test will be calculated based on the proportion of times each test rejected its null hypothesis. Each simulation will be performed for $n = 50, 100, 250, 500, 750, 1000$ and $2500$, with $1000$
 bootstrap iterations for all sets. The simulation will be generate $1000$ samples for each value of $n$, performing the tests each time.
 
 The code for the simulations can be found at \url{https://github.com/shkoeneman/GOF_manuscript/tree/main/scripts}. The results for the first simulation
@@ -465,28 +469,35 @@ can be found in the table below.
 
 \begin{table}[H]
 	\centering
+	
 	\small\addtolength{\tabcolsep}{-3pt}
 	\setlength\extrarowheight{-3pt}
 	\ttabbox[\FBwidth]
 	{\caption{\label{tab:sim1_table}Simulation 1 Results - Type~I Error}}
 	{
-	\begin{tabular}{ c|c|c|c}
-	$n$ & Bootstrap Test & White Test & Breusch-Pagan Test \\
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{ c|c|c|c|c|c|c}
+	$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
 	 \hline
-	 100 & 0.094 & 0.071 & 0.059 \\
-	 500 & 0.088 & 0.045 & 0.049 \\
-	 1000 & 0.077 & 0.053 & 0.051 \\
-	 2500 & 0.069 & 0.046 & 0.040 \\
+	 50 & 0.038 & 0.041 & 0.042 & 0.598 & 0.766 & 0.027 \\
+	 100 & 0.088 & 0.033 & 0.051 & 0.511 & 0.622 & 0.032 \\
+	 250 & 0.081 & 0.055 & 0.050 & 0.383 & 0.430 & 0.031 \\
+	 500 & 0.078 & 0.050 & 0.057 & 0.238 & 0.260 & 0.034 \\
+	 750 & 0.082 & 0.046 & 0.038 & 0.204 & 0.218 & 0.025 \\
+	 1000 & 0.089 & 0.058 & 0.050 & 0.182 & 0.187 & 0.035 \\
+	 2500 & 0.061 & 0.036 & 0.046 & 0.095 & 0.098 & 0.031 \\
 	 \Xhline{3\arrayrulewidth}
 	\end{tabular}
 	}
+	}
 \end{table}
 
-The bootstrap test exhibits anti-conservative behavior across all values of $n$ with the empirically determined Type~I error rate exceeding the desired Type~I error rate
-of $\alpha = 0.05$ in all scenarios. However, as $n$ increases, the empirical Type~I error rate appears to be decreasing towards the desired value, albeit perhaps somewhat slowly. Thus, when
+The developed bootstrap test exhibits anti-conservative behavior across most values of $n$ with the empirically determined Type~I error rate exceeding the desired Type~I error rate
+of $\alpha = 0.05$ in all scenarios. However, as $n$ increases, the empirical Type~I error rate appears to be decreasing towards the desired value, albeit somewhat slowly. Thus, when
 using the procedure, one should keep in mind that the test may be more prone to
-rejection than one might expect, particularly for small sample sizes before asymptotic properties of the test truly manifest. The White and Breusch-Pagan tests roughly maintain
-the desired Type~I error rate across all values of $n$.
+rejection than one might expect, particularly for small sample sizes before asymptotic properties of the test truly manifest. The parametric information matrix test shows mirrored behavior,
+possessing a conservative Type~1 error rate at all values of $n$. The classical and regression variants of the information matrix test fail to maintain a true Type~1 error rate close
+to the nominal value until the sample size is rather high, and thus should not be trusted outside of large sizes. The White and Breusch-Pagan tests roughly maintain the desired Type~I error rate across all values of $n$.
 
 The results for the second simulation can be found in the table below.
 
@@ -495,36 +506,36 @@ The results for the second simulation can be found in the table below.
 	\small\addtolength{\tabcolsep}{-3pt}
 	\setlength\extrarowheight{-3pt}
 	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim1_table}Simulation 2 Results - Power/Type~I Error}}
+	{\caption{\label{tab:sim2_table}Simulation 2 Results - Power/Type~I Error}}
 	{
-	\begin{tabular}{ c|c|c|c}
-	$n$ & Bootstrap Test & White Test & Breusch-Pagan Test \\
-	 \hline
-	 100 & 0.549 & 0.050 & 0.043 \\
-	 500 & 0.967 & 0.053 & 0.049 \\
-	 1000 & 0.997 & 0.063 & 0.053 \\
-	 2500 & 1.000 & 0.048 & 0.053 \\
-	 \Xhline{3\arrayrulewidth}
-	\end{tabular}
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{ c|c|c|c|c|c|c}
+		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		 \hline
+		 50 & 0.279 & 0.053 & 0.055 & 0.675 & 0.792 & 0.003 \\
+		 100 & 0.506 & 0.053 & 0.071 & 0.760 & 0.815 & 0.007 \\
+		 250 & 0.828 & 0.065 & 0.050 & 0.860 & 0.881 & 0.009 \\
+		 500 & 0.953 & 0.033 & 0.036 & 0.950 & 0.954 & 0.098 \\
+		 750 & 0.991 & 0.059 & 0.059 & 0.986 & 0.986 & 0.436 \\
+		 1000 & 0.996 & 0.055 & 0.048 & 0.993 & 0.995 & 0.730 \\
+		 2500 & 1.000 & 0.053 & 0.042 & 1.000 & 1.000 & 1.000 \\
+		 \Xhline{3\arrayrulewidth}
+		\end{tabular}
+		}
 	}
-\end{table}
+	\end{table}
 
-The power of the bootstrap test in this scenario of mean misspecification is rather low for $n = 100$. However, power rises quickly to high levels
-with the test appearing to possess near-perfect power as the value of $n$ approaches 2500. Thus, the bootstrap test appears to possess the ability to detect this mean
-misspecification on account of an unobserved covariate, and the power to detect this misspecification rises as the sample size increases as one would expect.
+The power of the bootstrap goodness-of-fit test in this scenario of mean misspecification is rather modest for low values of $n$, but rises rapidly to high levels. Thus, the bootstrap test appears to possess the
+ability to detect this mean misspecification on account of an unobserved covariate, and the power to detect this misspecification rises as the sample size increases as one would expect.
+The parametric bootstrap variant of the information matrix test eventually reaches similar levels of power, but lags substantially behind until $n$ increases over $1000$. Thus, the bootstrap
+goodness-of-fit test appears to possess better power to detect this mean misspecification due to a missing covariate in sample sizes below the highest values employed in the simulation.
 
-In contrast, the White test and Breusch-Pagan test both seem to only maintain their Type~I error rates established in Simulation 3. This performance was to be expected
+The classical and regression-based information matrix tests possess high power for all sample sizes, as is to be expected from their proclivity for rejecting null hypotheses even when they are true.
+This characteristic of the classical and regression information matrix tests will be present in the next simulation as well and will not be commented on as such. 
+
+In contrast, the White test and Breusch-Pagan test both seem to only maintain their Type~I error rates established in Simulation 1. This performance was to be expected
 as the null hypotheses of these tests are not violated in this scenario. However, this simulation setting does demonstrate how the inability of a goodness-of-fit test to detect improper
 fit does not mean lack-of-fit is not present, as these two tests are limited in the scope of misspecification they are able to detect.
-
-Figure 1 presents a residual plot generated by fitting the specified model for the third simulation setting to data generated as described for this setting. Note the seemingly
-patternless, constant variance spread, indicating that one would not find reason to think any assumption of linear regression was violated. 
-
-\begin{figure}[H]
-%\includegraphics[angle=-90, scale=0.45]{carat}\par
-\centerline{\epsfig{file=./figures/sim3_residual_plot.pdf,width=4.5in}}\par  %<- modified by Ivan  (You need to put figure in the same folder; or you must specify the path to the figure.)
-\caption{Simulation 3 Residual Plot.}
-\end{figure}
 
 The results for the third simulation can be found in the table below.
 
@@ -533,54 +544,108 @@ The results for the third simulation can be found in the table below.
 	\small\addtolength{\tabcolsep}{-3pt}
 	\setlength\extrarowheight{-3pt}
 	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim1_table}Simulation 3 Results - Power/Type~I Error}}
+	{\caption{\label{tab:sim3_table}Simulation 3 Results - Power/Type~I Error}}
 	{
-	\begin{tabular}{ c|c|c|c}
-	$n$ & Bootstrap Test & White Test & Breusch-Pagan Test \\
-	 \hline
-	 100 & 0.108 & 0.057 & 0.057 \\
-	 500 & 0.881 & 0.048 & 0.047 \\
-	 1000 & 0.996 & 0.058 & 0.050 \\
-	 2500 & 1.000 & 0.057 & 0.049 \\
-	 \Xhline{3\arrayrulewidth}
-	\end{tabular}
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{ c|c|c|c|c|c|c}
+		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		 \hline
+		 50 & 0.138 & 0.040 & 0.039 & 0.934 & 0.972 & 0.005 \\
+		 100 & 0.275 & 0.035 & 0.027 & 0.951 & 0.970 & 0.005 \\
+		 250 & 0.498 & 0.058 & 0.040 & 0.988 & 0.991 & 0.049 \\
+		 500 & 0.654 & 0.052 & 0.035 & 0.998 & 0.999 & 0.486 \\
+		 750 & 0.792 & 0.059 & 0.027 & 0.999 & 0.999 & 0.873 \\
+		 1000 & 0.868 & 0.058 & 0.038 & 1.000 & 1.000 & 0.981 \\
+		 2500 & 0.996 & 0.115 & 0.036 & 1.000 & 1.000 & 1.000 \\
+		 \Xhline{3\arrayrulewidth}
+		\end{tabular}
+		}
 	}
-\end{table}
+	\end{table}
 
-The bootstrap test seems to only exhibit power in line with its empirical Type~I error rate displayed in Simulation 3 for $n = 100$, and appears to require a relatively high sample size to produce
-adequate power. However, the test does seem to eventually be able to detect this violation of homoskedasticity. In contrast, the White test and Breusch-Pagan test exhibit only power in line with their Type~I error
-rates established in Simulation 3, and thus do not seem to be able to detect this form of heteroskedasticity, as the residual plot could not. This reveals how the subtleness of this homoskedasticity,
-which should not affect bias of estimates, but may affect efficiency.
+The bootstrap goodness-of-fit test possesses higher power in the third simulation in small sample sizes than the bootstrap information matrix test. However, at $n = 250$ the bootstrap information matrix test
+overtakes the bootstrap goodness-of-fit test, and appears to hold a small lead in power until both tests level out at near perfect power for $n = 2500$. Thus, each test holds an advantage in power for different bands of sample sizes.
+The White and Breusch-Pagan tests once again seem to maintain their desired sizes fairly well.
 
-This limitation in detection is on account of how the Breusch-Pagan and White tests and residual plots are constructed, as they rely on the detection of heteroskedasticity that is induced by observed covariates.
-When heteroskedasticity is induced by an unobserved covariate that is not used in the model, the White test and Breusch-Pagan test cannot ascertain that their
-null hypotheses of homoskedasticity are violated, and residual plots do not show any visible heteroskedasticity. However, the bootstrap test is able to reject its null hypothesis.
+We now move on to the fourth simulation. Figure 1 presents a residual plot generated by fitting the specified model for the fourth simulation setting to data generated as described for this setting.
+Note the seemingly patternless, constant variance spread, indicating that one would not find reason to think any assumption of linear regression was violated. 
 
-The results for the fourth and final simulation can be found in the table below.
+\begin{figure}[H]
+%\includegraphics[angle=-90, scale=0.45]{carat}\par
+\centerline{\epsfig{file=./figures/sim3_residual_plot.pdf,width=4.5in}}\par  %<- modified by Ivan  (You need to put figure in the same folder; or you must specify the path to the figure.)
+\caption{Simulation 4 Residual Plot.}
+\end{figure}
+
+The results for the fourth simulation can be found in the table below.
 
 \begin{table}[H]
 	\centering
 	\small\addtolength{\tabcolsep}{-3pt}
 	\setlength\extrarowheight{-3pt}
 	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim1_table}Simulation 4 Results - Power}}
+	{\caption{\label{tab:sim4_table}Simulation 4 Results - Power/Type~I Error}}
 	{
-	\begin{tabular}{ c|c|c|c}
-	$n$ & Bootstrap Test & White Test & Breusch-Pagan Test \\
-	 \hline
-	 100 & 0.040 & 0.462 & 0.674 \\
-	 500 & 0.344 & 1.000 & 1.000 \\
-	 1000 & 0.700 & 1.000 & 1.000 \\
-	 2500 & 0.989 & 1.000 & 1.000 \\
-	 \Xhline{3\arrayrulewidth}
-	\end{tabular}
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{ c|c|c|c|c|c|c}
+		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		 \hline
+		 50 & 0.006 & 0.054 & 0.046 & 0.051 & 0.702 & 0.146 \\
+		 100 & 0.121 & 0.048 & 0.038 & 0.356 & 0.525 & 0.307 \\
+		 250 & 0.506 & 0.047 & 0.036 & 0.183 & 0.317 & 0.538 \\
+		 500 & 0.891 & 0.044 & 0.041 & 0.160 & 0.369 & 0.790 \\
+		 750 & 0.976 & 0.052 & 0.049 & 0.335 & 0.547 & 0.928 \\
+		 1000 & 0.994 & 0.062 & 0.055 & 0.547 & 0.692 & 0.972 \\
+		 2500 & 1.000 & 0.057 & 0.062 & 0.994 & 0.994 & 1.000 \\
+		 \Xhline{3\arrayrulewidth}
+		\end{tabular}
+		}
 	}
-\end{table}
+	\end{table}
 
-In this scenario, the White test and Breusch-Pagan test both greatly outperform the bootstrap test in terms of power for lower values of $n$, with the bootstrap test
-eventually roughly matching the power of the other tests at $n = 2500$. This is likely due to the heteroskedasticity being induced by a covariate that is also in the 
-proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. While the bootstrap test is able to detect this misspecification,
-it requires a very large sample size to have adequate power.
+The bootstrap goodness-of-fit test appears to require a relatively high sample size to produce adequate power. However, the test does seem to eventually be able to detect this violation of homoskedasticity.
+The bootstrap information matrix test performs somewhat similarly, possessing higher power for small sample sizes and lower power for moderate sample sizes. The classic and regression variants of the information
+matrix test display erratic power as $n$ increases, and thus further show their unreliability.
+
+The White test and Breusch-Pagan test exhibit only power in line with their Type~I error rates established earlier, and thus do not seem to be able to detect this form of heteroskedasticity,
+as the residual plot could not. This reveals how the subtleness of this homoskedasticity, which should not affect bias of estimates, but may affect efficiency.
+
+This limitation in detection is on account of how the Breusch-Pagan and White tests and residual plots are constructed, as they rely on the detection of heteroskedasticity that is induced by observed covariates.
+When heteroskedasticity is induced by an unobserved covariate that is not used in the model, the White test and Breusch-Pagan test cannot ascertain that their
+null hypotheses of homoskedasticity are violated, and residual plots do not show any visible heteroskedasticity. However, the bootstrap goodness-of-fit test and variants of the information matrix test are able to
+reject their null hypotheses.
+
+The results for the fifth and final simulation can be found in the table below. Note that the null hypotheses of all tests are violated in this case, and each test should be able to detect this form of misspecification.
+
+\begin{table}[H]
+	\centering
+	\small\addtolength{\tabcolsep}{-3pt}
+	\setlength\extrarowheight{-3pt}
+	\ttabbox[\FBwidth]
+	{\caption{\label{tab:sim5_table}Simulation 5 Results - Power}}
+	{
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{ c|c|c|c|c|c|c}
+		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		 \hline
+		 50 & 0.018 & 0.169 & 0.327 & 0.725 & 0.875 & 0.146 \\
+		 100 & 0.036 & 0.314 & 0.695 & 0.855 & 0.912 & 0.307 \\
+		 250 & 0.141 & 0.773 & 0.992 & 0.988 & 0.992 & 0.538 \\
+		 500 & 0.413 & 0.995 & 1.000 & 1.000 & 1.000 & 0.790 \\
+		 750 & 0.583 & 1.000 & 1.000 & 1.000 & 1.000 & 0.928 \\
+		 1000 & 0.732 & 1.000 & 0.055 & 1.000 & 1.000 & 0.972 \\
+		 2500 & 0.991 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+		 \Xhline{3\arrayrulewidth}
+		\end{tabular}
+		}
+	}
+	\end{table}
+
+In this scenario, the White test and Breusch-Pagan test both perform well in moderate to large sample sizes. This is likely due to the heteroskedasticity being induced by a covariate that is also in the 
+proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. The bootstrap variant of the information matrix test performs similarly, while the classical and regression
+variants again display extreme power at low sample sizes. While the bootstrap goodness-of-fit test is able to detect this misspecification, it requires a very large sample size to have adequate power.
+
+In summary, we see that the new bootstrap goodness-of-fit test possesses advantages over competetitor tests, particularly in its ability to detect multiple forms of misspecification and ability to detect
+forms of mean misspecification where an important covariate may be missing.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -599,10 +664,11 @@ choose to employ the bootstrap test on the largest possible model in considerati
 If the test does not reject its null hypothesis of proper specification, one could proceed with the normal linear regression framework and select a final model using
 an information criterion such as Mallows' Cp, or by employing another method such as cross validation.
 
-This bootstrap procedure is not without its drawbacks. While the test is able to detect heteroskedasticity induced by unobserved covariates, this may be viewed as a detriment,
+This bootstrap goodness-of-fit procedure is not without its drawbacks. While the test is able to detect heteroskedasticity induced by unobserved covariates, this may be viewed as a detriment,
 as this form of heteroskedasticity will not affect bias, and only efficiency. Without knowledge of unobserved covariates, one may not be able to improve efficiency. Thus, if the test rejects its
 null hypothesis but one still would like  to move forward with a normal linear regression model, it is recommended to use robust estimates for the variance of estimated effects
-to hedge against performing improper inference. Simulations showed that the bootstrap test may be underpowered for small sample sizes. Additionally, the test may be overpowered for real-life datasets with large sample sizes, resulting in rejection of the null hypothesis
+to hedge against performing improper inference. Simulations showed that the bootstrap test may be underpowered for small sample sizes. A bootstrap rendition of the information matrix test may
+possess better power to detect certain forms of misspecification. Additionally, the test may be overpowered for real-life datasets with large sample sizes, resulting in rejection of the null hypothesis
 when in fact a linear regression is a reasonable model. This is a feature common to many goodness-of-fit tests, and must be remembered when performing an analysis on observed data.
 
 Potential future work involves finding similar procedures that can be used for other modeling frameworks.
