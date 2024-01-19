@@ -1,29 +1,24 @@
-%%%
-%%%  LaTeX template for publications
-%%%  to be submitted to Statistical Modelling
-%%%
-%%%  Prepared by Arnost Komarek
-%%%  Version 0.2 (20140214)
-%%%    0.2:  style of references slightly changed,
-%%%          support for use with bibTeX added
-%%%    0.3:  fax removed, orcid added, sections on supplementary material added as well as appendix
-\documentclass[submit]{smj}
+\documentclass[12pt]{article} %***
+\usepackage[sectionbib]{natbib}
+\usepackage{array,epsfig,fancyheadings,rotating}
+\usepackage[]{hyperref}  %<----modified by Ivan
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{sectsty, secdot}
+%\sectionfont{\fontsize{12}{15}\selectfont}
+\sectionfont{\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont}
+\renewcommand{\theequation}{\thesection\arabic{equation}}
+\subsectionfont{\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-%%%%% PREAMBLE
-%%%%% =============================================================================
-
-
-%%% Place for putting personal \usepackage and \newcommand commands
-%%% Note that some packages are loaded automatically
-%%% with the smj class. 
-%%% These include: graphicx, color, fancyvrb, amsmath, amssymb, calc, upquote (if available), natbib, url, hyperref.
-%%%
-%%% Please, specify all your personal definitions, newcommand etc. here
-%%% and not inside the main body of the text.
-%%% -------------------------------------------------------------------------------
-%\usepackage{PACKAGE}
-%\newcommand{MYCOMMAND}{...}
+\textwidth=31.9pc
+\textheight=46.5pc
+\oddsidemargin=1pc
+\evensidemargin=1pc
+\headsep=15pt
+%\headheight=.2cm
+\topmargin=.6cm
+\parindent=1.7pc
+\parskip=0pt
 
 \usepackage{floatrow}
 \usepackage{float}
@@ -31,7 +26,7 @@
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage{amsthm}
-%\usepackage{natbib}
+\usepackage{natbib}
 \usepackage[]{algorithm}
 \usepackage{algpseudocode}
 \usepackage{array}
@@ -43,136 +38,107 @@
 \usepackage{makecell}
 \usepackage{caption}
 
-
-%%% Identification of authors
-%%% -------------------------------------------------------------------------------
-%%% For each author, provide his/her first name, surname and possibly initials 
-%%% of the middle names. 
-%%%
-%%% Use \Affil{NUMBER} following the author name for each unique affiliation,
-%%% where NUMBER is integer starting from 1 to the number of affiliations needed
-%%% in this paper. In case of multiple affiliations of one author, use
-%%% \Affil{NUMBER1,}\Affil{NUMBER2,}\Affil{NUMBER3} following the author's name
-%%% as it is done for Emmanuel Lesaffre below.
-
-%%% The ORCID number does not have to be provided. If you want to provide it,
-%%% put it in the \ORCID{} command while following (the last) \Affil{} command
-%%% of given author as shown below.
-
-  %%% For papers with 3 or more authors:
-  %%%  in \Author{}, separate the authors with commas, the last author is separated by `\and' without a comma,
-  %%%  in \AuthorRunning{}, use the full name of the first author followed by \textrm{et al.}.
-
-%\Author{Arno\v{s}t Kom\'arek\Affil{1}\ORCID{0000-0001-8778-3762}, 
-%        Brian Marx\Affil{2}, 
-%        \and Jeffrey S. Simonoff\Affil{3}\ORCID{0000-0002-1496-608X}
-%        %and Emmanuel Lesaffre\Affil{4,}\Affil{5}\ORCID{0000-0002-3747-6905}
-%}
-%\AuthorRunning{Arno\v{s}t Kom\'arek \textrm{et al.}}
-
-  %%% For papers with 2 authors:
-  %%%  in both \Author{} and \AuthorRunning{},
-  %%%  use the full names of both authors separated by '\and' without a comma.
-\Author{Scott H. Koeneman\Affil{1} \and Joseph E. Cavanaugh\Affil{2}}
-\AuthorRunning{Scott H. Koeneman \and Joseph E. Cavanuagh}
-  
-  %%% For papers with 1 author:
-  %%%  in both \Author{} and \AuthorRunning{},
-  %%%  use the full name the author.
-%\Author{Arno\v{s}t Kom\'arek\Affil{1}}
-%\AuthorRunning{Arno\v{s}t Kom\'arek}
+\setcounter{page}{1}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+%\newtheorem{proof}{Proof}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\pagestyle{fancy}
 
 
-%%% Affiliations as they should appear on the title page.
-%%% -------------------------------------------------------------------------------
-%%% Do not provide the full addresses here.
-%%% The ordering inside \Affiliations{} should correspond to NUMBERs used 
-%%% in \Affil{} commands in \Author{}
-\Affiliations{
-
-  %%% 1
-\item Division of Biostatistics and Bioinformatics, 
-      Department of Pharmacology, Physiology, and Cancer Biology, 
-      Thomas Jefferson University,
-      Philadelphia,
-      PA, USA
-
-  %%% 2
-\item Department of Biostatistics,
-      The University of Iowa, 
-      Iowa City,
-      IA, USA
-
-}   %% end \Affiliations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\def\n{\noindent}
+\lhead[\fancyplain{} \leftmark]{}
+\chead[]{}
+\rhead[]{\fancyplain{}\rightmark}
+\cfoot{}
 
 
-%%% Postal, e-mail address, phone and fax of the corresponding author (not necessarily the first author).
-%%% ------------------------------------------------------------------------------------------------------
-%%% Use command \CorrAddress{} to provide a full postal address of the
-%%% corresponding author in the form
-%%% "Firstname Lastname, Department, University, Street 1, ZIP City, Country" 
-%%% Use command \CorrEmail{} to provide an e-mail address of the corresponding author.
-%%% Use command \CorrPhone{} to provide a phone number (including the country code!) of the corresponding author.
-%%% Use command \CorrFax{} to provide a fax number (including the country code!) of the corresponding author.
-\CorrAddress{Scott H. Koeneman, 
-             Division of Biostatistics and Bioinformatics, 
-             Thomas Jefferson University, 
-             130 South 9th Street, 
-             Philadelphia, PA 55038, 
-             USA}
-\CorrEmail{Scott.Koeneman@jefferson.edu}
-\CorrPhone{(+1)\;651\;792\;6163}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{document}
+\pagenumbering{arabic}
 
-%%% Title and a short title (to be used as a running header) of the paper
-%%% -------------------------------------------------------------------------------
-\Title{A New Bootstrap Goodness-of-Fit Test for Normal Linear Regression Models}
-\TitleRunning{Bootstrap GOF}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\renewcommand{\baselinestretch}{2}
 
-%%% Abstract
-%%% -------------------------------------------------------------------------------
-\Abstract{
+\markright{ \hbox{\footnotesize\rm %Statistica Sinica
+%{\footnotesize\bf 24} (201?), 000-000
+}\hfill\\[-13pt]
+\hbox{\footnotesize\rm
+%\href{http://dx.doi.org/10.5705/ss.20??.???}{doi:http://dx.doi.org/10.5705/ss.20??.???}
+}\hfill }
+
+\markboth{\hfill{\footnotesize\rm Scott H. Koeneman and Joseph E. Cavanaugh} \hfill}
+{\hfill {\footnotesize\rm Bootstrap Goodness-of-Fit} \hfill}
+
+\renewcommand{\thefootnote}{}
+$\ $\par
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont \vspace{0.8pc}
+\centerline{\large\bf A New Bootstrap Goodness-of-Fit Test for}
+\vspace{2pt} 
+\centerline{\large\bf Normal Linear Regression Models}
+\vspace{.4cm} 
+\centerline{Scott H. Koeneman and Joseph E. Cavanaugh} 
+\vspace{.4cm} 
+\centerline{\it Thomas Jefferson University and the University of Iowa}
+ \vspace{.55cm} \fontsize{9}{11.5pt plus.8pt minus.6pt}\selectfont
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{quotation}
+\noindent {\it Abstract:}
 In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
 to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
 investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
 to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \verb|DBModelSelect| R package,
 available freely via the Comprehensive R Archive Network.
-}
 
 
-%%% Key words
-%%% -------------------------------------------------------------------------------
-\Keywords{
-Information Criteria; Resampling; Normal Distribution; Information Matrix Test; Robust Variance
-}
+\vspace{9pt}
+\noindent {\it Key words and phrases:}
+Information Criteria, Resampling, Normal Distribution
+\par
+\end{quotation}\par
 
 
-%%%%% MAIN BODY 
-%%%%% =============================================================================
-\begin{document}
+
+\def\thefigure{\arabic{figure}}
+\def\thetable{\arabic{table}}
+
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
 
 
-%%% Title page
-%%% -------------------------------------------------------------------------------
-%%% Use command\maketitle to produce the title page.
-\maketitle
+\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
 
 
-%%% Main text
-%%% ------------------------------------------
-\section{Introduction}
-	\subsection{Goodness-of-Fit}
 
-    		Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction and Background}
+
+	\subsection*{Goodness-of-Fit}
+
+    	Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
 		and its associated assumptions align with the observed data. The notion of goodness-of-fit is relevant in the model selection realm of information criteria, particularly to the Akaike
-		information criterion \citet{Akaike}. Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
+		information criterion (\cite{Akaike}). Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
 		number of functionally independent estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
 		\begin{equation*}
 			AIC = -2 \ell(\hat{\theta}|y) + 2 p.
 		\end{equation*}
 		The $-2 \ell(\hat{\theta}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
-		conforms to the observed data $y$ \citet{Cavanaugh}. This term is also present in other likelihood-based information criteria such as the Bayesian information criterion \citet{Schwarz}.
+		conforms to the observed data $y$ (\cite{Cavanaugh}). This term is also present in other likelihood-based information criteria such as the Bayesian information criterion (\cite{Schwarz}).
 		The goodness-of-fit term will only grow smaller, indicating better conformity to the data, as complexity is added to the model. Thus, this goodness-of-fit term ironically does
 		not encompass full goodness-of-fit considerations, and other considerations are needed to avoid overfitting and to detect violations of model assumptions.
 
@@ -180,7 +146,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		and homoskedasticity, that being constant error variance. While this work will focus on assessments of the goodness-of-fit and assumptions of traditional normal linear regression models, it is worth noting
 		that assessments of goodness-of-fit exist for many other modeling paradigms as well, and many of the same principles apply.
 		
-		Residual plots serve as a subjective visual method for assessing the appropriateness of a fitted linear regression model \citet{Miles}. Across different values
+		Residual plots serve as a subjective visual method for assessing the appropriateness of a fitted linear regression model (\cite{Miles}). Across different values
 		of the predictors and observed values, the residuals should not exhibit any specific pattern other than a mean of zero and constant variance if the assumptions of the linear regression model are met.
 		Thus, deviations from this pattern in the form of a residual plot that exhibits curvature, or a change in spread, can indicate violations to linearity and homoskedasticity, respectively. 
 
@@ -190,19 +156,19 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 		Hypothesis tests for the goodness-of-fit of a linear model offer an alternative to visual methods. These tests posit a null hypothesis that the model adequately accommodates the data and that
 		the associated assumptions are satisfied, with an alternative that the assumptions are violated in some fundamental way. One such test is the Breusch-Pagan test, which postulates a null hypothesis
-		that a linear regression model does not violate homoskedasticity \citet{Breusch}. This test involves performing an auxiliary linear regression on a transformation of the squared residuals from
+		that a linear regression model does not violate homoskedasticity (\cite{Breusch}). This test involves performing an auxiliary linear regression on a transformation of the squared residuals from
 		the candidate linear regression model against the covariates of interest.
 
 		However, one limitation of the Breusch-Pagan test is that it is only designed to detect a relationship between the covariates and the squared residuals that is linear, and thus it will not
-		produce efficacious results if the heteroskedasticity present is not linear \citet{Waldman}. An alternative to the Breusch-Pagan test in this regard is the White test for homoskedasticity,
-		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test \citet{White1980}. The White test produces a test statistic that is sensitive to deviations to
+		produce efficacious results if the heteroskedasticity present is not linear (\cite{Waldman}). An alternative to the Breusch-Pagan test in this regard is the White test for homoskedasticity,
+		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test (\cite{White1980}). The White test produces a test statistic that is sensitive to deviations to
 		the null hypothesis in the form of heteroskedasticity related to the squares and cross products of regressors. Additionally, the test may indicate misspecification of the model if the cross products
 		of certain regressors should be included in the model, but are not.
 
 		Another type of goodness-of-fit test is found in the information matrix test. The information matrix test compares the differences between the elements of the observed information matrix and the elements
-		of the outer product of the score vector, with a null hypothesis that the model is correctly specified \citet{White1982}. This test is more general than the tests for heteroskedasticity, as the null
+		of the outer product of the score vector, with a null hypothesis that the model is correctly specified (\cite{White1982}). This test is more general than the tests for heteroskedasticity, as the null
 		hypothesis can be violated in a number of fashions. There are several ways to perform the information matrix test, including varying which elements of the abovementioned matrices to assess, using an 
-		auxiliary regression to assist in calculation of the test statistic \citet{Chesher}, and employing a parametric bootstrap to aid in calculation of the test statistic \citet{Dhaene}. While able to
+		auxiliary regression to assist in calculation of the test statistic (\cite{Chesher}), and employing a parametric bootstrap to aid in calculation of the test statistic (\cite{Dhaene}). While able to
 		detect misspecification of various kinds, information matrix tests can struggle with power in certain scenarios.
 
 		The various ways in which goodness-of-fit tests can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
@@ -212,16 +178,16 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		In addition, both the White and Breusch-Pagan tests cannot detect heteroskedasticity induced by unobserved covariates, as their auxiliary regressions only use what has been observed. Such heteroskedasticity
 		may not affect the bias and consistency of effect estimates, but may lead to a loss of efficiency of estimates. 
 
-	\subsection*{Robust Variance Estimation}
-
+		\subsection*{Robust Variance Estimation}
+	
 		When employing likelihood theory to obtain parameter estimates for a model, one can often leverage the properties of maximum likelihood estimators (MLEs) to produce reasonable estimates of the variance of the
-		estimators, and thus perform inference \citet{Millar}. However, these properties are only guaranteed to hold when the model is properly specified, and inefficient or biased estimates may result when assumptions
+		estimators, and thus perform inference (\cite{Millar}). However, these properties are only guaranteed to hold when the model is properly specified, and inefficient or biased estimates may result when assumptions
 		do not hold. This has given rise to robust variance estimators that rely on fewer assumptions than classical likelihood theory, yet can still quantify the variability of a statistic
 		at hand.
 
-		Huber first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown \citet{Huber}. White
+		Huber first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown (\cite{Huber}). White
 		expanded upon this notion by deriving covariance matrix estimates for maximum likelihood estimators that are robust to a variety of different types of misspecification and only assume
-		conditional independence and certain other regularity conditions \citet{White1982}. Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
+		conditional independence and certain other regularity conditions (\cite{White1982}). Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
 		$n$, White established the asymptotic relation
 		\begin{equation*}
 			\sqrt{n} (\hat{\theta}_n - \theta_*) \xrightarrow[]{d} N(0, C(\theta_* ) ) .
@@ -263,8 +229,9 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		the merit of performing inference on the pseudo-true parameters in the first place. Therefore, robust variance estimators serve as a hedge against slight deviances from a model
 		being correctly specified, not as a tool that remediates poor model selection.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Derivations and Test Formulation}
-		
+
 		We will first explore the variance of the log-likelihood goodness-of-fit term present in likelihood-based information criteria. We will assume a
 		scenario where a normal linear regression model is being fit to the data of interest, and that this model is not misspecified. Thus, this model is of the proper
 		parametric family and contains the requisite mean structure, although the mean structure may contain extraneous variables in the
@@ -279,7 +246,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		term.
 
 		To achieve this end, we first consider $\hat{\sigma}^2$. As the linear model is assumed to not be misspecified, and $\hat{\sigma}^2$ is a maximum likelihood
-		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information \citet{Fisher}. The Fisher information as it relates
+		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information (\cite{Fisher}). The Fisher information as it relates
 		to the parameter vector $\theta' = [\beta', \sigma^2]$, where $\beta$ represents the regression coefficients
 		present in the model, can be shown to be
 		\begin{equation*}
@@ -306,7 +273,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		To find the variance of $-2 \ell (\hat{\theta}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
 		Additionally, the above asymptotic distribution involves the true $\sigma^2$ to which we will not have access in practical scenarios.
 
-		We will address both of these issues by employing the delta method \citet{Rao}. We propose a transformation of the form
+		We will address both of these issues by employing the delta method (\cite{Rao}). We propose a transformation of the form
 		\begin{equation*}
 			g(x) = \log(x) .
 		\end{equation*}
@@ -337,7 +304,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 		Assume that we once again fit a linear regression model with parameters $\theta' = [\beta', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
 		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$ that is robust to model misspecification. This estimator will be constructed using the White robust
-		sandwich variance estimator, employing much of the notation related to this development that was introduced in the first section of this work \citet{White1980}.
+		sandwich variance estimator, employing much of the notation related to this development that was introduced in the first section of this work (\cite{White1980}).
 
 		We let $I_{n} (\theta)$ denote the observed information matrix with regards to our specified linear regression model. With $X$ denoting the $n$ by $r$ design matrix, we see that
 		the quantity $A_n (\theta)$ used in the White estimator is found to be 
@@ -441,7 +408,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		many assumptions of normal linear regression. If some assumptions are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
 		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity. 
 
-		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| \citet{Koeneman}, available for download via CRAN and Github.
+		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| (\cite{Koeneman}), available for download via CRAN and Github.
 		The \verb|BootGOFTestLM| function in this package provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
 		
 		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
@@ -449,6 +416,16 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		assumptions. Limited testing results suggest that the residual bootstrap may also work just as well in this procedure. However, pending further investigation, the non-parametric
 		bootstrap is recommended at the current time. All simulations presented in this work will use the non-parametric bootstrap implementation of the procedure.
 
+%\begin{figure}[t!]
+%\includegraphics [angle=-90, scale=0.45]{carat}\par
+%\centerline{\epsfig{file=d:/sinicas/simuh3.eps,angle=-90,width=4.5in}}\par
+%\centerline{\epsfig{file=d:/sinicas/simuh4.eps,width=4.5in}}\par
+%\centerline{\epsfig{file=logo.eps,width=4.5in}}\par  %<- modified by Ivan  (You need to put figure in the same folder; or you must specify the path to the figure.)
+%\caption{Caption of the figure.}
+%\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Simulation Studies}
 
 Four simulation settings will be employed to assess the efficacy of the bootstrap procedure developed in the previous section. In each simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
@@ -595,9 +572,8 @@ Note the seemingly patternless, constant variance spread, indicating that one wo
 
 \begin{figure}[H]
 %\includegraphics[angle=-90, scale=0.45]{carat}\par
-\includegraphics[width=4.5in]{figures/sim3_residual_plot.pdf}\par
+\centerline{\epsfig{file=./figures/sim3_residual_plot.pdf,width=4.5in}}\par  %<- modified by Ivan  (You need to put figure in the same folder; or you must specify the path to the figure.)
 \caption{Simulation 4 Residual Plot.}
-\centering
 \end{figure}
 
 The results for the fourth simulation can be found in the table below.
@@ -671,6 +647,8 @@ variants again display extreme power at low sample sizes. While the bootstrap go
 In summary, we see that the new bootstrap goodness-of-fit test possesses advantages over competetitor tests, particularly in its ability to detect multiple forms of misspecification and ability to detect
 forms of mean misspecification where an important covariate may be missing.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion and Conclusion}
 
 In this work, we have developed a new bootstrap-based goodness-of-fit procedure to assess the goodness-of-fit of a fitted normal linear regression model. In order
@@ -695,38 +673,13 @@ when in fact a linear regression is a reasonable model. This is a feature common
 
 Potential future work involves finding similar procedures that can be used for other modeling frameworks.
 
-%%% Supplementary materials (if any)
-%%% ------------------------------------------
-%\section*{Supplementary materials}
-%The supplementary materials include [the list of supplementary materials and their brief description]. They are available from the journals page at \url{https://journals.sagepub.com/home/smj}. [At the submission stage, all supplementary materials (or the links to access them) should be submitted jointly with the main paper.]
 
 
-%%% Acknowledgements (if any)
-%%% ------------------------------------------
-\section*{Acknowledgements}
-We want to thank\ldots 
-
-
-%%% Declaration of conflicting interests (should always be included)
-%%% -----------------------------------------------------------------
-\section*{Declaration of conflicting interests}
-The authors declared no potential conflicts of interest with respect to the research, authorship and/or
-publication of this article.
-   %%% Alternatively, please, disclose here potential conflicting interests. 
-
-
-%%% Funding (if any)
-%%% ------------------------------------------
-%\section*{Funding}
-%This is the place to mention the funding if it is applicable for the paper.
-
-
-%%% Appendix (if any)
-%%% ------------------------------------------
-\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Appendix}
+
 This Appendix will derive an exact variance for the goodness-of-fit term $-2 \ell (\hat{\theta} )$ in the case of a properly specified
-linear model. While a similar derivation has been presented in other work \citet{McQuarrie}, the following derivation differs substantially and is presented for completeness.
+linear model. While a similar derivation has been presented in other work (\cite{McQuarrie}), the following derivation differs substantially and is presented for completeness.
 We assume that a given linear regression model has a full rank $n$ by $r$ design matrix $X$, outcome vector $y$, true parameters $\beta$ and $\sigma^2$,
 and maximum likelihood estimates $\hat{\beta}$ and $\hat{\sigma}^2$. We let
 \begin{equation*}
@@ -787,166 +740,156 @@ However, while this variance is exact, it still involves an approximation as the
 this variance provided no benefit when used in the bootstrap goodness-of-fit procedure developed in this work. Thus, this derivation is presented here only
 for completeness and as a matter of theoretical interest.
 
-%%% References if bibTeX is used
-%%%
-%%% Please, do not specify any \bibliographystyle{} command!
-%%%
-%%% It is already specified in the smj.cls and its
-%%% second specification here causes error.
-%%% ------------------------------------------------------------
-\bibliography{GOF_main_SS}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Supplementary Materials}
+
+There are no additional supplemental materials for this work.
+\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Acknowledgements}
+
+We would like to acknowledge the University of Iowa for support during the development of this work.
+\par
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%% References (if created by hand).
-%%% -----------------------------------------------------------------------------------
+\bibhang=1.7pc
+\bibsep=2pt
+\fontsize{9}{14pt plus.8pt minus .6pt}\selectfont
+\renewcommand\bibname{\large \bf References}
+%\begin{thebibliography}{11}
+\expandafter\ifx\csname
+natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL}\fi
 
-%\bibliographystyle{plain}
 
-\iffalse
 
-\begin{thebibliography}{99}
-\providecommand{\natexlab}[1]{#1}
-\providecommand{\url}[1]{\texttt{#1}}
-\expandafter\ifx\csname urlstyle\endcsname\relax
-  \providecommand{\doi}[1]{doi: #1}\else
-  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+%% use bibfile 
+%  \bibliographystyle{chicago}      % Chicago style, author-year citations
+%  \bibliography{bibfile}   % name your BibTeX data base
+
+
+
+%%  Another method
+\begin{thebibliography}{}
 
 \bibitem[Akaike(1974)]{Akaike}
-{\rm Akaike, H.} (1974).
-\newblock A new look at the statistical identification model.
-\newblock \emph{IEEE Transactions on Automatic Control}, {\bf 19}, \penalty0 716--723.
+Akaike, H. (1974).
+ A new look at the statistical identification model.
+{\em IEEE Transactions on Automatic Control}~{\bf 19}, 716--723.
 
 \bibitem[Breusch and Pagan(1989)]{Breusch}
-{\rm Breusch, T.S., and Pagan, A.R.} (1989).
-\newblock A Simple Test for Heteroskedasticity and Random Coefficient Variation.
-\newblock \emph{Econometrica}, {\bf 47}, \penalty0 1287--1294.
+Breusch, T.S., and Pagan, A.R. (1989).
+ A Simple Test for Heteroskedasticity and Random Coefficient Variation.
+{\em Econometrica}~{\bf 47}, 1287--1294.
 
 \bibitem[Cavanaugh and Neath(2019)]{Cavanaugh}
-{\rm Cavanaugh, J.E., and Neath, A.A.} (2019).
-\newblock The Akaike information criterion: Background, derivation, properties, application, interpretation, and refinements.
-\newblock \emph{WIREs Comput Stat}, 11:e1460.
+Cavanaugh, J.E., and Neath, A.A. (2019).
+ The Akaike information criterion: Background, derivation, properties, application, interpretation, and refinements.
+{\em WIREs Comput Stat}, 11:e1460.
 
 \bibitem[Chesher(1983)]{Chesher}
-{\rm Chesher, A.} (1983).
-\newblock The Information Matrix Test: Simplified Calculation via a Score Test Interpretation.
-\newblock \emph{Economics Letters}, {\bf 13}, \penalty0 45--48.
+Chesher, A. (1983).
+ The Information Matrix Test: Simplified Calculation via a Score Test Interpretation.
+{\em Economics Letters}~{\bf 13}, 45--48.
 
 \bibitem[Dhaene and Hoorelbeke(2004)]{Dhaene}
-{\rm Dhaene, G., and Hoorelbeke, D.} (2004).
-\newblock The information matrix test with bootstrap-based covariance matrix estimation.
-\newblock \emph{Economics Letters}, {\bf 82}, \penalty0 341--347.
+Dhaene, G., and Hoorelbeke, D. (2004).
+ The information matrix test with bootstrap-based covariance matrix estimation.
+{\em Economics Letters}~{\bf 82}, 341--347.
 
 \bibitem[Fisher(1922)]{Fisher}
-{\rm Fisher, R.A.} (1922).
-\newblock On the Mathematical Foundations of Theoretical Statistics.
-\newblock \emph{Phil. Trans. R. Soc. Lond. A}, {\bf 222}, \penalty0 309--368.
+Fisher, R.A. (1922).
+ On the Mathematical Foundations of Theoretical Statistics.
+{\em Phil. Trans. R. Soc. Lond. A}~{\bf 222}, 309--368.
 
 \bibitem[Freedman(2006)]{Freedman}
-{\rm Freedman, D.A.} (2006).
-\newblock On The So-Called 'Huber Sandwich Estimator' and 'Robust Standard Errors'.
-\newblock \emph{The American Statistician}, {\bf 60}, \penalty0 299--302.
+Freedman, D.A. (2006).
+ On The So-Called 'Huber Sandwich Estimator' and 'Robust Standard Errors'.
+{\em The American Statistician}~{\bf 60}, 299--302.
 
 \bibitem[Huber(1967)]{Huber}
-{\rm Huber, P.J.} (1967).
-\newblock The behavior of maximum likelihood estimates under nonstandard conditions.
-\newblock \emph{Proceedings of the Fifth Berkeley Symposium on Mathematical Statistics and Probability}, {\bf 5}, \penalty0 221--233.
+Huber, P.J. (1967).
+ The behavior of maximum likelihood estimates under nonstandard conditions.
+{\em Proceedings of the Fifth Berkeley Symposium on Mathematical Statistics and Probability}~{\bf 5}, 221--233.
 
 \bibitem[Koeneman(2023)]{Koeneman}
-{\rm Koeneman, S.H.} (2023).
-\newblock \emph{DBModelSelect: Distribution-Based Model Selection}.
-\newblock R package version 0.2.0, \url{https://CRAN.R-project.org/package=DBModelSelect}.
+Koeneman, S.H. (2023).
+ {\em DBModelSelect: Distribution-Based Model Selection}.
+R package version 0.2.0, \url{https://CRAN.R-project.org/package=DBModelSelect}.
 
 \bibitem[Kutner et al.(2005)]{Kutner}
-{\rm Kutner, M.H., Nachtsheim, C.R., Neter, J., and Li, W.} (2005).
- \emph{Applied Linear Statistical Models}.
-\newblock McGraw-Hill Irwin, New York.
+Kutner, M.H., Nachtsheim, C.R., Neter, J., and Li, W. (2005).
+ {\em Applied Linear Statistical Models}.
+5th Edition. McGraw-Hill Irwin, New York.
 
 \bibitem[McQuarrie and Tsai(1998)]{McQuarrie}
-{\rm McQuarrie, A.D.R., and Tsai, C-L} (1998).
- \emph{Regression and Time Series Model Selection.}
-\newblock World Scientific, New Jersey.
+McQuarrie, A.D.R., and Tsai, C-L (1998).
+ {\em Regression and Time Series Model Selection.}
+1st Edition. World Scientific, New Jersey.
 
 \bibitem[Miles(2014)]{Miles}
-{\rm Miles, J.} (2014).
-\newblock Residual plot.
-\newblock \emph{Wiley StatsRef: Statistics Reference Online}.
+Miles, J. (2014).
+ Residual plot.
+{\em Wiley StatsRef: Statistics Reference Online}.
 
 \bibitem[Millar(2011)]{Millar}
-{\rm Millar, R.B.} (2011).
-\newblock \emph{Maximum Likelihood Estimation and Inference: With Examples in R, SAS and ADMB.}
-\newblock Wiley, Hoboken.
+Millar, R.B. (2011).
+ {\em Maximum Likelihood Estimation and Inference: With Examples in R, SAS and ADMB.}
+1st Edition. Wiley, Hoboken.
 
 \bibitem[Rao(1965)]{Rao}
-{\rm Rao, C.R.} (1965).
-\newblock \emph{Linear Statistical Inference and Its Applications.}
-\newblock Wiley, Hoboken.
+Rao, C.R. (1965).
+ {\em Linear Statistical Inference and Its Applications.}
+1st Edition. Wiley, Hoboken.
 
 \bibitem[Schwarz(1978)]{Schwarz}
-{\rm Schwarz, G.E.} (1978).
-\newblock Estimating the dimension of a model.
-\newblock \emph{Annals of Statistics}, {\bf 22}, \penalty0 461--464.
+Schwarz, G.E. (1978).
+ Estimating the dimension of a model.
+{\em Annals of Statistics}~{\bf 22}, 461--464.
 
 \bibitem[White(1980)]{White1980}
-{\rm White, H.} (1980).
-\newblock A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity.
-\newblock \emph{Econometrica}, {\bf 48}, \penalty0 817--838.
+White, H. (1980).
+ A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity.
+{\em Econometrica}~{\bf 48}, 817--838.
 
 \bibitem[White(1982)]{White1982}
-{\rm White, H.} (1982).
-\newblock Maximum Likelihood Estimation of Misspecified Models.
-\newblock \emph{Econometrica}, {\bf 50}, \penalty0 1--25.
+White, H. (1982).
+ Maximum Likelihood Estimation of Misspecified Models.
+{\em Econometrica}~{\bf 50}, 1--25.
 
 \bibitem[Waldman(1983)]{Waldman}
-{\rm Waldman, D.M.} (1983).
-\newblock A note on algebraic equivalence of White's test and a variation of the Godfrey/Breusch-Pagan test for heteroscedasticity.
-\newblock \emph{Economics Letters}, {\bf 13}, \penalty0 197--200.
+Waldman, D.M. (1983).
+ A note on algebraic equivalence of White's test and a variation of the Godfrey/Breusch-Pagan test for heteroscedasticity.
+{\em Economics Letters}~{\bf 13}, 197--200.
+
+
 
 \end{thebibliography}
 
-\fi
 
-%\bibitem[Fahrmeir et~al.(2013)Fahrmeir, Kneib, Lang, and Marx]{Fahrmeiret13}
-%{\rm Fahrmeir, L., Kneib, T., Lang, S., {\rm and} Marx, B.} (2013).
-%\newblock \emph{Regression: Models, Methods and Applications}.
-%\newblock Springer-Verlag, New York.
-%
-%\bibitem[G\'omez et~al.(2009)G\'omez, Luz~Calle, Oller, and Langohr]{Gomezet09}
-%{\rm G\'omez, G., Luz~Calle, M., Oller, R., {\rm and} Langohr, K.} (2009).
-%\newblock Tutorial on methods for interval-censored data and their implementation in {R}.
-%\newblock \emph{Statistical Modelling}, {\bf 9}\penalty0 (4), \penalty0 259--297.
-%\newblock \doi{10.1177/1471082X0900900402}.
-%
-%\bibitem[Kneib(2013)]{Kneib13}
-%{\rm Kneib, T.} (2013).
-%\newblock Beyond mean regression.
-%\newblock \emph{Statistical Modelling}, {\bf 13}\penalty0 (4), \penalty0 275--303.
-%\newblock \doi{10.1177/1471082X13494159}.
-%
-%\bibitem[Kom\'arek and Lesaffre(2006)]{KomarekLesaffre06}
-%{\rm Kom\'arek, A. {\rm and} Lesaffre, E.} (2006).
-%\newblock Bayesian semi-parametric accelerated failure time model for paired doubly-interval-censored data.
-%\newblock \emph{Statistical Modelling}, {\bf 6}\penalty0 (1), \penalty0 3--22.
-%\newblock \doi{10.1191/1471082X06st107oa}.
-%
-%\bibitem[Lesaffre et~al.(2009)Lesaffre, Kom\'arek, and Jara]{Lesaffreet09}
-%{\rm Lesaffre, E., Kom\'arek, A., {\rm and} Jara, A.} (2009).
-%\newblock The {B}ayesian approach.
-%\newblock In {\rm Lesaffre, E., Feine, J., Leroux, B., {\rm and} Declerck, D.}, editors,
-%  \emph{Statistical and Methodological Aspects of Oral Health Research},
-%  pages 315--338. John Wiley and Sons, Chichester.
-%
-%\bibitem[Li et~al.(2007)Li, Simonoff, and Tsai]{Liet07}
-%{\rm Li, L., Simonoff, J.~S., {\rm and} Tsai, C.-L.} (2007).
-%\newblock Tobit model estimation and sliced inverse regression.
-%\newblock \emph{Statistical Modelling}, {\bf 7}\penalty0 (2), \penalty0 107--123.
-%\newblock \doi{10.1177/1471082X0700700201}.
-%
-%\bibitem[Waldmann et~al.(2013)Waldmann, Kneib, Yue, Lang, and Flexeder]{Waldmannet13}
-%{\rm Waldmann, E., Kneib, T., Yue, Y.~R., Lang, S., {\rm and} Flexeder, C.} (2013).
-%\newblock Bayesian semiparametric additive quantile regression.
-%\newblock \emph{Statistical Modelling}, {\bf 13}\penalty0 (3), \penalty0 223--252.
-%\newblock \doi{10.1177/1471082X13480650}.
-%
+\pagebreak
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vskip .65cm
+\noindent
+Division of Biostatistics and Bioinformatics, Department of Pharmacology, Physiology, and Cancer Biology, Sidney Kimmel Medical College, Thomas Jefferson University
+\vskip 2pt
+\noindent
+E-mail: Scott.Koeneman@jefferson.edu
+\vskip 2pt
+
+\noindent
+Department of Biostatistics, College of Public Health, University of Iowa 
+\vskip 2pt
+\noindent
+E-mail: joe-cavanuagh@uiowa.edu
+
+
+% \vskip .3cm
+%\centerline{(Received ???? 20??; accepted ???? 20??)}\par
 \end{document}
