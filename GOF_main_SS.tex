@@ -136,7 +136,7 @@
 In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
 to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
 investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
-to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \verb|DBModelSelect| R package,
+to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \texttt{DBModelSelect} R package,
 available freely via the Comprehensive R Archive Network.
 }
 
@@ -156,6 +156,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 %%% Title page
 %%% -------------------------------------------------------------------------------
 %%% Use command\maketitle to produce the title page.
+
 \maketitle
 
 
@@ -441,8 +442,8 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		many assumptions of normal linear regression. If some assumptions are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
 		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity. 
 
-		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| \citep{Koeneman}, available for download via CRAN and Github.
-		The \verb|BootGOFTestLM| function in this package provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
+		Additionally, an implementation of this bootstrap test was developed in the R package \texttt{DBModelSelect} \citep{Koeneman}, available for download via CRAN and Github.
+		The \texttt{BootGOFTestLM} function in this package provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
 		
 		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
 		and may use any bootstrap interval they choose so long as it is theoretically justifiable. Additionally, the non-parametric bootstrap is employed in the algorithm detailed above to avoid further
@@ -678,7 +679,7 @@ to develop this test, we first derived an asymptotic variance for the goodness-o
 that the fitted regression model is properly specified. The test functions by assessing whether a robust estimated variance conforms to the
 theoretical value under proper specification. Simulation studies demonstrated the ability of this bootstrap test to detect a wide variety of violations of assumptions inherent to
 normal linear regression. These violations include mean misspecification and violations to homoskedasticity. As such, this new procedure has the potential to serve as an omnibus
-goodness-of-fit procedure for normal linear regression models. Additionally, we developed the \verb|BootGOFTestLM| function of the R package \verb|DBModelSelect| to provide
+goodness-of-fit procedure for normal linear regression models. Additionally, we developed the \texttt{BootGOFTestLM} function of the R package \texttt{DBModelSelect} to provide
 an efficient and convenient method of performing the test.
 
 This procedure has the potential to assist in model selection. For example, if one were to consider a normal linear regression framework to model a certain outcome, one may
