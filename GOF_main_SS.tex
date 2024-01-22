@@ -166,13 +166,13 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
     		Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
 		and its associated assumptions align with the observed data. The notion of goodness-of-fit is relevant in the model selection realm of information criteria, particularly to the Akaike
-		information criterion \citet{Akaike}. Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
+		information criterion \citep{Akaike}. Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
 		number of functionally independent estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
 		\begin{equation*}
 			AIC = -2 \ell(\hat{\theta}|y) + 2 p.
 		\end{equation*}
 		The $-2 \ell(\hat{\theta}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
-		conforms to the observed data $y$ \citet{Cavanaugh}. This term is also present in other likelihood-based information criteria such as the Bayesian information criterion \citet{Schwarz}.
+		conforms to the observed data $y$ \citep{Cavanaugh}. This term is also present in other likelihood-based information criteria such as the Bayesian information criterion \citep{Schwarz}.
 		The goodness-of-fit term will only grow smaller, indicating better conformity to the data, as complexity is added to the model. Thus, this goodness-of-fit term ironically does
 		not encompass full goodness-of-fit considerations, and other considerations are needed to avoid overfitting and to detect violations of model assumptions.
 
@@ -180,7 +180,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		and homoskedasticity, that being constant error variance. While this work will focus on assessments of the goodness-of-fit and assumptions of traditional normal linear regression models, it is worth noting
 		that assessments of goodness-of-fit exist for many other modeling paradigms as well, and many of the same principles apply.
 		
-		Residual plots serve as a subjective visual method for assessing the appropriateness of a fitted linear regression model \citet{Miles}. Across different values
+		Residual plots serve as a subjective visual method for assessing the appropriateness of a fitted linear regression model \citep{Miles}. Across different values
 		of the predictors and observed values, the residuals should not exhibit any specific pattern other than a mean of zero and constant variance if the assumptions of the linear regression model are met.
 		Thus, deviations from this pattern in the form of a residual plot that exhibits curvature, or a change in spread, can indicate violations to linearity and homoskedasticity, respectively. 
 
@@ -190,19 +190,19 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 		Hypothesis tests for the goodness-of-fit of a linear model offer an alternative to visual methods. These tests posit a null hypothesis that the model adequately accommodates the data and that
 		the associated assumptions are satisfied, with an alternative that the assumptions are violated in some fundamental way. One such test is the Breusch-Pagan test, which postulates a null hypothesis
-		that a linear regression model does not violate homoskedasticity \citet{Breusch}. This test involves performing an auxiliary linear regression on a transformation of the squared residuals from
+		that a linear regression model does not violate homoskedasticity \citep{Breusch}. This test involves performing an auxiliary linear regression on a transformation of the squared residuals from
 		the candidate linear regression model against the covariates of interest.
 
 		However, one limitation of the Breusch-Pagan test is that it is only designed to detect a relationship between the covariates and the squared residuals that is linear, and thus it will not
-		produce efficacious results if the heteroskedasticity present is not linear \citet{Waldman}. An alternative to the Breusch-Pagan test in this regard is the White test for homoskedasticity,
-		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test \citet{White1980}. The White test produces a test statistic that is sensitive to deviations to
+		produce efficacious results if the heteroskedasticity present is not linear \citep{Waldman}. An alternative to the Breusch-Pagan test in this regard is the White test for homoskedasticity,
+		which shares the same null hypothesis of homoskedasticity of a linear model as the Breusch-Pagan test \citep{White1980}. The White test produces a test statistic that is sensitive to deviations to
 		the null hypothesis in the form of heteroskedasticity related to the squares and cross products of regressors. Additionally, the test may indicate misspecification of the model if the cross products
 		of certain regressors should be included in the model, but are not.
 
 		Another type of goodness-of-fit test is found in the information matrix test. The information matrix test compares the differences between the elements of the observed information matrix and the elements
-		of the outer product of the score vector, with a null hypothesis that the model is correctly specified \citet{White1982}. This test is more general than the tests for heteroskedasticity, as the null
+		of the outer product of the score vector, with a null hypothesis that the model is correctly specified \citep{White1982}. This test is more general than the tests for heteroskedasticity, as the null
 		hypothesis can be violated in a number of fashions. There are several ways to perform the information matrix test, including varying which elements of the abovementioned matrices to assess, using an 
-		auxiliary regression to assist in calculation of the test statistic \citet{Chesher}, and employing a parametric bootstrap to aid in calculation of the test statistic \citet{Dhaene}. While able to
+		auxiliary regression to assist in calculation of the test statistic \citep{Chesher}, and employing a parametric bootstrap to aid in calculation of the test statistic \citep{Dhaene}. While able to
 		detect misspecification of various kinds, information matrix tests can struggle with power in certain scenarios.
 
 		The various ways in which goodness-of-fit tests can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
@@ -215,13 +215,13 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 	\subsection*{Robust Variance Estimation}
 
 		When employing likelihood theory to obtain parameter estimates for a model, one can often leverage the properties of maximum likelihood estimators (MLEs) to produce reasonable estimates of the variance of the
-		estimators, and thus perform inference \citet{Millar}. However, these properties are only guaranteed to hold when the model is properly specified, and inefficient or biased estimates may result when assumptions
+		estimators, and thus perform inference \citep{Millar}. However, these properties are only guaranteed to hold when the model is properly specified, and inefficient or biased estimates may result when assumptions
 		do not hold. This has given rise to robust variance estimators that rely on fewer assumptions than classical likelihood theory, yet can still quantify the variability of a statistic
 		at hand.
 
-		Huber first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown \citet{Huber}. White
+		\citet{Huber} first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown. \citet{White1982}
 		expanded upon this notion by deriving covariance matrix estimates for maximum likelihood estimators that are robust to a variety of different types of misspecification and only assume
-		conditional independence and certain other regularity conditions \citet{White1982}. Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
+		conditional independence and certain other regularity conditions. Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
 		$n$, White established the asymptotic relation
 		\begin{equation*}
 			\sqrt{n} (\hat{\theta}_n - \theta_*) \xrightarrow[]{d} N(0, C(\theta_* ) ) .
@@ -279,7 +279,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		term.
 
 		To achieve this end, we first consider $\hat{\sigma}^2$. As the linear model is assumed to not be misspecified, and $\hat{\sigma}^2$ is a maximum likelihood
-		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information \citet{Fisher}. The Fisher information as it relates
+		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information \citep{Fisher}. The Fisher information as it relates
 		to the parameter vector $\theta' = [\beta', \sigma^2]$, where $\beta$ represents the regression coefficients
 		present in the model, can be shown to be
 		\begin{equation*}
@@ -306,7 +306,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		To find the variance of $-2 \ell (\hat{\theta}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
 		Additionally, the above asymptotic distribution involves the true $\sigma^2$ to which we will not have access in practical scenarios.
 
-		We will address both of these issues by employing the delta method \citet{Rao}. We propose a transformation of the form
+		We will address both of these issues by employing the delta method \citep{Rao}. We propose a transformation of the form
 		\begin{equation*}
 			g(x) = \log(x) .
 		\end{equation*}
@@ -337,7 +337,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 		Assume that we once again fit a linear regression model with parameters $\theta' = [\beta', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
 		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$ that is robust to model misspecification. This estimator will be constructed using the White robust
-		sandwich variance estimator, employing much of the notation related to this development that was introduced in the first section of this work \citet{White1980}.
+		sandwich variance estimator, employing much of the notation related to this development that was introduced in the first section of this work \citep{White1980}.
 
 		We let $I_{n} (\theta)$ denote the observed information matrix with regards to our specified linear regression model. With $X$ denoting the $n$ by $r$ design matrix, we see that
 		the quantity $A_n (\theta)$ used in the White estimator is found to be 
@@ -441,7 +441,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		many assumptions of normal linear regression. If some assumptions are violated, the property $Var[GOF] \approx 2n$ is not guaranteed to hold. This characteristic allows the test to detect
 		many forms of misspecification from mean misspecification to distributional misspecification to heteroskedasticity. 
 
-		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| \citet{Koeneman}, available for download via CRAN and Github.
+		Additionally, an implementation of this bootstrap test was developed in the R package \verb|DBModelSelect| \citep{Koeneman}, available for download via CRAN and Github.
 		The \verb|BootGOFTestLM| function in this package provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
 		
 		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
@@ -726,7 +726,7 @@ publication of this article.
 \appendix
 \section*{Appendix}
 This Appendix will derive an exact variance for the goodness-of-fit term $-2 \ell (\hat{\theta} )$ in the case of a properly specified
-linear model. While a similar derivation has been presented in other work \citet{McQuarrie}, the following derivation differs substantially and is presented for completeness.
+linear model. While a similar derivation has been presented in other work \citep{McQuarrie}, the following derivation differs substantially and is presented for completeness.
 We assume that a given linear regression model has a full rank $n$ by $r$ design matrix $X$, outcome vector $y$, true parameters $\beta$ and $\sigma^2$,
 and maximum likelihood estimates $\hat{\beta}$ and $\hat{\sigma}^2$. We let
 \begin{equation*}
