@@ -42,6 +42,7 @@
 \usepackage{graphics}
 \usepackage{makecell}
 \usepackage{caption}
+\usepackage{bm}
 
 
 %%% Identification of authors
@@ -144,7 +145,7 @@ available freely via the Comprehensive R Archive Network.
 %%% Key words
 %%% -------------------------------------------------------------------------------
 \Keywords{
-Information Criteria; Resampling; Normal Distribution; Information Matrix Test; Robust Variance
+Information Criteria; Information Matrix Test; Normal Distribution; Resampling; Robust Variance
 }
 
 
@@ -167,12 +168,12 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
     		Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
 		and its associated assumptions align with the observed data. The notion of goodness-of-fit is relevant in the model selection realm of information criteria, particularly to the Akaike
-		information criterion \citep{Akaike}. Using $\ell(\hat{\theta}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
+		information criterion \citep{Akaike}. Using $\ell(\hat{\bm{\theta}}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
 		number of functionally independent estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
 		\begin{equation*}
-			AIC = -2 \ell(\hat{\theta}|y) + 2 p.
+			AIC = -2 \ell(\hat{\bm{\theta}}|y) + 2 p.
 		\end{equation*}
-		The $-2 \ell(\hat{\theta}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
+		The $-2 \ell(\hat{\bm{\theta}}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
 		conforms to the observed data $y$ \citep{Cavanaugh}. This term is also present in other likelihood-based information criteria such as the Bayesian information criterion \citep{Schwarz}.
 		The goodness-of-fit term will only grow smaller, indicating better conformity to the data, as complexity is added to the model. Thus, this goodness-of-fit term ironically does
 		not encompass full goodness-of-fit considerations, and other considerations are needed to avoid overfitting and to detect violations of model assumptions.
@@ -202,9 +203,11 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 		Another type of goodness-of-fit test is found in the information matrix test. The information matrix test compares the differences between the elements of the observed information matrix and the elements
 		of the outer product of the score vector, with a null hypothesis that the model is correctly specified \citep{White1982}. This test is more general than the tests for heteroskedasticity, as the null
-		hypothesis can be violated in a number of fashions. There are several ways to perform the information matrix test, including varying which elements of the abovementioned matrices to assess, using an 
-		auxiliary regression to assist in calculation of the test statistic \citep{Chesher}, and employing a parametric bootstrap to aid in calculation of the test statistic \citep{Dhaene}. While able to
-		detect misspecification of various kinds, information matrix tests can struggle with power in certain scenarios.
+		hypothesis can be violated in a number of fashions. While able to
+		detect misspecification of various kinds, the information matrix test can struggle with power in certain scenarios.
+  
+        As the original formulation of the information matrix test can be computationally difficult to implement, an alternate method exists using an
+		auxiliary regression to assist in calculation of the test statistic \citep{Chesher} However, both the classical and regression variants of the information matrix can struggle mightily with their performance in small sample sizes. Thus, another method of performing the test involves employing a parametric bootstrap to aid in calculation of the test statistic \citep{Dhaene}. This method can be shown to better maintain a desired test level in small to moderate sample sizes. 
 
 		The various ways in which goodness-of-fit tests can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
 		When a hypothesis is rejected, we can be reasonably confident that an assumption is violated; however, by simply performing the test, we do not glean much information as to how exactly the
@@ -222,41 +225,41 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 		\citet{Huber} first provided justifications for consistency and asymptotic normality of maximum likelihood estimators under conditions weaker than had been previously shown. \citet{White1982}
 		expanded upon this notion by deriving covariance matrix estimates for maximum likelihood estimators that are robust to a variety of different types of misspecification and only assume
-		conditional independence and certain other regularity conditions. Defining $\theta_*$ as the pseudo-true parameter and $\hat{\theta}_n$ as the MLE for a sample of size
+		conditional independence and certain other regularity conditions. Defining $\bm{\theta}_*$ as the pseudo-true parameter and $\hat{\bm{\theta}}_n$ as the MLE for a sample of size
 		$n$, White established the asymptotic relation
 		\begin{equation*}
-			\sqrt{n} (\hat{\theta}_n - \theta_*) \xrightarrow[]{d} N(0, C(\theta_* ) ) .
+			\sqrt{n} (\hat{\bm{\theta}}_n - \bm{\theta}_*) \xrightarrow[]{d} N(0, \bm{C}(\bm{\theta}_* ) ) .
 		\end{equation*}
-		The large sample covariance matrix $C(\theta)$ can be defined using two positive definite matrices $A(\theta)$ and $B(\theta)$, where the $(i,j)$ element of $A(\theta)$ is defined as
+		The large sample covariance matrix $\bm{C}(\bm{\theta})$ can be defined using two positive definite matrices $\bm{A}(\bm{\theta})$ and $\bm{B}(\bm{\theta})$, where the $(i,j)$ element of $\bm{A}(\bm{\theta})$ is defined as
 		\begin{equation*}
-			A(\theta)_{i,j} = E \left[ \frac{\partial^2 f(y,\theta)}{\partial \theta_i \partial \theta_j} \right] 
+			\bm{A}(\bm{\theta})_{i,j} = E \left[ \frac{\partial^2 f(\bm{y},\bm{\theta})}{\partial \bm{\theta}_i \partial \bm{\theta}_j} \right] 
 		\end{equation*}
-		and the $(i,j)$ element of $B(\theta)$ is defined as
+		and the $(i,j)$ element of $\bm{B}(\bm{\theta})$ is defined as
 		\begin{equation*}
-			B(\theta)_{i,j} = E \left[ \frac{\partial f(y,\theta)}{\partial \theta_i} \frac{\partial f(y,\theta)}{\partial \theta_j} \right] 
+			\bm{B}(\bm{\theta})_{i,j} = E \left[ \frac{\partial f(\bm{y},\bm{\theta})}{\partial \bm{\theta}_i} \frac{\partial f(\bm{y},\bm{\theta})}{\partial \bm{\theta}_j} \right] 
 		\end{equation*}
-		where $i = 1,...,p$ and $j = 1,...,p$ respectively. These matrices then combine to define $C(\theta)$ as
+		where $i = 1,...,p$ and $j = 1,...,p$ respectively. These matrices then combine to define $\bm{C}(\bm{\theta})$ as
 		\begin{equation*}
-			C(\theta) = A(\theta)^{-1} B(\theta) A(\theta)^{-1} ,
+			\bm{C}(\bm{\theta}) = \bm{A}(\bm{\theta})^{-1} \bm{B}(\bm{\theta}) \bm{A}(\bm{\theta})^{-1} ,
 		\end{equation*}
-		and thus evaluating this quantity at $\theta_*$, one arrives at the robust asymptotic variance estimate. The resulting estimator, and those that are similar in form, are often called sandwich
+		and thus evaluating this quantity at $\bm{\theta}_*$, one arrives at the robust asymptotic variance estimate. The resulting estimator, and those that are similar in form, are often called sandwich
 		variance estimators due to one quantity being sandwiched in between two identical others to form the statistic.
 
-		As in general one will not know the pseudo-true parameter $\theta_*$, White formulates the matrices $A_n(\theta)$ and $B_n(\theta)$, with the $(i,j)$ element of $A_n(\theta)$ defined as
+		As in general one will not know the pseudo-true parameter $\bm{\theta}_*$, White formulates the matrices $\bm{A_n}(\bm{\theta})$ and $\bm{B_n}(\bm{\theta})$, with the $(i,j)$ element of $\bm{A_n}(\bm{\theta})$ defined as
 		\begin{equation*}
-			A_n(\theta)_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial^2 f(y_t,\theta)}{\partial \theta_i \partial \theta_j}
+			\bm{A_n}(\bm{\theta})_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial^2 f(\bm{y_t},\bm{\theta})}{\partial \bm{\theta}_i \partial \bm{\theta}_j}
 		\end{equation*}
-		and the $(i,j)$ element of $B_n(\theta)$ as
+		and the $(i,j)$ element of $\bm{B_n}(\bm{\theta})$ as
 		\begin{equation*}
-			B_n(\theta)_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial f(y_t,\theta)}{\partial \theta_i} \frac{\partial f(y_t,\theta)}{\partial \theta_j} .
+			\bm{B_n}(\bm{\theta})_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial f(\bm{y_t},\bm{\theta})}{\partial \bm{\theta}_i} \frac{\partial f(\bm{y_t},\bm{\theta})}{\partial \bm{\theta}_j} .
 		\end{equation*}
-		White proposes calculating $A_n(\theta)$ and $B_n(\theta)$ from the data, and evaluating them at the MLE, to produce
+		White proposes calculating $\bm{A_n}(\bm{\theta})$ and $\bm{B_n}(\bm{\theta})$ from the data, and evaluating them at the MLE, to produce
 		\begin{equation*}
-			C_n(\hat{\theta}) = A_n(\hat{\theta})^{-1} B_n(\hat{\theta}) A_n(\hat{\theta})^{-1} .
+			\bm{C_n}(\hat{\bm{\theta}}) = \bm{A_n}(\hat{\bm{\theta}})^{-1} \bm{B_n}(\hat{\bm{\theta}}) \bm{A_n}(\hat{\bm{\theta}})^{-1} .
 		\end{equation*}
 		It can then be shown that 
 		\begin{equation*}
-			C_n(\hat{\theta}_n) \xrightarrow[]{a.s.} C(\theta_* ) .
+			\bm{C_n}(\hat{\bm{\theta}}_n) \xrightarrow[]{a.s.} \bm{C}(\bm{\theta}_* ) .
 		\end{equation*}
 		Thus, we have a variance estimator for the MLE that is both robust to model misspecification and can be calculated using the data, but yet also will be approximately equivalent to the standard
 		likelihood theory estimator if the model is correctly specified. This sandwich estimator, and others like it, can be used to perform inference related to the parameters if one calls into question
@@ -271,9 +274,9 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		parametric family and contains the requisite mean structure, although the mean structure may contain extraneous variables in the
 		case of an overspecified model.
 
-		Assuming a linear model has been fit using maximum likelihood with fitted parameters $\hat{\theta}$, the goodness-of-fit term can be decomposed as
+		Assuming a linear model has been fit using maximum likelihood with fitted parameters $\hat{\bm{\theta}}$, the goodness-of-fit term can be decomposed as
 		\begin{equation}
-			-2 \ell (\hat{\theta}  ) = n \log(2 \pi) + n + n \log(\hat{\sigma}^2 ) ,
+			-2 \ell (\hat{\bm{\theta}}  ) = n \log(2 \pi) + n + n \log(\hat{\sigma}^2 ) ,
 		\end{equation}
 		where $\hat{\sigma}^2$ denotes the maximum likelihood estimate for the error variance $\sigma^2$. Note that the only term here that is random is
 		the statistic $n \log(\hat{\sigma}^2)$. Thus, if we can quantify the variability of this term, we can quantify the variability of the entire goodness-of-fit
@@ -281,20 +284,20 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 		To achieve this end, we first consider $\hat{\sigma}^2$. As the linear model is assumed to not be misspecified, and $\hat{\sigma}^2$ is a maximum likelihood
 		estimator, this estimator will have an asymptotic variance related to the inverse of the Fisher information \citep{Fisher}. The Fisher information as it relates
-		to the parameter vector $\theta' = [\beta', \sigma^2]$, where $\beta$ represents the regression coefficients
+		to the parameter vector $\bm{\theta}' = [\bm{\beta}', \sigma^2]$, where $\bm{\beta}$ represents the regression coefficients
 		present in the model, can be shown to be
 		\begin{equation*}
-			- E \left[ \frac{\partial^2 \ell (\hat{\theta}  )}{\partial \theta^2} \right] = \mathcal{I}_{n}(\theta) =
+			- E \left[ \frac{\partial^2 \ell (\hat{\bm{\theta}}  )}{\partial \bm{\theta}^2} \right] = \bm{\mathcal{I}}_{n}(\bm{\theta}) =
 			\begin{bmatrix}
-				\frac{X' X}{\sigma^2} & 0 \\
+				\frac{\bm{X}' \bm{X}}{\sigma^2} & 0 \\
 				0 & \frac{n}{2 \sigma^4} \\
 			\end{bmatrix}
 			,
 		\end{equation*}
-		where $X$ is the design matrix of the regression, and $0$ is a vector of zeroes. Thus, we may take the inverse of the Fisher information matrix and isolate
+		where $\bm{X}$ is the design matrix of the regression, and $0$ is a vector of zeroes. Thus, we may take the inverse of the Fisher information matrix and isolate
 		the element related to the error variance $\sigma^2$. We see that this element will be
 		\begin{equation*}
-			\mathcal{I}^{-1}(\sigma ^2) = \frac{2 \sigma ^4}{n} .
+			\bm{\mathcal{I}}^{-1}(\sigma ^2) = \frac{2 \sigma ^4}{n} .
 		\end{equation*}
 		
 		Using the above relation, and applying the property of asymptotic normality of the MLE $\hat{\sigma}^2$ in this case of a properly specified normal linear
@@ -304,7 +307,7 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		\end{equation*}
 		should hold.
 
-		To find the variance of $-2 \ell (\hat{\theta}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
+		To find the variance of $-2 \ell (\hat{\bm{\theta}}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
 		Additionally, the above asymptotic distribution involves the true $\sigma^2$ to which we will not have access in practical scenarios.
 
 		We will address both of these issues by employing the delta method \citep{Rao}. We propose a transformation of the form
@@ -323,63 +326,63 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		Thus, assuming that the model is appropriately specified, the variance of $n\log(\hat{\sigma}^2)$ will be approximately $2n$. Applying this variance back to the goodness-of-fit term,
 		we see that the approximation
 		\begin{equation*}
-			Var \left[ -2 \ell (\hat{\theta}  ) \right] \approx 2n
+			Var \left[ -2 \ell (\hat{\bm{\theta}}  ) \right] \approx 2n
 		\end{equation*}
 		is justified. Furthermore, $2n$ could also serve as an approximation to the variance of AIC or BIC for this correctly specified linear regression model. This approximation
-		has the same form no matter the complexity of the design matrix $X$ or value of the true parameters $\theta$, making it useful as a
+		has the same form no matter the complexity of the design matrix $\bm{X}$ or value of the true parameters $\bm{\theta}$, making it useful as a
 		general tool.
 
-		It should be noted that this approximation does rely on asymptotic properties. In the Appendix, an exact variance for $-2 \ell (\hat{\theta})$ is found which does
+		It should be noted that this approximation does rely on asymptotic properties. In the Appendix, an exact variance for $-2 \ell (\hat{\bm{\theta}})$ is found which does
 		not rely on asymptotic properties. However, this variance is more complicated to compute than the simple approximation $2n$, and was not found to provide any meaningful
 		benefit over $2n$ when used in procedures developed later in this work.
 
-		With the previous derivation in hand, we now develop an estimator for the variance of $n\log(\hat{\sigma}^2)$, and thus $-2 \ell (\hat{\theta})$,
+		With the previous derivation in hand, we now develop an estimator for the variance of $n\log(\hat{\sigma}^2)$, and thus $-2 \ell (\hat{\bm{\theta}})$,
 		that need not assume a given fitted normal linear regression model is correctly specified.
 
-		Assume that we once again fit a linear regression model with parameters $\theta' = [\beta', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
-		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$ that is robust to model misspecification. This estimator will be constructed using the White robust
+		Assume that we once again fit a linear regression model with parameters $\bm{\theta}' = [\bm{\beta}', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
+		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\bm{\theta}}  ) \right]$ that is robust to model misspecification. This estimator will be constructed using the White robust
 		sandwich variance estimator, employing much of the notation related to this development that was introduced in the first section of this work \citep{White1980}.
 
-		We let $I_{n} (\theta)$ denote the observed information matrix with regards to our specified linear regression model. With $X$ denoting the $n$ by $r$ design matrix, we see that
-		the quantity $A_n (\theta)$ used in the White estimator is found to be 
+		We let $\bm{I_{n}} (\bm{\theta})$ denote the observed information matrix with regards to our specified linear regression model. With $\bm{X}$ denoting the $n$ by $r$ design matrix, we see that
+		the quantity $\bm{A_n} (\bm{\theta})$ used in the White estimator is found to be 
 		\begin{equation*}
-			A_n(\theta) = \frac{1}{n}
+			\bm{A_n}(\bm{\theta}) = \frac{1}{n}
 			\begin{bmatrix}
-				\frac{X'X}{\sigma^2} & \left[ \frac{-(y-X\beta)'X}{\sigma^4} \right]' \\
-				\left[ \frac{-(y-X\beta)'X}{\sigma^4} \right] &  \frac{n}{2 \sigma^4} - \frac{(y-X\beta)'(y-X\beta)}{\sigma^6}
+				\frac{\bm{X}'\bm{X}}{\sigma^2} & \left[ \frac{-(\bm{y}-\bm{X}\bm{\beta})'\bm{X}}{\sigma^4} \right]' \\
+				\left[ \frac{-(\bm{y}-\bm{X}\bm{\beta})'\bm{X}}{\sigma^4} \right] &  \frac{n}{2 \sigma^4} - \frac{(\bm{y}-\bm{X}\bm{\beta})'(\bm{y}-\bm{X}\bm{\beta})}{\sigma^6}
 				\end{bmatrix}
-				= -\frac{1}{n} I_n(\theta) .
+				= -\frac{1}{n} \bm{I_n}(\bm{\theta}) .
 		\end{equation*}
-		Now let $x_i$ be the $i$th row of the design matrix $X$, and $y_i$ be the $i$th observation of the observation vector $y$. With these constructs at hand, we can define the score components
+		Now let $\bm{x_i}$ be the $i$th row of the design matrix $\bm{X}$, and $y_i$ be the $i$th element of the observation vector $y$. With these constructs at hand, we can define the score components
 		for individual observations in our sample as
 		\begin{equation*}
-			U_i(\theta) = 
+			\bm{U_i}(\bm{\theta}) = 
 			\begin{bmatrix}
-				\frac{(y_i-x_i \beta)x_i'}{\sigma^2} \\
-				\frac{-1}{2 \sigma^2} + \frac{(y_i - x_i \beta)^2}{2 \sigma^4}
+				\frac{(y_i-\bm{x_i} \bm{\beta})\bm{x_i}'}{\sigma^2} \\
+				\frac{-1}{2 \sigma^2} + \frac{(y_i - \bm{x_i} \bm{\beta})^2}{2 \sigma^4}
 			\end{bmatrix}
 			.
 		\end{equation*}
-		With these components defined, we can then use the preceding to represent the matrix $B_n (\theta)$ used in the White estimator as
+		With these components defined, we can then use the preceding to represent the matrix $\bm{B_n} (\bm{\theta})$ used in the White estimator as
 		\begin{equation*}
-			B_n(\theta) = \frac{1}{n} \sum_{i=1}^{n} U_i(\theta) U_i(\theta)' .
+			\bm{B_n}(\bm{\theta}) = \frac{1}{n} \sum_{i=1}^{n} \bm{U_i}(\bm{\theta}) \bm{U_i}(\bm{\theta})' .
 		\end{equation*}
 
-		Thus, with $B_n(\theta)$ and $A_n(\theta)$ defined, these matrices can be evaluated at the maximum likelihood estimator $\hat{\theta}$ and be used to define
+		Thus, with $\bm{B_n}(\bm{\theta})$ and $\bm{A_n}(\bm{\theta})$ defined, these matrices can be evaluated at the maximum likelihood estimator $\hat{\bm{\theta}}$ and be used to define
 		\begin{equation*}
 			\begin{split}
-				C_n(\hat{\theta}) & = A^{-1}_n(\hat{\theta}) B_n(\hat{\theta}) A^{-1}_n(\hat{\theta}) \\
-				& = n I_n^{-1}(\hat{\theta}) \left[ \sum_{i=1}^{n} U_i(\hat{\theta}) U_i(\hat{\theta})' \right] I_n^{-1}(\hat{\theta}) ,
+				\bm{C_n}(\hat{\bm{\theta}}) & = A^{-1}_n(\hat{\bm{\theta}}) \bm{B_n}(\hat{\bm{\theta}}) A^{-1}_n(\hat{\bm{\theta}}) \\
+				& = n \bm{I_n}^{-1}(\hat{\bm{\theta}}) \left[ \sum_{i=1}^{n} \bm{U_i}(\hat{\bm{\theta}}) \bm{U_i}(\hat{\bm{\theta}})' \right] \bm{I_n}^{-1}(\hat{\bm{\theta}}) ,
 			\end{split}
 		\end{equation*}
-		where $C_n(\hat{\theta})$ will be a $(r+1)$ by $(r+1)$ matrix that can be used as an estimator of the asymptotic variance-covariance matrix of $\hat{\theta}$. This estimator is robust to misspecification
+		where $\bm{C_n}(\hat{\bm{\theta}})$ will be a $(r+1)$ by $(r+1)$ matrix that can be used as an estimator of the asymptotic variance-covariance matrix of $\hat{\bm{\theta}}$. This estimator is robust to misspecification
 		of the model.
 		
 		Consider the bottom rightmost element of this matrix, that being the $(r+1)^{th}$ element of the $(r+1)^{th}$ column of the matrix. This element will correspond to the large-sample
-		robust variance of $\hat{\sigma}^2$. Let $s(\theta)$ refer to this corresponding element in the case of the theoretical matrix $C(\theta)$, and $s_n(\hat{\theta})$ refer to this
-		corresponding element of the estimator $C_n(\hat{\theta})$. By White's results, it can then be seen that
+		robust variance of $\hat{\sigma}^2$. Let $s(\bm{\theta})$ refer to this corresponding element in the case of the theoretical matrix $\bm{C}(\bm{\theta})$, and $s_n(\hat{\bm{\theta}})$ refer to this
+		corresponding element of the estimator $\bm{C_n}(\hat{\bm{\theta}})$. By White's results, it can then be seen that
 		\begin{equation}
-			\sqrt{n} (\hat{\sigma}^2 - \sigma_*^2) \xrightarrow[]{d} N(0, s(\theta_*)) ,
+			\sqrt{n} (\hat{\sigma}^2 - \sigma_*^2) \xrightarrow[]{d} N(0, s(\bm{\theta}_*)) ,
 		\end{equation}
 		where $\sigma_*^2$ denotes the pseudo-true parameter related to $\sigma^2$ in the case of potential misspecification.
 
@@ -389,33 +392,28 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 		\end{equation*}
 		Applying this transformation to the asymptotic distribution presented in (2.2), we arrive at the relation
 		\begin{equation*}
-			\sqrt{n} ( \log (\hat{\sigma}^2) - \log(\sigma_*^2)) \xrightarrow[]{d} N \left( 0, \frac{1}{\sigma_*^4} s(\theta_*) \right) .
+			\sqrt{n} ( \log (\hat{\sigma}^2) - \log(\sigma_*^2)) \xrightarrow[]{d} N \left( 0, \frac{1}{\sigma_*^4} s(\bm{\theta}_*) \right) .
 		\end{equation*}
 		Using this asymptotic distribution, one can arrive at an approximate distribution for $n\log(\hat{\sigma}^2)$ as
 		\begin{equation*}
-			n\log(\hat{\sigma}^2) \; \dot\sim \; N \left( n\log(\sigma_* ^2), \frac{n}{\sigma_*^4} s(\theta_*) \right) ,
+			n\log(\hat{\sigma}^2) \; \dot\sim \; N \left( n\log(\sigma_* ^2), \frac{n}{\sigma_*^4} s(\bm{\theta}_*) \right) ,
 		\end{equation*}
-		which could be suitable for use in finite sample sizes that are sufficiently large. However, $\sigma_*^2$ and $s(\theta_*)$ are unlikely to be unknown in practical modeling
-		applications. Thus, estimating these quantities with $\hat{\sigma}^2$ and $s_n(\hat{\theta})$ respectively, a reasonable estimate for the variance of $n\log(\hat{\sigma}^2)$ can
+		which could be suitable for use in finite sample sizes that are sufficiently large. However, $\sigma_*^2$ and $s(\bm{\theta}_*)$ are unlikely to be unknown in practical modeling
+		applications. Thus, estimating these quantities with $\hat{\sigma}^2$ and $s_n(\hat{\bm{\theta}})$ respectively, a reasonable estimate for the variance of $n\log(\hat{\sigma}^2)$ can
 		be proposed as
 		\begin{equation*}
-			Var \left[ n\log(\hat{\sigma}^2) \right] \approx \frac{n}{\hat{\sigma}^4} s_n(\hat{\theta}) .
+			Var \left[ n\log(\hat{\sigma}^2) \right] \approx \frac{n}{\hat{\sigma}^4} s_n(\hat{\bm{\theta}}) .
 		\end{equation*}
-		By the relation presented in (2.1), it is clear that this variance estimate is also suitable for $Var \left[ -2 \ell (\hat{\theta}  ) \right]$, and therefore
+		By the relation presented in (2.1), it is clear that this variance estimate is also suitable for $Var \left[ -2 \ell (\hat{\bm{\theta}}  ) \right]$, and therefore
 		likelihood-based information criteria as a whole that possess a constant penalty term. This estimator should approximate our previously derived value $2n$ in the case of a correctly
 		specified model, as the sandwich estimator component will approximate the expected Fisher information used earlier, and the MLE $\hat{\sigma}^2$ should converge to the true
-		parameter value $\sigma^2$. However, this sandwich estimator need not assume correct specification, and should be relatively robust to model misspecification.
-		
-		For the remainder of this work, this sandwich estimator will be referred to as $\widehat{Var}[GOF]$, such that
-		\begin{equation*}
-			\widehat{Var}[GOF] = \frac{n}{\hat{\sigma}^4} s_n(\hat{\theta}) .
-		\end{equation*}
+		parameter value $\sigma^2$. However, this sandwich estimator need not assume correct specification, and should be relatively robust to model misspecification. For the remainder of this work, this sandwich estimator will be referred to as $\widehat{Var}[GOF]$.
 
 		We have established an asymptotic variance for the likelihood goodness-of-fit term in the case of a correctly specified normal linear regression model, and an
 		estimator for this variance that does not assume the model is correctly specified. We will now synthesize these two developments to form a general goodness-of-fit procedure to
 		test the hypothesis that a given normal linear regression model is correctly specified.
 
-		Under the null hypothesis that a normal linear regression model is correctly specified, the estimator $\widehat{Var}[GOF]$ should be close to the theoretical value $2n$ for a
+		Under this null hypothesis, the estimator $\widehat{Var}[GOF]$ should be close to the theoretical value $2n$ for a
 		sufficient sample size. We propose the use of the non-parametric bootstrap to obtain an empirical estimate for the sampling distribution of $\widehat{Var}[GOF]$. Once this empirical distribution
 		has been obtained, the null hypothesis can be tested by observing whether a bootstrap interval for $Var[GOF]$ contains the theoretical value $2n$, as the approximation
 		$Var[GOF] \approx 2n$ should hold for sufficient sample sizes under the null hypothesis. If a $100*(1-\alpha)$\% bootstrap confidence interval does not contain 
@@ -452,44 +450,43 @@ Information Criteria; Resampling; Normal Distribution; Information Matrix Test; 
 
 \section{Simulation Studies}
 
-Four simulation settings will be employed to assess the efficacy of the bootstrap procedure developed in the previous section. In each simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
+Five simulation settings will be employed to assess the efficacy of the bootstrap procedure developed in the previous section in comparison to the White test, Breusch-Pagan test, classical information matrix test, auxiliary regression information matrix test, and parametric bootstrap information matrix test. In each simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
 be generated for $i = 1,...,n$ according to
 \begin{equation*}
 	y_i = 2.0 + 2.0 x_{i1} + 2.0 x_{i2} + \epsilon_i , 
 \end{equation*}
-with the nature of the error term $\epsilon$ and the fitted candidate model varying between different simulations.
+with the nature of the error term $\epsilon$ and the fitted candidate model varying between different simulations. For all simulations, $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
+a $Uniform(0,5)$ distribution.
 
-In the first simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
-a $Uniform(0,5)$ distribution. With the generated data in hand, we will proceed to fit a normal linear regression model that includes an intercept and effects for $x_{i1}$ and $x_{i2}$. This model
+In the first simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$. With the generated data in hand, we will proceed to fit a normal linear regression model that includes an intercept and effects for $x_{i1}$ and $x_{i2}$. This model
 is properly specified, and should not exhibit gross lack-of-fit.
 
-In the second simulation scenario, once again each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
-a $Uniform(0,5)$ distribution. However, in this case the fitted model will be a normal linear regression model with an intercept and effect for only
+In the second simulation scenario, once again each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$.
+However, in this case the fitted model will be a normal linear regression model with an intercept and effect for only
 $x_{i1}$. The covariate $x_{i2}$ will be omitted from the model, and could be viewed as a factor that affects the true generating process, but
 was unobserved in data collection. This omission will induce mean misspecification for this fitted model as the mean structure will be underspecified.
 
-In the third simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
-a $Uniform(0,5)$ distribution. However, we will generate a third variable $x_{i3}$ such that $x_{i3} = 0.3 x_{i2} + 0.7 U$, where $U$ is drawn according to a $Uniform(0,5)$ distribution.
+In the third simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N(0,4)$. 
+However, we will generate a third variable $x_{i3}$ such that $x_{i3} = 0.3 x_{i2} + 0.7 u_i$, where each $u_i$ is drawn according to a $Uniform(0,5)$ distribution.
 Then, the fitted model will be a normal linear regression model with an intercept and effects for $x_{i1}$ and $x_{i3}$. This model is misspecified as while the covariate $x_{i3}$ 
 may serve as a surrogate for $x_{i2}$ due to their relation, we are still missing information used in the true generating process.
 
-In the fourth simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$, and $x_{i1}$, $x_{i2}$, and $x_{i3}$ are completely $iid$ covariates
+In the fourth simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$, and $x_{i3}$ is an additional $iid$ covariate
 generated according to a $Uniform(0,5)$ distribution. Note that heteroskedasticity is introduced into this model courtesy of $x_{i3}$ affecting the error variance. The fitted model for
 this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$, but will be fit assuming constant variance.
 This will result in unbiased regression parameter estimates; however, these estimates are not guaranteed to be the most efficient, and could be improved by including information regarding $x_{i3}$.
 
-In the final simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + 0.5 x_{i2})^2 \right)$, and $x_{i1}$ and $x_{i2}$ are completely $iid$ covariates generated according to
-a $Uniform(0,5)$ distribution. The fitted model for this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$,
+In the final simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + 0.5 x_{i2})^2 \right)$. The fitted model for this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$,
 but will be fit assuming homoskedasticity. In this case the heteroskedasticity present is related to a covariate in the model matrix, and thus any normal linear model fit to the data will not be properly
 specified if it assumes homoskedasticity, leading to potentially improper inference.
 
-In each simulation, the bootstrap goodness-of-fit test, White test, Breusch-Pagan, classical information matrix test, auxiliary regression information matrix test, and parametric bootstrap information matrix test will each be performed at the $\alpha = .05$ level on the  fitted model. We expect the tests to roughly maintain their
+In each simulation, the bootstrap goodness-of-fit test, White test, Breusch-Pagan test, classical information matrix test, auxiliary regression information matrix test, and parametric bootstrap information matrix test will each be performed at the $\alpha = .05$ level on the  fitted model. We expect the tests to roughly maintain their
 Type~I error rates in the cases where the null hypothesis of each is true, and reveal the power of the test in the simulations where the null hypothesis is violated. After many simulation iterations, the
 Type~I error rates or power of each test will be calculated based on the proportion of times each test rejected its null hypothesis. Each simulation will be performed for $n = 50, 100, 250, 500, 750, 1000$ and $2500$, with $1000$
 bootstrap iterations for all sets. The simulation will be generate $1000$ samples for each value of $n$, performing the tests each time.
 
 The code for the simulations can be found at \url{https://github.com/shkoeneman/GOF_manuscript/tree/main/scripts}. The results for the first simulation
-can be found in the table below.
+can be found in Table 1.
 
 \begin{table}[H]
 	\centering
@@ -501,7 +498,7 @@ can be found in the table below.
 	{
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{ c|c|c|c|c|c|c}
-	$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+	$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
 	 \hline
 	 50 & 0.038 & 0.041 & 0.042 & 0.598 & 0.766 & 0.027 \\
 	 100 & 0.088 & 0.033 & 0.051 & 0.511 & 0.622 & 0.032 \\
@@ -523,7 +520,7 @@ rejection than one might expect, particularly for small sample sizes before asym
 possessing a conservative Type~1 error rate at all values of $n$. The classical and regression variants of the information matrix test fail to maintain a true Type~1 error rate close
 to the nominal value until the sample size is rather high, and thus should not be trusted outside of large sizes. The White and Breusch-Pagan tests roughly maintain the desired Type~I error rate across all values of $n$.
 
-The results for the second simulation can be found in the table below.
+The results for the second simulation can be found in Table 2.
 
 \begin{table}[H]
 	\centering
@@ -534,7 +531,7 @@ The results for the second simulation can be found in the table below.
 	{
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
 		 \hline
 		 50 & 0.279 & 0.053 & 0.055 & 0.675 & 0.792 & 0.003 \\
 		 100 & 0.506 & 0.053 & 0.071 & 0.760 & 0.815 & 0.007 \\
@@ -561,7 +558,7 @@ In contrast, the White test and Breusch-Pagan test both seem to only maintain th
 as the null hypotheses of these tests are not violated in this scenario. However, this simulation setting does demonstrate how the inability of a goodness-of-fit test to detect improper
 fit does not mean lack-of-fit is not present, as these two tests are limited in the scope of misspecification they are able to detect.
 
-The results for the third simulation can be found in the table below.
+The results for the third simulation can be found in Table 3.
 
 \begin{table}[H]
 	\centering
@@ -572,7 +569,7 @@ The results for the third simulation can be found in the table below.
 	{
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
 		 \hline
 		 50 & 0.138 & 0.040 & 0.039 & 0.934 & 0.972 & 0.005 \\
 		 100 & 0.275 & 0.035 & 0.027 & 0.951 & 0.970 & 0.005 \\
@@ -587,7 +584,7 @@ The results for the third simulation can be found in the table below.
 	}
 	\end{table}
 
-The bootstrap goodness-of-fit test possesses higher power in the third simulation in small sample sizes than the bootstrap information matrix test. However, at $n = 250$ the bootstrap information matrix test
+The bootstrap goodness-of-fit test possesses higher power in the third simulation in small sample sizes than the bootstrap information matrix test. However, at $n = 750$ the bootstrap information matrix test
 overtakes the bootstrap goodness-of-fit test, and appears to hold a small lead in power until both tests level out at near perfect power for $n = 2500$. Thus, each test holds an advantage in power for different bands of sample sizes.
 The White and Breusch-Pagan tests once again seem to maintain their desired sizes fairly well.
 
@@ -601,7 +598,7 @@ Note the seemingly patternless, constant variance spread, indicating that one wo
 \centering
 \end{figure}
 
-The results for the fourth simulation can be found in the table below.
+The results for the fourth simulation can be found in Table 4.
 
 \begin{table}[H]
 	\centering
@@ -612,7 +609,7 @@ The results for the fourth simulation can be found in the table below.
 	{
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
 		 \hline
 		 50 & 0.006 & 0.054 & 0.046 & 0.051 & 0.702 & 0.146 \\
 		 100 & 0.121 & 0.048 & 0.038 & 0.356 & 0.525 & 0.307 \\
@@ -639,7 +636,7 @@ When heteroskedasticity is induced by an unobserved covariate that is not used i
 null hypotheses of homoskedasticity are violated, and residual plots do not show any visible heteroskedasticity. However, the bootstrap goodness-of-fit test and variants of the information matrix test are able to
 reject their null hypotheses.
 
-The results for the fifth and final simulation can be found in the table below. Note that the null hypotheses of all tests are violated in this case, and each test should be able to detect this form of misspecification.
+The results for the fifth and final simulation can be found in Table 5. Note that the null hypotheses of all tests are violated in this case, and each test should be able to detect this form of misspecification.
 
 \begin{table}[H]
 	\centering
@@ -650,7 +647,7 @@ The results for the fifth and final simulation can be found in the table below. 
 	{
 	\resizebox{\textwidth}{!}{%
 	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & White & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
 		 \hline
 		 50 & 0.018 & 0.169 & 0.327 & 0.725 & 0.875 & 0.146 \\
 		 100 & 0.036 & 0.314 & 0.695 & 0.855 & 0.912 & 0.307 \\
@@ -669,8 +666,7 @@ In this scenario, the White test and Breusch-Pagan test both perform well in mod
 proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. The bootstrap variant of the information matrix test performs similarly, while the classical and regression
 variants again display extreme power at low sample sizes. While the bootstrap goodness-of-fit test is able to detect this misspecification, it requires a very large sample size to have adequate power.
 
-In summary, we see that the new bootstrap goodness-of-fit test possesses advantages over competetitor tests, particularly in its ability to detect multiple forms of misspecification and ability to detect
-forms of mean misspecification where an important covariate may be missing.
+In summary, we see that in general, the classical and regression variants of the information matrix test tend to reject null hypotheses no matter the circumstance, and fail to maintain acceptable type I error rates outside of extraordinary sample sizes. Thus, these tests are not recommended for general use. The White and Breusch-Pagan tests are the most adept at detecting heteroskedasticity related to covariates in the mean structure, but are narrow in their focus and cannot detect other forms of misspecification. The bootstrap information matrix test and bootstrap goodness-of-fit test can both detect myriad forms of misspecification, and maintain acceptable type I error rates. The bootstrap information matrix test may possess better power in cases of heteroskedasticity, and the bootstrap goodness-of-fit test may possess better power in the case of a missing covariate. Thus, the new bootstrap goodness-of-fit test presents advantages over competetitor tests, particularly in the ability to detect multiple forms of misspecification and ability to detect forms of mean misspecification where an important covariate may be missing.
 
 \section{Discussion and Conclusion}
 
@@ -726,27 +722,27 @@ publication of this article.
 %%% ------------------------------------------
 \appendix
 \section*{Appendix}
-This Appendix will derive an exact variance for the goodness-of-fit term $-2 \ell (\hat{\theta} )$ in the case of a properly specified
+This Appendix will derive an exact variance for the goodness-of-fit term $-2 \ell (\hat{\bm{\theta}} )$ in the case of a properly specified
 linear model. While a similar derivation has been presented in other work \citep{McQuarrie}, the following derivation differs substantially and is presented for completeness.
-We assume that a given linear regression model has a full rank $n$ by $r$ design matrix $X$, outcome vector $y$, true parameters $\beta$ and $\sigma^2$,
-and maximum likelihood estimates $\hat{\beta}$ and $\hat{\sigma}^2$. We let
+We assume that a given linear regression model has a full rank $n$ by $r$ design matrix $\bm{X}$, outcome vector $y$, true parameters $\bm{\beta}$ and $\sigma^2$,
+and maximum likelihood estimates $\hat{\bm{\beta}}$ and $\hat{\sigma}^2$. We let
 \begin{equation*}
-	A = \frac{1}{\sigma^2} (I_n - X(X'X)^{-1}X') 
+	\bm{A} = \frac{1}{\sigma^2} (\bm{I_n} - \bm{X}(\bm{X}'\bm{X})^{-1}\bm{X}') 
 \end{equation*}
 such that we can construct the quadratic form
 \begin{equation*}
-	y'Ay = \frac{n \hat{\sigma}^2}{\sigma^2} .
+	\bm{y'Ay} = \frac{n \hat{\sigma}^2}{\sigma^2} .
 \end{equation*}
 By the properties of quadratic forms of multivariate normal random variables, it can be seen that
 \begin{equation}
-	y'Ay = \frac{n \hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-r} .
+	\bm{y'Ay} = \frac{n \hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-r} .
 \end{equation}
 Note that if we take the natural logarithm of the left-hand side and evaluate its variance, we see that
 \begin{equation}
 	Var \left[ \log(\frac{n \hat{\sigma}^2}{\sigma^2}) \right]  = Var \left[ \log \hat{\sigma}^2 \right]
 \end{equation}
 due to constant terms being irrelevant to the variance calculation. This enclosed form is very close to the $n \log \hat{\sigma}^2$ that is required
-to determine the variance of the likelihood goodness of fit term $-2 \ell (\hat{\theta} )$ in the case of a normal linear regression model.
+to determine the variance of the likelihood goodness of fit term $-2 \ell (\hat{\bm{\theta}} )$ in the case of a normal linear regression model.
 Thus, if we can calculate $Var \left[ \log \hat{\sigma}^2 \right]$, which is itself the variance
 of the natural logarithm of a variable distributed as $\chi^2_{n-r}$, we can easily obtain $Var \left[ n \log \hat{\sigma}^2 \right]$.
 
@@ -781,7 +777,7 @@ This value can be calculated using software to approximate the trigamma function
 
 Recalling the distributional result established in (4.3) and the relation in (4.4), it is clear that
 \begin{equation*}
-	Var \left[ n \log \hat{\sigma}^2 \right] = Var \left[ -2 \ell (\hat{\theta} ) \right] = n^2 \psi^{(1)} \left( \frac{n-r}{2} \right).
+	Var \left[ n \log \hat{\sigma}^2 \right] = Var \left[ -2 \ell (\hat{\bm{\theta}} ) \right] = n^2 \psi^{(1)} \left( \frac{n-r}{2} \right).
 \end{equation*}
 
 However, while this variance is exact, it still involves an approximation as the trigamma function must be approximated. Additionally, it was found that
