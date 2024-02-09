@@ -1,29 +1,5 @@
-%%%
-%%%  LaTeX template for publications
-%%%  to be submitted to Statistical Modelling
-%%%
-%%%  Prepared by Arnost Komarek
-%%%  Version 0.2 (20140214)
-%%%    0.2:  style of references slightly changed,
-%%%          support for use with bibTeX added
-%%%    0.3:  fax removed, orcid added, sections on supplementary material added as well as appendix
-\documentclass[submit]{smj}
 
-
-%%%%% PREAMBLE
-%%%%% =============================================================================
-
-
-%%% Place for putting personal \usepackage and \newcommand commands
-%%% Note that some packages are loaded automatically
-%%% with the smj class. 
-%%% These include: graphicx, color, fancyvrb, amsmath, amssymb, calc, upquote (if available), natbib, url, hyperref.
-%%%
-%%% Please, specify all your personal definitions, newcommand etc. here
-%%% and not inside the main body of the text.
-%%% -------------------------------------------------------------------------------
-%\usepackage{PACKAGE}
-%\newcommand{MYCOMMAND}{...}
+\documentclass[review]{elsarticle}
 
 \usepackage{floatrow}
 \usepackage{float}
@@ -43,122 +19,45 @@
 \usepackage{makecell}
 \usepackage{caption}
 \usepackage{bm}
+\usepackage{xurl}
 
 
-%%% Identification of authors
-%%% -------------------------------------------------------------------------------
-%%% For each author, provide his/her first name, surname and possibly initials 
-%%% of the middle names. 
-%%%
-%%% Use \Affil{NUMBER} following the author name for each unique affiliation,
-%%% where NUMBER is integer starting from 1 to the number of affiliations needed
-%%% in this paper. In case of multiple affiliations of one author, use
-%%% \Affil{NUMBER1,}\Affil{NUMBER2,}\Affil{NUMBER3} following the author's name
-%%% as it is done for Emmanuel Lesaffre below.
-
-%%% The ORCID number does not have to be provided. If you want to provide it,
-%%% put it in the \ORCID{} command while following (the last) \Affil{} command
-%%% of given author as shown below.
-
-  %%% For papers with 3 or more authors:
-  %%%  in \Author{}, separate the authors with commas, the last author is separated by `\and' without a comma,
-  %%%  in \AuthorRunning{}, use the full name of the first author followed by \textrm{et al.}.
-
-%\Author{Arno\v{s}t Kom\'arek\Affil{1}\ORCID{0000-0001-8778-3762}, 
-%        Brian Marx\Affil{2}, 
-%        \and Jeffrey S. Simonoff\Affil{3}\ORCID{0000-0002-1496-608X}
-%        %and Emmanuel Lesaffre\Affil{4,}\Affil{5}\ORCID{0000-0002-3747-6905}
-%}
-%\AuthorRunning{Arno\v{s}t Kom\'arek \textrm{et al.}}
-
-  %%% For papers with 2 authors:
-  %%%  in both \Author{} and \AuthorRunning{},
-  %%%  use the full names of both authors separated by '\and' without a comma.
-\Author{Scott H. Koeneman\Affil{1} \and Joseph E. Cavanaugh\Affil{2}}
-\AuthorRunning{Scott H. Koeneman \and Joseph E. Cavanuagh}
-  
-  %%% For papers with 1 author:
-  %%%  in both \Author{} and \AuthorRunning{},
-  %%%  use the full name the author.
-%\Author{Arno\v{s}t Kom\'arek\Affil{1}}
-%\AuthorRunning{Arno\v{s}t Kom\'arek}
-
-
-%%% Affiliations as they should appear on the title page.
-%%% -------------------------------------------------------------------------------
-%%% Do not provide the full addresses here.
-%%% The ordering inside \Affiliations{} should correspond to NUMBERs used 
-%%% in \Affil{} commands in \Author{}
-\Affiliations{
-
-  %%% 1
-\item Division of Biostatistics and Bioinformatics, 
-      Department of Pharmacology, Physiology, and Cancer Biology, 
-      Thomas Jefferson University,
-      Philadelphia,
-      PA, USA
-
-  %%% 2
-\item Department of Biostatistics,
-      The University of Iowa, 
-      Iowa City,
-      IA, USA
-
-}   %% end \Affiliations
-
-
-%%% Postal, e-mail address, phone and fax of the corresponding author (not necessarily the first author).
-%%% ------------------------------------------------------------------------------------------------------
-%%% Use command \CorrAddress{} to provide a full postal address of the
-%%% corresponding author in the form
-%%% "Firstname Lastname, Department, University, Street 1, ZIP City, Country" 
-%%% Use command \CorrEmail{} to provide an e-mail address of the corresponding author.
-%%% Use command \CorrPhone{} to provide a phone number (including the country code!) of the corresponding author.
-%%% Use command \CorrFax{} to provide a fax number (including the country code!) of the corresponding author.
-\CorrAddress{Scott H. Koeneman, 
-             Division of Biostatistics and Bioinformatics, 
-             Thomas Jefferson University, 
-             130 South 9th Street, 
-             Philadelphia, PA 55038, 
-             USA}
-\CorrEmail{Scott.Koeneman@jefferson.edu}
-\CorrPhone{(+1)\;651\;792\;6163}
-
-
-%%% Title and a short title (to be used as a running header) of the paper
-%%% -------------------------------------------------------------------------------
-\Title{A New Bootstrap Goodness-of-Fit Test for Normal Linear Regression Models}
-\TitleRunning{Bootstrap GOF}
-
-
-%%% Abstract
-%%% -------------------------------------------------------------------------------
-\Abstract{
-In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
-to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
-investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
-to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \texttt{DBModelSelect} R package,
-available freely via the Comprehensive R Archive Network.
-}
-
-
-%%% Key words
-%%% -------------------------------------------------------------------------------
-\Keywords{
-Information Criteria; Information Matrix Test; Normal Distribution; Resampling; Robust Variance
-}
-
-
-%%%%% MAIN BODY 
-%%%%% =============================================================================
 \begin{document}
 
 
-%%% Title page
-%%% -------------------------------------------------------------------------------
-%%% Use command\maketitle to produce the title page.
+\begin{frontmatter}
 
-\maketitle
+	\title{A New Bootstrap Goodness-of-Fit Test for \\ Normal Linear Regression Models}
+	
+	\author[1]{Scott H. Koeneman\corref{cor1}}
+	\ead{Scott.Koeneman@jefferson.edu}
+	\author[2]{Joseph E. Cavanaugh}
+	\cortext[cor1]{Corresponding author}
+	\address[1]{Division of Biostatistics and Bioinformatics, 
+	Thomas Jefferson University, 
+	130 S. 9th St., 
+	Philadelphia, PA, 55038}
+ \address[2]{Department of Biostatistics, University of Iowa, 145 N. Riverside Dr., Iowa City, IA, 52242}
+	
+	\date{February 2, 2024}
+	
+	\begin{abstract}
+	
+		In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
+		to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
+		investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
+		to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \texttt{DBModelSelect} R package,
+		available freely via the Comprehensive R Archive Network.\\
+	
+	\end{abstract}
+	
+	\begin{keyword}
+		Information Criteria \sep Information Matrix Test \sep Normal Distribution \sep Resampling \sep Robust Variance \\
+	\end{keyword}
+	
+	\end{frontmatter}
+	
+	\newpage
 
 
 %%% Main text
@@ -168,13 +67,13 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 
     		Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
 		and its associated assumptions align with the observed data. The notion of goodness-of-fit is relevant in the model selection realm of information criteria, particularly to the Akaike
-		information criterion \citep{Akaike}. Using $\ell(\hat{\bm{\theta}}|y)$ to denote the log-likelihood of the fitted model and $p$ to denote the
+		information criterion \citep{Akaike}. Using $\ell(\hat{\bm{\theta}}|\bm{y})$ to denote the log-likelihood of the fitted model and $p$ to denote the
 		number of functionally independent estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
 		\begin{equation*}
-			AIC = -2 \ell(\hat{\bm{\theta}}|y) + 2 p.
+			AIC = -2 \ell(\hat{\bm{\theta}}|\bm{y}) + 2 p.
 		\end{equation*}
-		The $-2 \ell(\hat{\bm{\theta}}|y)$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
-		conforms to the observed data $y$ \citep{Cavanaugh}. This term is also present in other likelihood-based information criteria such as the Bayesian information criterion \citep{Schwarz}.
+		The $-2 \ell(\hat{\bm{\theta}}|\bm{y})$ term based on the empirical log-likelihood is known as the goodness-of-fit term as it represents the degree to which the fitted model
+		conforms to the observed data $\bm{y}$ \citep{Cavanaugh}. This term is also present in other likelihood-based information criteria such as the Bayesian information criterion \citep{Schwarz}.
 		The goodness-of-fit term will only grow smaller, indicating better conformity to the data, as complexity is added to the model. Thus, this goodness-of-fit term ironically does
 		not encompass full goodness-of-fit considerations, and other considerations are needed to avoid overfitting and to detect violations of model assumptions.
 
@@ -207,7 +106,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		detect misspecification of various kinds, the information matrix test can struggle with power in certain scenarios.
   
         As the original formulation of the information matrix test can be computationally difficult to implement, an alternate method exists using an
-		auxiliary regression to assist in calculation of the test statistic \citep{Chesher} However, both the classical and regression variants of the information matrix can struggle mightily with their performance in small sample sizes. Thus, another method of performing the test involves employing a parametric bootstrap to aid in calculation of the test statistic \citep{Dhaene}. This method can be shown to better maintain a desired test level in small to moderate sample sizes. 
+		auxiliary regression to assist in calculation of the test statistic \citep{Chesher}. However, both the classical and regression variants of the information matrix test can struggle mightily with their performance in small sample sizes. Thus, another method of performing the test involves employing a parametric bootstrap to aid in calculation of the test statistic \citep{Dhaene}. This method can be shown to better maintain a desired test level in small to moderate sample sizes. 
 
 		The various ways in which goodness-of-fit tests can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
 		When a hypothesis is rejected, we can be reasonably confident that an assumption is violated; however, by simply performing the test, we do not glean much information as to how exactly the
@@ -216,7 +115,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		In addition, both the White and Breusch-Pagan tests cannot detect heteroskedasticity induced by unobserved covariates, as their auxiliary regressions only use what has been observed. Such heteroskedasticity
 		may not affect the bias and consistency of effect estimates, but may lead to a loss of efficiency of estimates. 
 
-	\subsection*{Robust Variance Estimation}
+	\subsection{Robust Variance Estimation}
 
 		When employing likelihood theory to obtain parameter estimates for a model, one can often leverage the properties of maximum likelihood estimators (MLEs) to produce reasonable estimates of the variance of the
 		estimators, and thus perform inference \citep{Millar}. However, these properties are only guaranteed to hold when the model is properly specified, and inefficient or biased estimates may result when assumptions
@@ -232,11 +131,11 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		\end{equation*}
 		The large sample covariance matrix $\bm{C}(\bm{\theta})$ can be defined using two positive definite matrices $\bm{A}(\bm{\theta})$ and $\bm{B}(\bm{\theta})$, where the $(i,j)$ element of $\bm{A}(\bm{\theta})$ is defined as
 		\begin{equation*}
-			\bm{A}(\bm{\theta})_{i,j} = E \left[ \frac{\partial^2 f(\bm{y},\bm{\theta})}{\partial \bm{\theta}_i \partial \bm{\theta}_j} \right] 
+			\bm{A}(\bm{\theta})_{i,j} = E \left[ \frac{\partial^2 f(\bm{y},\bm{\theta})}{\partial \theta_i \partial \theta_j} \right] 
 		\end{equation*}
 		and the $(i,j)$ element of $\bm{B}(\bm{\theta})$ is defined as
 		\begin{equation*}
-			\bm{B}(\bm{\theta})_{i,j} = E \left[ \frac{\partial f(\bm{y},\bm{\theta})}{\partial \bm{\theta}_i} \frac{\partial f(\bm{y},\bm{\theta})}{\partial \bm{\theta}_j} \right] 
+			\bm{B}(\bm{\theta})_{i,j} = E \left[ \frac{\partial f(\bm{y},\bm{\theta})}{\partial \theta_i} \frac{\partial f(\bm{y},\bm{\theta})}{\partial \theta_j} \right] 
 		\end{equation*}
 		where $i = 1,...,p$ and $j = 1,...,p$ respectively. These matrices then combine to define $\bm{C}(\bm{\theta})$ as
 		\begin{equation*}
@@ -247,11 +146,11 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 
 		As in general one will not know the pseudo-true parameter $\bm{\theta}_*$, White formulates the matrices $\bm{A_n}(\bm{\theta})$ and $\bm{B_n}(\bm{\theta})$, with the $(i,j)$ element of $\bm{A_n}(\bm{\theta})$ defined as
 		\begin{equation*}
-			\bm{A_n}(\bm{\theta})_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial^2 f(\bm{y_t},\bm{\theta})}{\partial \bm{\theta}_i \partial \bm{\theta}_j}
+			\bm{A_n}(\bm{\theta})_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial^2 f(y_t,\bm{\theta})}{\partial \theta_i \partial \theta_j}
 		\end{equation*}
 		and the $(i,j)$ element of $\bm{B_n}(\bm{\theta})$ as
 		\begin{equation*}
-			\bm{B_n}(\bm{\theta})_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial f(\bm{y_t},\bm{\theta})}{\partial \bm{\theta}_i} \frac{\partial f(\bm{y_t},\bm{\theta})}{\partial \bm{\theta}_j} .
+			\bm{B_n}(\bm{\theta})_{i,j} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial f(y_t,\bm{\theta})}{\partial \theta_i} \frac{\partial f(y_t,\bm{\theta})}{\partial \theta_j} .
 		\end{equation*}
 		White proposes calculating $\bm{A_n}(\bm{\theta})$ and $\bm{B_n}(\bm{\theta})$ from the data, and evaluating them at the MLE, to produce
 		\begin{equation*}
@@ -276,7 +175,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 
 		Assuming a linear model has been fit using maximum likelihood with fitted parameters $\hat{\bm{\theta}}$, the goodness-of-fit term can be decomposed as
 		\begin{equation}
-			-2 \ell (\hat{\bm{\theta}}  ) = n \log(2 \pi) + n + n \log(\hat{\sigma}^2 ) ,
+			-2 \ell (\hat{\bm{\theta}} | \bm{y} ) = n \log(2 \pi) + n + n \log(\hat{\sigma}^2 ) ,
 		\end{equation}
 		where $\hat{\sigma}^2$ denotes the maximum likelihood estimate for the error variance $\sigma^2$. Note that the only term here that is random is
 		the statistic $n \log(\hat{\sigma}^2)$. Thus, if we can quantify the variability of this term, we can quantify the variability of the entire goodness-of-fit
@@ -287,7 +186,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		to the parameter vector $\bm{\theta}' = [\bm{\beta}', \sigma^2]$, where $\bm{\beta}$ represents the regression coefficients
 		present in the model, can be shown to be
 		\begin{equation*}
-			- E \left[ \frac{\partial^2 \ell (\hat{\bm{\theta}}  )}{\partial \bm{\theta}^2} \right] = \bm{\mathcal{I}}_{n}(\bm{\theta}) =
+			- E \left[ \frac{\partial^2 \ell (\hat{\bm{\theta}} | \bm{y} )}{\partial \bm{\theta}^2} \right] = \bm{\mathcal{I}}_{n}(\bm{\theta}) =
 			\begin{bmatrix}
 				\frac{\bm{X}' \bm{X}}{\sigma^2} & 0 \\
 				0 & \frac{n}{2 \sigma^4} \\
@@ -307,7 +206,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		\end{equation*}
 		should hold.
 
-		To find the variance of $-2 \ell (\hat{\bm{\theta}}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
+		To find the variance of $-2 \ell (\hat{\bm{\theta}} | \bm{y}  )$, we must find the variance of $n \log(\hat{\sigma}^2)$.
 		Additionally, the above asymptotic distribution involves the true $\sigma^2$ to which we will not have access in practical scenarios.
 
 		We will address both of these issues by employing the delta method \citep{Rao}. We propose a transformation of the form
@@ -326,21 +225,21 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		Thus, assuming that the model is appropriately specified, the variance of $n\log(\hat{\sigma}^2)$ will be approximately $2n$. Applying this variance back to the goodness-of-fit term,
 		we see that the approximation
 		\begin{equation*}
-			Var \left[ -2 \ell (\hat{\bm{\theta}}  ) \right] \approx 2n
+			Var \left[ -2 \ell (\hat{\bm{\theta}} | \bm{y}  ) \right] \approx 2n
 		\end{equation*}
 		is justified. Furthermore, $2n$ could also serve as an approximation to the variance of AIC or BIC for this correctly specified linear regression model. This approximation
 		has the same form no matter the complexity of the design matrix $\bm{X}$ or value of the true parameters $\bm{\theta}$, making it useful as a
 		general tool.
 
-		It should be noted that this approximation does rely on asymptotic properties. In the Appendix, an exact variance for $-2 \ell (\hat{\bm{\theta}})$ is found which does
+		It should be noted that this approximation does rely on asymptotic properties. In the Appendix, an exact variance for $-2 \ell (\hat{\bm{\theta}} | \bm{y})$ is found which does
 		not rely on asymptotic properties. However, this variance is more complicated to compute than the simple approximation $2n$, and was not found to provide any meaningful
 		benefit over $2n$ when used in procedures developed later in this work.
 
-		With the previous derivation in hand, we now develop an estimator for the variance of $n\log(\hat{\sigma}^2)$, and thus $-2 \ell (\hat{\bm{\theta}})$,
+		With the previous derivation in hand, we now develop an estimator for the variance of $n\log(\hat{\sigma}^2)$, and thus $-2 \ell (\hat{\bm{\theta}} | \bm{y})$,
 		that need not assume a given fitted normal linear regression model is correctly specified.
 
 		Assume that we once again fit a linear regression model with parameters $\bm{\theta}' = [\bm{\beta}', \sigma^2]$ to our data, and suppose we do not know whether this model is correctly specified.
-		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\bm{\theta}}  ) \right]$ that is robust to model misspecification. This estimator will be constructed using the White robust
+		We wish to construct an estimator for $Var \left[ -2 \ell (\hat{\bm{\theta}} | \bm{y} ) \right]$ that is robust to model misspecification. This estimator will be constructed using the White robust
 		sandwich variance estimator, employing much of the notation related to this development that was introduced in the first section of this work \citep{White1980}.
 
 		We let $\bm{I_{n}} (\bm{\theta})$ denote the observed information matrix with regards to our specified linear regression model. With $\bm{X}$ denoting the $n$ by $r$ design matrix, we see that
@@ -390,7 +289,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		\begin{equation*}
 			g(x) = \log(x) .
 		\end{equation*}
-		Applying this transformation to the asymptotic distribution presented in (2.2), we arrive at the relation
+		Applying this transformation to the asymptotic distribution presented in (2), we arrive at the relation
 		\begin{equation*}
 			\sqrt{n} ( \log (\hat{\sigma}^2) - \log(\sigma_*^2)) \xrightarrow[]{d} N \left( 0, \frac{1}{\sigma_*^4} s(\bm{\theta}_*) \right) .
 		\end{equation*}
@@ -404,7 +303,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 		\begin{equation*}
 			Var \left[ n\log(\hat{\sigma}^2) \right] \approx \frac{n}{\hat{\sigma}^4} s_n(\hat{\bm{\theta}}) .
 		\end{equation*}
-		By the relation presented in (2.1), it is clear that this variance estimate is also suitable for $Var \left[ -2 \ell (\hat{\bm{\theta}}  ) \right]$, and therefore
+		By the relation presented in (1), it is clear that this variance estimate is also suitable for $Var \left[ -2 \ell (\hat{\bm{\theta}} | \bm{y} ) \right]$, and therefore
 		likelihood-based information criteria as a whole that possess a constant penalty term. This estimator should approximate our previously derived value $2n$ in the case of a correctly
 		specified model, as the sandwich estimator component will approximate the expected Fisher information used earlier, and the MLE $\hat{\sigma}^2$ should converge to the true
 		parameter value $\sigma^2$. However, this sandwich estimator need not assume correct specification, and should be relatively robust to model misspecification. For the remainder of this work, this sandwich estimator will be referred to as $\widehat{Var}[GOF]$.
@@ -450,7 +349,7 @@ Information Criteria; Information Matrix Test; Normal Distribution; Resampling; 
 
 \section{Simulation Studies}
 
-Five simulation settings will be employed to assess the efficacy of the bootstrap procedure developed in the previous section in comparison to the White test, Breusch-Pagan test, classical information matrix test, auxiliary regression information matrix test, and parametric bootstrap information matrix test. In each simulation, an $n$ by 1 outcome vector $y = [y_1,...,y_n]'$ will
+Five simulation settings will be employed to assess the efficacy of the bootstrap procedure developed in the previous section in comparison to the White test, Breusch-Pagan test, classical information matrix test, auxiliary regression information matrix test, and parametric bootstrap information matrix test. In each simulation, an $n$ by 1 outcome vector $\bm{y} = [y_1,...,y_n]'$ will
 be generated for $i = 1,...,n$ according to
 \begin{equation*}
 	y_i = 2.0 + 2.0 x_{i1} + 2.0 x_{i2} + \epsilon_i , 
@@ -471,12 +370,15 @@ However, we will generate a third variable $x_{i3}$ such that $x_{i3} = 0.3 x_{i
 Then, the fitted model will be a normal linear regression model with an intercept and effects for $x_{i1}$ and $x_{i3}$. This model is misspecified as while the covariate $x_{i3}$ 
 may serve as a surrogate for $x_{i2}$ due to their relation, we are still missing information used in the true generating process.
 
-In the fourth simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right)$, and $x_{i3}$ is an additional $iid$ covariate
+In the fourth simulation scenario, each $\epsilon_i$ will be generated as
+\[ \epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + x_{i3})^2 \right) ,\]
+and $x_{i3}$ is an additional $iid$ covariate
 generated according to a $Uniform(0,5)$ distribution. Note that heteroskedasticity is introduced into this model courtesy of $x_{i3}$ affecting the error variance. The fitted model for
 this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$, but will be fit assuming constant variance.
 This will result in unbiased regression parameter estimates; however, these estimates are not guaranteed to be the most efficient, and could be improved by including information regarding $x_{i3}$.
 
-In the final simulation scenario, each $\epsilon_i$ will be generated as $\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + 0.5 x_{i2})^2 \right)$. The fitted model for this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$,
+In the final simulation scenario, each $\epsilon_i$ will be generated as
+\[\epsilon_i \stackrel{iid}{\sim} N \left( 0,(2 + 0.5 x_{i2})^2 \right).\] The fitted model for this simulation will be a normal linear regression model that has the correct mean structure of an intercept with effects for $x_{i1}$ and $x_{i2}$,
 but will be fit assuming homoskedasticity. In this case the heteroskedasticity present is related to a covariate in the model matrix, and thus any normal linear model fit to the data will not be properly
 specified if it assumes homoskedasticity, leading to potentially improper inference.
 
@@ -666,7 +568,7 @@ In this scenario, the White test and Breusch-Pagan test both perform well in mod
 proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. The bootstrap variant of the information matrix test performs similarly, while the classical and regression
 variants again display extreme power at low sample sizes. While the bootstrap goodness-of-fit test is able to detect this misspecification, it requires a very large sample size to have adequate power.
 
-In summary, we see that in general, the classical and regression variants of the information matrix test tend to reject null hypotheses no matter the circumstance, and fail to maintain acceptable type I error rates outside of extraordinary sample sizes. Thus, these tests are not recommended for general use. The White and Breusch-Pagan tests are the most adept at detecting heteroskedasticity related to covariates in the mean structure, but are narrow in their focus and cannot detect other forms of misspecification. The bootstrap information matrix test and bootstrap goodness-of-fit test can both detect myriad forms of misspecification, and maintain acceptable type I error rates. The bootstrap information matrix test may possess better power in cases of heteroskedasticity, and the bootstrap goodness-of-fit test may possess better power in the case of a missing covariate. Thus, the new bootstrap goodness-of-fit test presents advantages over competetitor tests, particularly in the ability to detect multiple forms of misspecification and ability to detect forms of mean misspecification where an important covariate may be missing.
+In summary, we see that in general, the classical and regression variants of the information matrix test tend to reject null hypotheses no matter the circumstance, and fail to maintain acceptable type I error rates outside of extraordinary sample sizes. Thus, these tests are not recommended for general use. The White and Breusch-Pagan tests are the most adept at detecting heteroskedasticity related to covariates in the mean structure, but are narrow in their focus and cannot detect other forms of misspecification. The bootstrap information matrix test and bootstrap goodness-of-fit test can both detect myriad forms of misspecification, and both maintain acceptable type I error rates. The bootstrap information matrix test may possess better power in the presence of heteroskedasticity, and the bootstrap goodness-of-fit test may possess better power in settings where the mean structure is misspecified due to the omission of covariates. Thus, the new bootstrap goodness-of-fit test presents advantages over competetitor tests, particularly in its ability to detect multiple forms of misspecification and its ability to detect forms of mean misspecification where important covariates may be missing.
 
 \section{Discussion and Conclusion}
 
@@ -692,36 +594,9 @@ when in fact a linear regression is a reasonable model. This is a feature common
 
 Potential future work involves finding similar procedures that can be used for other modeling frameworks.
 
-%%% Supplementary materials (if any)
-%%% ------------------------------------------
-%\section*{Supplementary materials}
-%The supplementary materials include [the list of supplementary materials and their brief description]. They are available from the journals page at \url{https://journals.sagepub.com/home/smj}. [At the submission stage, all supplementary materials (or the links to access them) should be submitted jointly with the main paper.]
-
-
-%%% Acknowledgements (if any)
-%%% ------------------------------------------
-%\section*{Acknowledgements}
-%We want to thank\ldots 
-
-
-%%% Declaration of conflicting interests (should always be included)
-%%% -----------------------------------------------------------------
-\section*{Declaration of conflicting interests}
-The authors declared no potential conflicts of interest with respect to the research, authorship and/or
-publication of this article.
-   %%% Alternatively, please, disclose here potential conflicting interests. 
-
-
-%%% Funding (if any)
-%%% ------------------------------------------
-%\section*{Funding}
-%This is the place to mention the funding if it is applicable for the paper.
-
-
 %%% Appendix (if any)
 %%% ------------------------------------------
-\appendix
-\section*{Appendix}
+\section{Appendix}
 This Appendix will derive an exact variance for the goodness-of-fit term $-2 \ell (\hat{\bm{\theta}} )$ in the case of a properly specified
 linear model. While a similar derivation has been presented in other work \citep{McQuarrie}, the following derivation differs substantially and is presented for completeness.
 We assume that a given linear regression model has a full rank $n$ by $r$ design matrix $\bm{X}$, outcome vector $y$, true parameters $\bm{\beta}$ and $\sigma^2$,
@@ -775,7 +650,7 @@ $\nu$ degrees of freedom, is found to be
 \end{equation*}
 This value can be calculated using software to approximate the trigamma function, although it should be noted that this calculation may be unstable for certain values of the degrees of freedom.
 
-Recalling the distributional result established in (4.3) and the relation in (4.4), it is clear that
+Recalling the distributional result established in (3) and the relation in (4), it is clear that
 \begin{equation*}
 	Var \left[ n \log \hat{\sigma}^2 \right] = Var \left[ -2 \ell (\hat{\bm{\theta}} ) \right] = n^2 \psi^{(1)} \left( \frac{n-r}{2} \right).
 \end{equation*}
@@ -784,22 +659,10 @@ However, while this variance is exact, it still involves an approximation as the
 this variance provided no benefit when used in the bootstrap goodness-of-fit procedure developed in this work. Thus, this derivation is presented here only
 for completeness and as a matter of theoretical interest.
 
-%%% References if bibTeX is used
-%%%
-%%% Please, do not specify any \bibliographystyle{} command!
-%%%
-%%% It is already specified in the smj.cls and its
-%%% second specification here causes error.
-%%% ------------------------------------------------------------
-\bibliography{GOF_main_SS}
 
+%\bibliography{GOF_main_SS}
 
-%%% References (if created by hand).
-%%% -----------------------------------------------------------------------------------
-
-%\bibliographystyle{plain}
-
-\iffalse
+%\iffalse
 
 \begin{thebibliography}{99}
 \providecommand{\natexlab}[1]{#1}
@@ -900,50 +763,7 @@ for completeness and as a matter of theoretical interest.
 
 \end{thebibliography}
 
-\fi
-
-%\bibitem[Fahrmeir et~al.(2013)Fahrmeir, Kneib, Lang, and Marx]{Fahrmeiret13}
-%{\rm Fahrmeir, L., Kneib, T., Lang, S., {\rm and} Marx, B.} (2013).
-%\newblock \emph{Regression: Models, Methods and Applications}.
-%\newblock Springer-Verlag, New York.
-%
-%\bibitem[G\'omez et~al.(2009)G\'omez, Luz~Calle, Oller, and Langohr]{Gomezet09}
-%{\rm G\'omez, G., Luz~Calle, M., Oller, R., {\rm and} Langohr, K.} (2009).
-%\newblock Tutorial on methods for interval-censored data and their implementation in {R}.
-%\newblock \emph{Statistical Modelling}, {\bf 9}\penalty0 (4), \penalty0 259--297.
-%\newblock \doi{10.1177/1471082X0900900402}.
-%
-%\bibitem[Kneib(2013)]{Kneib13}
-%{\rm Kneib, T.} (2013).
-%\newblock Beyond mean regression.
-%\newblock \emph{Statistical Modelling}, {\bf 13}\penalty0 (4), \penalty0 275--303.
-%\newblock \doi{10.1177/1471082X13494159}.
-%
-%\bibitem[Kom\'arek and Lesaffre(2006)]{KomarekLesaffre06}
-%{\rm Kom\'arek, A. {\rm and} Lesaffre, E.} (2006).
-%\newblock Bayesian semi-parametric accelerated failure time model for paired doubly-interval-censored data.
-%\newblock \emph{Statistical Modelling}, {\bf 6}\penalty0 (1), \penalty0 3--22.
-%\newblock \doi{10.1191/1471082X06st107oa}.
-%
-%\bibitem[Lesaffre et~al.(2009)Lesaffre, Kom\'arek, and Jara]{Lesaffreet09}
-%{\rm Lesaffre, E., Kom\'arek, A., {\rm and} Jara, A.} (2009).
-%\newblock The {B}ayesian approach.
-%\newblock In {\rm Lesaffre, E., Feine, J., Leroux, B., {\rm and} Declerck, D.}, editors,
-%  \emph{Statistical and Methodological Aspects of Oral Health Research},
-%  pages 315--338. John Wiley and Sons, Chichester.
-%
-%\bibitem[Li et~al.(2007)Li, Simonoff, and Tsai]{Liet07}
-%{\rm Li, L., Simonoff, J.~S., {\rm and} Tsai, C.-L.} (2007).
-%\newblock Tobit model estimation and sliced inverse regression.
-%\newblock \emph{Statistical Modelling}, {\bf 7}\penalty0 (2), \penalty0 107--123.
-%\newblock \doi{10.1177/1471082X0700700201}.
-%
-%\bibitem[Waldmann et~al.(2013)Waldmann, Kneib, Yue, Lang, and Flexeder]{Waldmannet13}
-%{\rm Waldmann, E., Kneib, T., Yue, Y.~R., Lang, S., {\rm and} Flexeder, C.} (2013).
-%\newblock Bayesian semiparametric additive quantile regression.
-%\newblock \emph{Statistical Modelling}, {\bf 13}\penalty0 (3), \penalty0 223--252.
-%\newblock \doi{10.1177/1471082X13480650}.
-%
+%\fi
 
 
 \end{document}
