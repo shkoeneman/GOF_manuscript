@@ -1,7 +1,22 @@
 
-\documentclass[review]{elsarticle}
+%\documentclass[sn-mathphys-num]{sn-jnl}
+\documentclass[sn-mathphys-ay]{sn-jnl}
 
-\usepackage{floatrow}
+%\usepackage{graphicx}%
+%\usepackage{multirow}%
+%\usepackage{amsmath,amssymb,amsfonts}%
+%\usepackage{amsthm}%
+%\usepackage{mathrsfs}%
+%\usepackage[title]{appendix}%
+%\usepackage{xcolor}%
+%\usepackage{textcomp}%
+%\usepackage{manyfoot}%
+%\usepackage{booktabs}%
+%\usepackage{algorithm}%
+%\usepackage{algorithmicx}%
+%\usepackage{algpseudocode}%
+%\usepackage{listings}%
+%\usepackage{floatrow}
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -20,44 +35,29 @@
 \usepackage{caption}
 \usepackage{bm}
 \usepackage{xurl}
-
+\usepackage{adjustbox}
 
 \begin{document}
+	
+\title[A Novel Bootstrap Goodness-of-Fit Test for Normal Linear Regression Models]{A Novel Bootstrap Goodness-of-Fit Test for Normal Linear Regression Models}
 
+\author*[1]{\fnm{Scott H.} \sur{Koeneman}}\email{Scott.Koeneman@jefferson.edu}
 
-\begin{frontmatter}
+\author[2]{\fnm{Joseph E.} \sur{Cavanaugh}}\email{joe-cavanaugh@uiowa.edu}
 
-	\title{A New Bootstrap Goodness-of-Fit Test for \\ Normal Linear Regression Models}
-	
-	\author[1]{Scott H. Koeneman\corref{cor1}}
-	\ead{Scott.Koeneman@jefferson.edu}
-	\author[2]{Joseph E. Cavanaugh}
-	\cortext[cor1]{Corresponding author}
-	\address[1]{Division of Biostatistics and Bioinformatics, 
-	Thomas Jefferson University, 
-	130 S. 9th St., 
-	Philadelphia, PA, 55038}
- \address[2]{Department of Biostatistics, University of Iowa, 145 N. Riverside Dr., Iowa City, IA, 52242}
-	
-	\date{February 2, 2024}
-	
-	\begin{abstract}
-	
-		In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged
-		to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to
-		investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared
-		to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \texttt{DBModelSelect} R package,
-		available freely via the Comprehensive R Archive Network.\\
-	
-	\end{abstract}
-	
-	\begin{keyword}
-		Information Criteria \sep Information Matrix Test \sep Normal Distribution \sep Resampling \sep Robust Variance \\
-	\end{keyword}
-	
-	\end{frontmatter}
-	
-	\newpage
+\affil*[1]{\orgdiv{Division of Biostatistics and Bioinformatics},
+\orgname{Thomas Jefferson University},
+\orgaddress{\street{130 S. 9th St.}, \city{Philadelphia}, \postcode{55038}, \state{PA}, \country{USA}}}
+
+\affil[2]{\orgdiv{Department of Biostatistics},
+\orgname{The University of Iowa}, \orgaddress{\street{145 N. Riverside Dr.},
+\city{Iowa City}, \postcode{52242}, \state{IA}, \country{USA}}}
+
+\abstract{In this work, the distributional properties of the goodness-of-fit term in likelihood-based information criteria are explored. These properties are then leveraged to construct a novel goodness-of-fit test for normal linear regression models that relies on a non-parametric bootstrap. Several simulation studies are performed to investigate the properties and efficacy of the developed procedure, with these studies demonstrating that the bootstrap test offers distinct advantages as compared to other methods of assessing the goodness-of-fit of a normal linear regression model. Our inferential technique can be employed using the \texttt{DBModelSelect} R package, available freely via the Comprehensive R Archive Network.}
+
+\keywords{Information Criteria, Information Matrix Test, Normal Distribution, Resampling, Robust Variance}
+
+\maketitle
 
 
 %%% Main text
@@ -107,10 +107,6 @@
   
         As the original formulation of the information matrix test can be computationally difficult to implement, an alternate method exists using an
 		auxiliary regression to assist in calculation of the test statistic \citep{Chesher}. However, both the classical and regression variants of the information matrix test can struggle mightily with their performance in small sample sizes. Thus, another method of performing the test involves employing a parametric bootstrap to aid in calculation of the test statistic \citep{Dhaene}. This method can be shown to better maintain a desired test level in small to moderate sample sizes. 
-
-		The various ways in which goodness-of-fit tests can detect misspecification bring to attention a weakness of the hypothesis test methods as opposed to methods of visual inspection.
-		When a hypothesis is rejected, we can be reasonably confident that an assumption is violated; however, by simply performing the test, we do not glean much information as to how exactly the
-		model may be misspecified. This is in contrast to the method of visually observing residual plots wherein specific issues may be easier to identify.
 
 		In addition, both the White and Breusch-Pagan tests cannot detect heteroskedasticity induced by unobserved covariates, as their auxiliary regressions only use what has been observed. Such heteroskedasticity
 		may not affect the bias and consistency of effect estimates, but may lead to a loss of efficiency of estimates. 
@@ -390,29 +386,50 @@ bootstrap iterations for all sets. The simulation will be generate $1000$ sample
 The code for the simulations can be found at \url{https://github.com/shkoeneman/GOF_manuscript/tree/main/scripts}. The results for the first simulation
 can be found in Table 1.
 
-\begin{table}[H]
-	\centering
-	
-	\small\addtolength{\tabcolsep}{-3pt}
-	\setlength\extrarowheight{-3pt}
-	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim1_table}Simulation 1 Results - Type~I Error}}
-	{
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{ c|c|c|c|c|c|c}
-	$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
-	 \hline
-	 50 & 0.038 & 0.041 & 0.042 & 0.598 & 0.766 & 0.027 \\
-	 100 & 0.088 & 0.033 & 0.051 & 0.511 & 0.622 & 0.032 \\
-	 250 & 0.081 & 0.055 & 0.050 & 0.383 & 0.430 & 0.031 \\
-	 500 & 0.078 & 0.050 & 0.057 & 0.238 & 0.260 & 0.034 \\
-	 750 & 0.082 & 0.046 & 0.038 & 0.204 & 0.218 & 0.025 \\
-	 1000 & 0.089 & 0.058 & 0.050 & 0.182 & 0.187 & 0.035 \\
-	 2500 & 0.061 & 0.036 & 0.046 & 0.095 & 0.098 & 0.031 \\
-	 \Xhline{3\arrayrulewidth}
-	\end{tabular}
-	}
-	}
+%\begin{table}[H]
+%	\centering
+%	
+%	\small\addtolength{\tabcolsep}{-3pt}
+%	\setlength\extrarowheight{-3pt}
+%	\ttabbox[\FBwidth]
+%	{\caption{\label{tab:sim1_table}Simulation 1 Results - Type~I Error}}
+%	{
+%	\resizebox{\textwidth}{!}{%
+%	\begin{tabular}{ c|c|c|c|c|c|c}
+%	$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+%	 \hline
+%	 50 & 0.038 & 0.041 & 0.042 & 0.598 & 0.766 & 0.027 \\
+%	 100 & 0.088 & 0.033 & 0.051 & 0.511 & 0.622 & 0.032 \\
+%	 250 & 0.081 & 0.055 & 0.050 & 0.383 & 0.430 & 0.031 \\
+%	 500 & 0.078 & 0.050 & 0.057 & 0.238 & 0.260 & 0.034 \\
+%	 750 & 0.082 & 0.046 & 0.038 & 0.204 & 0.218 & 0.025 \\
+%	 1000 & 0.089 & 0.058 & 0.050 & 0.182 & 0.187 & 0.035 \\
+%	 2500 & 0.061 & 0.036 & 0.046 & 0.095 & 0.098 & 0.031 \\
+%	 \Xhline{
+%3\arrayrulewidth}
+%	\end{tabular}
+%	}
+%	}
+%\end{table}
+
+\begin{table}[h]
+\caption{Simulation 1 Results - Type~I Error}\label{sim1tab}%
+%\resizebox{1\textwidth}{!}{%
+\begin{tabular}{ c|c|c|c|c|c|c}
+\toprule
+n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+\midrule
+50 & 0.038 & 0.041 & 0.042 & 0.598 & 0.766 & 0.027 \\
+100 & 0.088 & 0.033 & 0.051 & 0.511 & 0.622 & 0.032 \\
+250 & 0.081 & 0.055 & 0.050 & 0.383 & 0.430 & 0.031 \\
+500 & 0.078 & 0.050 & 0.057 & 0.238 & 0.260 & 0.034 \\
+750 & 0.082 & 0.046 & 0.038 & 0.204 & 0.218 & 0.025 \\
+1000 & 0.089 & 0.058 & 0.050 & 0.182 & 0.187 & 0.035 \\
+2500 & 0.061 & 0.036 & 0.046 & 0.095 & 0.098 & 0.031 \\
+\botrule
+\end{tabular}
+%}
+
 \end{table}
 
 The developed bootstrap test exhibits anti-conservative behavior across most values of $n$ with the empirically determined Type~I error rate exceeding the desired Type~I error rate
@@ -424,29 +441,49 @@ to the nominal value until the sample size is rather high, and thus should not b
 
 The results for the second simulation can be found in Table 2.
 
-\begin{table}[H]
-	\centering
-	\small\addtolength{\tabcolsep}{-3pt}
-	\setlength\extrarowheight{-3pt}
-	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim2_table}Simulation 2 Results - Power/Type~I Error}}
-	{
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
-		 \hline
-		 50 & 0.279 & 0.053 & 0.055 & 0.675 & 0.792 & 0.003 \\
-		 100 & 0.506 & 0.053 & 0.071 & 0.760 & 0.815 & 0.007 \\
-		 250 & 0.828 & 0.065 & 0.050 & 0.860 & 0.881 & 0.009 \\
-		 500 & 0.953 & 0.033 & 0.036 & 0.950 & 0.954 & 0.098 \\
-		 750 & 0.991 & 0.059 & 0.059 & 0.986 & 0.986 & 0.436 \\
-		 1000 & 0.996 & 0.055 & 0.048 & 0.993 & 0.995 & 0.730 \\
-		 2500 & 1.000 & 0.053 & 0.042 & 1.000 & 1.000 & 1.000 \\
-		 \Xhline{3\arrayrulewidth}
-		\end{tabular}
-		}
-	}
-	\end{table}
+%\begin{table}[H]
+%	\centering
+%	\small\addtolength{\tabcolsep}{-3pt}
+%	\setlength\extrarowheight{-3pt}
+%	\ttabbox[\FBwidth]
+%	{\caption{\label{tab:sim2_table}Simulation 2 Results - Power/Type~I Error}}
+%	{
+%	\resizebox{\textwidth}{!}{%
+%	\begin{tabular}{ c|c|c|c|c|c|c}
+%		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+%		 \hline
+%		 50 & 0.279 & 0.053 & 0.055 & 0.675 & 0.792 & 0.003 \\
+%		 100 & 0.506 & 0.053 & 0.071 & 0.760 & 0.815 & 0.007 \\
+%		 250 & 0.828 & 0.065 & 0.050 & 0.860 & 0.881 & 0.009 \\
+%		 500 & 0.953 & 0.033 & 0.036 & 0.950 & 0.954 & 0.098 \\
+%		 750 & 0.991 & 0.059 & 0.059 & 0.986 & 0.986 & 0.436 \\
+%		 1000 & 0.996 & 0.055 & 0.048 & 0.993 & 0.995 & 0.730 \\
+%		 2500 & 1.000 & 0.053 & 0.042 & 1.000 & 1.000 & 1.000 \\
+%		 \Xhline{3\arrayrulewidth}
+%		\end{tabular}
+%		}
+%	}
+%	\end{table}
+
+\begin{table}[h]
+\caption{Simulation 2 Results - Power/Type~I Error}\label{sim2tab}%
+%\resizebox{1\textwidth}{!}{%
+\begin{tabular}{ c|c|c|c|c|c|c}
+\toprule
+n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+\midrule
+50 & 0.279 & 0.053 & 0.055 & 0.675 & 0.792 & 0.003 \\
+100 & 0.506 & 0.053 & 0.071 & 0.760 & 0.815 & 0.007 \\
+250 & 0.828 & 0.065 & 0.050 & 0.860 & 0.881 & 0.009 \\
+500 & 0.953 & 0.033 & 0.036 & 0.950 & 0.954 & 0.098 \\
+750 & 0.991 & 0.059 & 0.059 & 0.986 & 0.986 & 0.436 \\
+1000 & 0.996 & 0.055 & 0.048 & 0.993 & 0.995 & 0.730 \\
+2500 & 1.000 & 0.053 & 0.042 & 1.000 & 1.000 & 1.000 \\
+\botrule
+\end{tabular}
+%}
+
+\end{table}
 
 The power of the bootstrap goodness-of-fit test in this scenario of mean misspecification is rather modest for low values of $n$, but rises rapidly to high levels. Thus, the bootstrap test appears to possess the
 ability to detect this mean misspecification on account of an unobserved covariate, and the power to detect this misspecification rises as the sample size increases as one would expect.
@@ -462,29 +499,49 @@ fit does not mean lack-of-fit is not present, as these two tests are limited in 
 
 The results for the third simulation can be found in Table 3.
 
-\begin{table}[H]
-	\centering
-	\small\addtolength{\tabcolsep}{-3pt}
-	\setlength\extrarowheight{-3pt}
-	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim3_table}Simulation 3 Results - Power/Type~I Error}}
-	{
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
-		 \hline
-		 50 & 0.138 & 0.040 & 0.039 & 0.934 & 0.972 & 0.005 \\
-		 100 & 0.275 & 0.035 & 0.027 & 0.951 & 0.970 & 0.005 \\
-		 250 & 0.498 & 0.058 & 0.040 & 0.988 & 0.991 & 0.049 \\
-		 500 & 0.654 & 0.052 & 0.035 & 0.998 & 0.999 & 0.486 \\
-		 750 & 0.792 & 0.059 & 0.027 & 0.999 & 0.999 & 0.873 \\
-		 1000 & 0.868 & 0.058 & 0.038 & 1.000 & 1.000 & 0.981 \\
-		 2500 & 0.996 & 0.115 & 0.036 & 1.000 & 1.000 & 1.000 \\
-		 \Xhline{3\arrayrulewidth}
-		\end{tabular}
-		}
-	}
-	\end{table}
+%\begin{table}[H]
+%	\centering
+%	\small\addtolength{\tabcolsep}{-3pt}
+%	\setlength\extrarowheight{-3pt}
+%	\ttabbox[\FBwidth]
+%	{\caption{\label{tab:sim3_table}Simulation 3 Results - Power/Type~I Error}}
+%	{
+%	\resizebox{\textwidth}{!}{%
+%	\begin{tabular}{ c|c|c|c|c|c|c}
+%		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+%		 \hline
+%		 50 & 0.138 & 0.040 & 0.039 & 0.934 & 0.972 & 0.005 \\
+%		 100 & 0.275 & 0.035 & 0.027 & 0.951 & 0.970 & 0.005 \\
+%		 250 & 0.498 & 0.058 & 0.040 & 0.988 & 0.991 & 0.049 \\
+%		 500 & 0.654 & 0.052 & 0.035 & 0.998 & 0.999 & 0.486 \\
+%		 750 & 0.792 & 0.059 & 0.027 & 0.999 & 0.999 & 0.873 \\
+%		 1000 & 0.868 & 0.058 & 0.038 & 1.000 & 1.000 & 0.981 \\
+%		 2500 & 0.996 & 0.115 & 0.036 & 1.000 & 1.000 & 1.000 \\
+%		 \Xhline{3\arrayrulewidth}
+%		\end{tabular}
+%		}
+%	}
+%	\end{table}
+
+\begin{table}[h]
+\caption{Simulation 3 Results - Power/Type~I Error}\label{sim3tab}%
+%\resizebox{1\textwidth}{!}{%
+\begin{tabular}{ c|c|c|c|c|c|c}
+\toprule
+n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+\midrule
+50 & 0.138 & 0.040 & 0.039 & 0.934 & 0.972 & 0.005 \\
+100 & 0.275 & 0.035 & 0.027 & 0.951 & 0.970 & 0.005 \\
+250 & 0.498 & 0.058 & 0.040 & 0.988 & 0.991 & 0.049 \\
+500 & 0.654 & 0.052 & 0.035 & 0.998 & 0.999 & 0.486 \\
+750 & 0.792 & 0.059 & 0.027 & 0.999 & 0.999 & 0.873 \\
+1000 & 0.868 & 0.058 & 0.038 & 1.000 & 1.000 & 0.981 \\
+2500 & 0.996 & 0.115 & 0.036 & 1.000 & 1.000 & 1.000 \\
+\botrule
+\end{tabular}
+%}
+
+\end{table}
 
 The bootstrap goodness-of-fit test possesses higher power in the third simulation in small sample sizes than the bootstrap information matrix test. However, at $n = 750$ the bootstrap information matrix test
 overtakes the bootstrap goodness-of-fit test, and appears to hold a small lead in power until both tests level out at near perfect power for $n = 2500$. Thus, each test holds an advantage in power for different bands of sample sizes.
@@ -502,29 +559,49 @@ Note the seemingly patternless, constant variance spread, indicating that one wo
 
 The results for the fourth simulation can be found in Table 4.
 
-\begin{table}[H]
-	\centering
-	\small\addtolength{\tabcolsep}{-3pt}
-	\setlength\extrarowheight{-3pt}
-	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim4_table}Simulation 4 Results - Power/Type~I Error}}
-	{
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
-		 \hline
-		 50 & 0.006 & 0.054 & 0.046 & 0.051 & 0.702 & 0.146 \\
-		 100 & 0.121 & 0.048 & 0.038 & 0.356 & 0.525 & 0.307 \\
-		 250 & 0.506 & 0.047 & 0.036 & 0.183 & 0.317 & 0.538 \\
-		 500 & 0.891 & 0.044 & 0.041 & 0.160 & 0.369 & 0.790 \\
-		 750 & 0.976 & 0.052 & 0.049 & 0.335 & 0.547 & 0.928 \\
-		 1000 & 0.994 & 0.062 & 0.055 & 0.547 & 0.692 & 0.972 \\
-		 2500 & 1.000 & 0.057 & 0.062 & 0.994 & 0.994 & 1.000 \\
-		 \Xhline{3\arrayrulewidth}
-		\end{tabular}
-		}
-	}
-	\end{table}
+%\begin{table}[H]
+%	\centering
+%	\small\addtolength{\tabcolsep}{-3pt}
+%	\setlength\extrarowheight{-3pt}
+%	\ttabbox[\FBwidth]
+%	{\caption{\label{tab:sim4_table}Simulation 4 Results - Power/Type~I Error}}
+%	{
+%	\resizebox{\textwidth}{!}{%
+%	\begin{tabular}{ c|c|c|c|c|c|c}
+%		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+%		 \hline
+%		 50 & 0.006 & 0.054 & 0.046 & 0.051 & 0.702 & 0.146 \\
+%		 100 & 0.121 & 0.048 & 0.038 & 0.356 & 0.525 & 0.307 \\
+%		 250 & 0.506 & 0.047 & 0.036 & 0.183 & 0.317 & 0.538 \\
+%		 500 & 0.891 & 0.044 & 0.041 & 0.160 & 0.369 & 0.790 \\
+%		 750 & 0.976 & 0.052 & 0.049 & 0.335 & 0.547 & 0.928 \\
+%		 1000 & 0.994 & 0.062 & 0.055 & 0.547 & 0.692 & 0.972 \\
+%		 2500 & 1.000 & 0.057 & 0.062 & 0.994 & 0.994 & 1.000 \\
+%		 \Xhline{3\arrayrulewidth}
+%		\end{tabular}
+%		}
+%	}
+%	\end{table}
+
+\begin{table}[h]
+\caption{Simulation 4 Results - Power/Type~I Error}\label{sim4tab}%
+%\resizebox{1\textwidth}{!}{%
+\begin{tabular}{ c|c|c|c|c|c|c}
+\toprule
+n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+\midrule
+50 & 0.006 & 0.054 & 0.046 & 0.051 & 0.702 & 0.146 \\
+100 & 0.121 & 0.048 & 0.038 & 0.356 & 0.525 & 0.307 \\
+250 & 0.506 & 0.047 & 0.036 & 0.183 & 0.317 & 0.538 \\
+500 & 0.891 & 0.044 & 0.041 & 0.160 & 0.369 & 0.790 \\
+750 & 0.976 & 0.052 & 0.049 & 0.335 & 0.547 & 0.928 \\
+1000 & 0.994 & 0.062 & 0.055 & 0.547 & 0.692 & 0.972 \\
+2500 & 1.000 & 0.057 & 0.062 & 0.994 & 0.994 & 1.000 \\
+\botrule
+\end{tabular}
+%}
+
+\end{table}
 
 The bootstrap goodness-of-fit test appears to require a relatively high sample size to produce adequate power. However, the test does seem to eventually be able to detect this violation of homoskedasticity.
 The bootstrap information matrix test performs somewhat similarly, possessing higher power for small sample sizes and lower power for moderate sample sizes. The classic and regression variants of the information
@@ -540,29 +617,49 @@ reject their null hypotheses.
 
 The results for the fifth and final simulation can be found in Table 5. Note that the null hypotheses of all tests are violated in this case, and each test should be able to detect this form of misspecification.
 
-\begin{table}[H]
-	\centering
-	\small\addtolength{\tabcolsep}{-3pt}
-	\setlength\extrarowheight{-3pt}
-	\ttabbox[\FBwidth]
-	{\caption{\label{tab:sim5_table}Simulation 5 Results - Power}}
-	{
-	\resizebox{\textwidth}{!}{%
-	\begin{tabular}{ c|c|c|c|c|c|c}
-		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
-		 \hline
-		 50 & 0.018 & 0.169 & 0.327 & 0.725 & 0.875 & 0.146 \\
-		 100 & 0.036 & 0.314 & 0.695 & 0.855 & 0.912 & 0.307 \\
-		 250 & 0.141 & 0.773 & 0.992 & 0.988 & 0.992 & 0.538 \\
-		 500 & 0.413 & 0.995 & 1.000 & 1.000 & 1.000 & 0.790 \\
-		 750 & 0.583 & 1.000 & 1.000 & 1.000 & 1.000 & 0.928 \\
-		 1000 & 0.732 & 1.000 & 0.055 & 1.000 & 1.000 & 0.972 \\
-		 2500 & 0.991 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
-		 \Xhline{3\arrayrulewidth}
-		\end{tabular}
-		}
-	}
-	\end{table}
+%\begin{table}[H]
+%	\centering
+%	\small\addtolength{\tabcolsep}{-3pt}
+%	\setlength\extrarowheight{-3pt}
+%	\ttabbox[\FBwidth]
+%	{\caption{\label{tab:sim5_table}Simulation 5 Results - Power}}
+%	{
+%	\resizebox{\textwidth}{!}{%
+%	\begin{tabular}{ c|c|c|c|c|c|c}
+%		$n$ & Bootstrap GOF & ~~~~White~~~~ & Breusch-Pagan & Classical IM & Regression IM & Bootstrap IM \\
+%		 \hline
+%		 50 & 0.018 & 0.169 & 0.327 & 0.725 & 0.875 & 0.146 \\
+%		 100 & 0.036 & 0.314 & 0.695 & 0.855 & 0.912 & 0.307 \\
+%		 250 & 0.141 & 0.773 & 0.992 & 0.988 & 0.992 & 0.538 \\
+%		 500 & 0.413 & 0.995 & 1.000 & 1.000 & 1.000 & 0.790 \\
+%		 750 & 0.583 & 1.000 & 1.000 & 1.000 & 1.000 & 0.928 \\
+%		 1000 & 0.732 & 1.000 & 0.055 & 1.000 & 1.000 & 0.972 \\
+%		 2500 & 0.991 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+%		 \Xhline{3\arrayrulewidth}
+%		\end{tabular}
+%		}
+%	}
+%	\end{table}
+
+\begin{table}[h]
+\caption{Simulation 5 Results - Power}\label{sim5tab}%
+%\resizebox{1\textwidth}{!}{%
+\begin{tabular}{ c|c|c|c|c|c|c}
+\toprule
+n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+\midrule
+50 & 0.018 & 0.169 & 0.327 & 0.725 & 0.875 & 0.146 \\
+100 & 0.036 & 0.314 & 0.695 & 0.855 & 0.912 & 0.307 \\
+250 & 0.141 & 0.773 & 0.992 & 0.988 & 0.992 & 0.538 \\
+500 & 0.413 & 0.995 & 1.000 & 1.000 & 1.000 & 0.790 \\
+750 & 0.583 & 1.000 & 1.000 & 1.000 & 1.000 & 0.928 \\
+1000 & 0.732 & 1.000 & 0.055 & 1.000 & 1.000 & 0.972 \\
+2500 & 0.991 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+\botrule
+\end{tabular}
+%}
+
+\end{table}
 
 In this scenario, the White test and Breusch-Pagan test both perform well in moderate to large sample sizes. This is likely due to the heteroskedasticity being induced by a covariate that is also in the 
 proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. The bootstrap variant of the information matrix test performs similarly, while the classical and regression
@@ -660,6 +757,7 @@ this variance provided no benefit when used in the bootstrap goodness-of-fit pro
 for completeness and as a matter of theoretical interest.
 
 
+
 %\bibliography{GOF_main_SS}
 
 %\iffalse
@@ -675,36 +773,43 @@ for completeness and as a matter of theoretical interest.
 {\rm Akaike, H.} (1974).
 \newblock A new look at the statistical identification model.
 \newblock \emph{IEEE Transactions on Automatic Control}, {\bf 19}, \penalty0 716--723.
+\newblock \doi{10.1109/TAC.1974.1100705}.
 
 \bibitem[Breusch and Pagan(1989)]{Breusch}
 {\rm Breusch, T.S., and Pagan, A.R.} (1989).
 \newblock A Simple Test for Heteroskedasticity and Random Coefficient Variation.
 \newblock \emph{Econometrica}, {\bf 47}, \penalty0 1287--1294.
+\newblock \doi{10.2307/1911963}.
 
 \bibitem[Cavanaugh and Neath(2019)]{Cavanaugh}
 {\rm Cavanaugh, J.E., and Neath, A.A.} (2019).
 \newblock The Akaike information criterion: Background, derivation, properties, application, interpretation, and refinements.
 \newblock \emph{WIREs Comput Stat}, 11:e1460.
+\newblock \doi{10.1007/978-3-642-04898-2_111}.
 
 \bibitem[Chesher(1983)]{Chesher}
 {\rm Chesher, A.} (1983).
 \newblock The Information Matrix Test: Simplified Calculation via a Score Test Interpretation.
 \newblock \emph{Economics Letters}, {\bf 13}, \penalty0 45--48.
+\newblock \doi{10.1016/0165-1765(83)90009-5}.
 
 \bibitem[Dhaene and Hoorelbeke(2004)]{Dhaene}
 {\rm Dhaene, G., and Hoorelbeke, D.} (2004).
 \newblock The information matrix test with bootstrap-based covariance matrix estimation.
 \newblock \emph{Economics Letters}, {\bf 82}, \penalty0 341--347.
+\newblock \doi{10.1016/j.econlet.2003.09.002}.
 
 \bibitem[Fisher(1922)]{Fisher}
 {\rm Fisher, R.A.} (1922).
 \newblock On the Mathematical Foundations of Theoretical Statistics.
 \newblock \emph{Phil. Trans. R. Soc. Lond. A}, {\bf 222}, \penalty0 309--368.
+\newblock \doi{10.1098/rsta.1922.0009}.
 
 \bibitem[Freedman(2006)]{Freedman}
 {\rm Freedman, D.A.} (2006).
 \newblock On The So-Called 'Huber Sandwich Estimator' and 'Robust Standard Errors'.
 \newblock \emph{The American Statistician}, {\bf 60}, \penalty0 299--302.
+\newblock \doi{10.1198/000313006X152207}.
 
 \bibitem[Huber(1967)]{Huber}
 {\rm Huber, P.J.} (1967).
@@ -730,6 +835,7 @@ for completeness and as a matter of theoretical interest.
 {\rm Miles, J.} (2014).
 \newblock Residual plot.
 \newblock \emph{Wiley StatsRef: Statistics Reference Online}.
+\newblock \doi{10.1002/9781118445112.stat06619}.
 
 \bibitem[Millar(2011)]{Millar}
 {\rm Millar, R.B.} (2011).
@@ -745,21 +851,25 @@ for completeness and as a matter of theoretical interest.
 {\rm Schwarz, G.E.} (1978).
 \newblock Estimating the dimension of a model.
 \newblock \emph{Annals of Statistics}, {\bf 22}, \penalty0 461--464.
+\newblock \doi{10.1214/aos/1176344136}.
 
 \bibitem[White(1980)]{White1980}
 {\rm White, H.} (1980).
 \newblock A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity.
 \newblock \emph{Econometrica}, {\bf 48}, \penalty0 817--838.
+\newblock \doi{10.2307/1912934}.
 
 \bibitem[White(1982)]{White1982}
 {\rm White, H.} (1982).
 \newblock Maximum Likelihood Estimation of Misspecified Models.
 \newblock \emph{Econometrica}, {\bf 50}, \penalty0 1--25.
+\newblock \doi{10.2307/1912526}.
 
 \bibitem[Waldman(1983)]{Waldman}
 {\rm Waldman, D.M.} (1983).
 \newblock A note on algebraic equivalence of White's test and a variation of the Godfrey/Breusch-Pagan test for heteroscedasticity.
 \newblock \emph{Economics Letters}, {\bf 13}, \penalty0 197--200.
+\newblock \doi{10.1016/0165-1765(83)90085-X}.
 
 \end{thebibliography}
 
