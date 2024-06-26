@@ -67,7 +67,8 @@
 
     		Broadly, the term goodness-of-fit as it pertains to statistical modeling refers to the degree to which a certain model
 		and its associated assumptions align with the observed data. The notion of goodness-of-fit is relevant in the model selection realm of information criteria, particularly to the Akaike
-		information criterion \citep{Akaike}. Using $\ell(\hat{\bm{\theta}}|\bm{y})$ to denote the log-likelihood of the fitted model and $p$ to denote the
+		information criterion \citep{Akaike}. Using $\ell(\hat{\bm{\theta}}|\bm{y})$ to denote the log-likelihood of the fitted model with respect to the estimated parameters $\hat{\bm{\theta}}$ and the
+		the observed data $\bm{y}$, and $p$ to denote the
 		number of functionally independent estimated parameters, the Akaike information criterion (AIC) for a fitted model can be expressed as
 		\begin{equation*}
 			AIC = -2 \ell(\hat{\bm{\theta}}|\bm{y}) + 2 p.
@@ -189,7 +190,7 @@
 			\end{bmatrix}
 			,
 		\end{equation*}
-		where $\bm{X}$ is the design matrix of the regression, and $0$ is a vector of zeroes. Thus, we may take the inverse of the Fisher information matrix and isolate
+		where $\bm{X}$ is the fixed design matrix of the regression, and $0$ is a vector of zeroes. Thus, we may take the inverse of the Fisher information matrix and isolate
 		the element related to the error variance $\sigma^2$. We see that this element will be
 		\begin{equation*}
 			\bm{\mathcal{I}}^{-1}(\sigma ^2) = \frac{2 \sigma ^4}{n} .
@@ -293,7 +294,7 @@
 		\begin{equation*}
 			n\log(\hat{\sigma}^2) \; \dot\sim \; N \left( n\log(\sigma_* ^2), \frac{n}{\sigma_*^4} s(\bm{\theta}_*) \right) ,
 		\end{equation*}
-		which could be suitable for use in finite sample sizes that are sufficiently large. However, $\sigma_*^2$ and $s(\bm{\theta}_*)$ are unlikely to be unknown in practical modeling
+		which could be suitable for use in finite sample sizes that are sufficiently large. However, $\sigma_*^2$ and $s(\bm{\theta}_*)$ are unlikely to be known in practical modeling
 		applications. Thus, estimating these quantities with $\hat{\sigma}^2$ and $s_n(\hat{\bm{\theta}})$ respectively, a reasonable estimate for the variance of $n\log(\hat{\sigma}^2)$ can
 		be proposed as
 		\begin{equation*}
@@ -301,7 +302,7 @@
 		\end{equation*}
 		By the relation presented in (1), it is clear that this variance estimate is also suitable for $Var \left[ -2 \ell (\hat{\bm{\theta}} | \bm{y} ) \right]$, and therefore
 		likelihood-based information criteria as a whole that possess a constant penalty term. This estimator should approximate our previously derived value $2n$ in the case of a correctly
-		specified model, as the sandwich estimator component will approximate the expected Fisher information used earlier, and the MLE $\hat{\sigma}^2$ should converge to the true
+		specified model, as the sandwich estimator component will approximate the expected Fisher information used earlier and serve as an consistent estimate of the desired quantity. Additionally, as a consistent estimator the MLE $\hat{\sigma}^2$ should converge to the true
 		parameter value $\sigma^2$. However, this sandwich estimator need not assume correct specification, and should be relatively robust to model misspecification. For the remainder of this work, this sandwich estimator will be referred to as $\widehat{Var}[GOF]$.
 
 		We have established an asymptotic variance for the likelihood goodness-of-fit term in the case of a correctly specified normal linear regression model, and an
@@ -320,7 +321,7 @@
 			\begin{algorithmic}[1]
 			  \Statex For test level $\alpha$, candidate normal linear model $M$, bootstrap iterations $B$, sample size $n$, and a null hypothesis that $M$
 			  is adequately specified:
-			  \State Resample, with replacement, outcomes with covariates to generate a bootstrap sample of size $n$.
+			  \State Resample, with replacement, the observations (outcomes with covariates) to generate a bootstrap sample of size $n$.
 			  \State Fit model $M$ to this bootstrap sample, and with this fitted model, calculate $\widehat{Var}[GOF]$
 			  and record this statistic.
 			  \State Repeat steps 1-2 $B$ times to generate an empirical bootstrap distribution for $\widehat{Var}[GOF]$.
@@ -339,7 +340,7 @@
 		The \texttt{BootGOFTestLM} function in this package provides a convenient and efficient way to perform the bootstrap test on a fitted linear model.
 		
 		While the simulations in the following section will employ a percentile interval as the bootstrap confidence interval method of choice, one is not limited to using this method
-		and may use any bootstrap interval they choose so long as it is theoretically justifiable. Additionally, the non-parametric bootstrap is employed in the algorithm detailed above to avoid further
+		and one may use any flavor of bootstrap interval so long as it is theoretically justifiable. Additionally, the non-parametric bootstrap is employed in the algorithm detailed above to avoid further
 		assumptions. Limited testing results suggest that the residual bootstrap may also work just as well in this procedure. However, pending further investigation, the non-parametric
 		bootstrap is recommended at the current time. All simulations presented in this work will use the non-parametric bootstrap implementation of the procedure.
 
@@ -381,7 +382,7 @@ specified if it assumes homoskedasticity, leading to potentially improper infere
 In each simulation, the bootstrap goodness-of-fit test, White test, Breusch-Pagan test, classical information matrix test, auxiliary regression information matrix test, and parametric bootstrap information matrix test will each be performed at the $\alpha = .05$ level on the  fitted model. We expect the tests to roughly maintain their
 Type~I error rates in the cases where the null hypothesis of each is true, and reveal the power of the test in the simulations where the null hypothesis is violated. After many simulation iterations, the
 Type~I error rates or power of each test will be calculated based on the proportion of times each test rejected its null hypothesis. Each simulation will be performed for $n = 50, 100, 250, 500, 750, 1000$ and $2500$, with $1000$
-bootstrap iterations for all sets. The simulation will be generate $1000$ samples for each value of $n$, performing the tests each time.
+bootstrap iterations for all sets. The simulation will generate $1000$ samples for each value of $n$, performing the tests each time.
 
 The code for the simulations can be found at \url{https://github.com/shkoeneman/GOF_manuscript/tree/main/scripts}. The results for the first simulation
 can be found in Table 1.
@@ -417,7 +418,7 @@ can be found in Table 1.
 %\resizebox{1\textwidth}{!}{%
 \begin{tabular}{ c|c|c|c|c|c|c}
 \toprule
-n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+$n$ & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
 \midrule
 50 & 0.038 & 0.041 & 0.042 & 0.598 & 0.766 & 0.027 \\
 100 & 0.088 & 0.033 & 0.051 & 0.511 & 0.622 & 0.032 \\
@@ -470,7 +471,7 @@ The results for the second simulation can be found in Table 2.
 %\resizebox{1\textwidth}{!}{%
 \begin{tabular}{ c|c|c|c|c|c|c}
 \toprule
-n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+$n$ & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
 \midrule
 50 & 0.279 & 0.053 & 0.055 & 0.675 & 0.792 & 0.003 \\
 100 & 0.506 & 0.053 & 0.071 & 0.760 & 0.815 & 0.007 \\
@@ -528,7 +529,7 @@ The results for the third simulation can be found in Table 3.
 %\resizebox{1\textwidth}{!}{%
 \begin{tabular}{ c|c|c|c|c|c|c}
 \toprule
-n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+$n$ & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
 \midrule
 50 & 0.138 & 0.040 & 0.039 & 0.934 & 0.972 & 0.005 \\
 100 & 0.275 & 0.035 & 0.027 & 0.951 & 0.970 & 0.005 \\
@@ -588,7 +589,7 @@ The results for the fourth simulation can be found in Table 4.
 %\resizebox{1\textwidth}{!}{%
 \begin{tabular}{ c|c|c|c|c|c|c}
 \toprule
-n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+$n$ & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
 \midrule
 50 & 0.006 & 0.054 & 0.046 & 0.051 & 0.702 & 0.146 \\
 100 & 0.121 & 0.048 & 0.038 & 0.356 & 0.525 & 0.307 \\
@@ -608,7 +609,7 @@ The bootstrap information matrix test performs somewhat similarly, possessing hi
 matrix test display erratic power as $n$ increases, and thus further show their unreliability.
 
 The White test and Breusch-Pagan test exhibit only power in line with their Type~I error rates established earlier, and thus do not seem to be able to detect this form of heteroskedasticity,
-as the residual plot could not. This reveals how the subtleness of this homoskedasticity, which should not affect bias of estimates, but may affect efficiency.
+as the residual plot could not. This reveals how the subtleness of this heteroskedasticity, which should not affect bias of estimates, but may affect efficiency.
 
 This limitation in detection is on account of how the Breusch-Pagan and White tests and residual plots are constructed, as they rely on the detection of heteroskedasticity that is induced by observed covariates.
 When heteroskedasticity is induced by an unobserved covariate that is not used in the model, the White test and Breusch-Pagan test cannot ascertain that their
@@ -646,14 +647,14 @@ The results for the fifth and final simulation can be found in Table 5. Note tha
 %\resizebox{1\textwidth}{!}{%
 \begin{tabular}{ c|c|c|c|c|c|c}
 \toprule
-n & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
+$n$ & Boot GOF & White & Breusch-Pagan & Classical IM & Regression IM & Boot IM \\
 \midrule
 50 & 0.018 & 0.169 & 0.327 & 0.725 & 0.875 & 0.146 \\
 100 & 0.036 & 0.314 & 0.695 & 0.855 & 0.912 & 0.307 \\
 250 & 0.141 & 0.773 & 0.992 & 0.988 & 0.992 & 0.538 \\
 500 & 0.413 & 0.995 & 1.000 & 1.000 & 1.000 & 0.790 \\
 750 & 0.583 & 1.000 & 1.000 & 1.000 & 1.000 & 0.928 \\
-1000 & 0.732 & 1.000 & 0.055 & 1.000 & 1.000 & 0.972 \\
+1000 & 0.732 & 1.000 & 1.000 & 1.000 & 1.000 & 0.972 \\
 2500 & 0.991 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
 \botrule
 \end{tabular}
@@ -665,7 +666,14 @@ In this scenario, the White test and Breusch-Pagan test both perform well in mod
 proposed mean structure, the very case for which the White and Breusch-Pagan tests were designed. The bootstrap variant of the information matrix test performs similarly, while the classical and regression
 variants again display extreme power at low sample sizes. While the bootstrap goodness-of-fit test is able to detect this misspecification, it requires a very large sample size to have adequate power.
 
-In summary, we see that in general, the classical and regression variants of the information matrix test tend to reject null hypotheses no matter the circumstance, and fail to maintain acceptable type I error rates outside of extraordinary sample sizes. Thus, these tests are not recommended for general use. The White and Breusch-Pagan tests are the most adept at detecting heteroskedasticity related to covariates in the mean structure, but are narrow in their focus and cannot detect other forms of misspecification. The bootstrap information matrix test and bootstrap goodness-of-fit test can both detect myriad forms of misspecification, and both maintain acceptable type I error rates. The bootstrap information matrix test may possess better power in the presence of heteroskedasticity, and the bootstrap goodness-of-fit test may possess better power in settings where the mean structure is misspecified due to the omission of covariates. Thus, the new bootstrap goodness-of-fit test presents advantages over competetitor tests, particularly in its ability to detect multiple forms of misspecification and its ability to detect forms of mean misspecification where important covariates may be missing.
+In summary, we see that in general, the classical and regression variants of the information matrix test tend to reject null hypotheses no matter the circumstance, and fail to maintain
+acceptable type I error rates outside of extraordinary sample sizes. Thus, these tests are not recommended for general use. The White and Breusch-Pagan tests are the most adept at
+detecting heteroskedasticity related to covariates in the mean structure, but are narrow in their focus and cannot detect other forms of misspecification. The bootstrap information
+matrix test and bootstrap goodness-of-fit test can both detect myriad forms of misspecification, and both maintain acceptable type I error rates. The bootstrap information matrix
+test may possess better power in the presence of heteroskedasticity, and the bootstrap goodness-of-fit test may possess better power in settings where the mean structure is
+misspecified due to the omission of covariates. Thus, the new bootstrap goodness-of-fit test shows an ability to roughly maintain a desired Type I error rate,
+demonstrates the consistency one desires from a hypothesis test as sample size increases, and presents advantages over competetitor tests, particularly in its ability to detect
+multiple forms of misspecification and its ability to detect forms of mean misspecification where important covariates may be missing.
 
 \section{Discussion and Conclusion}
 
@@ -720,11 +728,7 @@ By the properties of quadratic forms of multivariate normal random variables, it
 \begin{equation}
 	\bm{y'Ay} = \frac{n \hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-r} .
 \end{equation}
-Note that if we take the natural logarithm of the left-hand side and evaluate its variance, we see that
-\begin{equation}
-	Var \left[ \log(\frac{n \hat{\sigma}^2}{\sigma^2}) \right]  = Var \left[ \log \hat{\sigma}^2 \right]
-\end{equation}
-due to constant terms being irrelevant to the variance calculation. This enclosed form is very close to the $n \log \hat{\sigma}^2$ that is required
+Note that if we take the natural logarithm of this quantity and evaluate its variance, we see that we arrive at $Var \left[ \log \hat{\sigma}^2 \right]$. This enclosed term is very close to the $n \log \hat{\sigma}^2$ that is required
 to determine the variance of the likelihood goodness of fit term $-2 \ell (\hat{\bm{\theta}} )$ in the case of a normal linear regression model.
 Thus, if we can calculate $Var \left[ \log \hat{\sigma}^2 \right]$, which is itself the variance
 of the natural logarithm of a variable distributed as $\chi^2_{n-r}$, we can easily obtain $Var \left[ n \log \hat{\sigma}^2 \right]$.
@@ -749,7 +753,7 @@ derivative with respect to $t$ and evaluating at $t=0$, we find the second momen
 	E \left[ Y^2 \right] =
 	(\log 2)^2 + \psi^{(0)} \left( \frac{\nu}{2} \right) 2 \log 2  + \psi^{(1)} \left( \frac{\nu}{2} \right) + \left( \psi^{(0)} \left( \frac{\nu}{2} \right) \right)^2 ,
 \end{equation*}
-where $\psi^{(1)}(z)$ is the digamma function.
+where $\psi^{(1)}(z)$ is the trigamma function.
 
 Therefore, the variance of $Y$, the log of a central chi-squared random variable with
 $\nu$ degrees of freedom, is found to be
