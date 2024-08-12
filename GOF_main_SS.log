@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.5) (preloaded format=pdflatex 2023.8.29)  26 JUN 2024 16:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.5) (preloaded format=pdflatex 2023.8.29)  12 AUG 2024 16:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -733,10 +733,10 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 {C:/Users/syk070/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
+ [2]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [2]
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
@@ -765,51 +765,58 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [10]
-LaTeX Font Info:    Calculating math sizes for size <8.03> on input line 419.
+LaTeX Font Info:    Calculating math sizes for size <8.03> on input line 428.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <4.015> not available
-(Font)              size <5> substituted on input line 419.
+(Font)              size <5> substituted on input line 428.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <4.015> not available
-(Font)              size <5> substituted on input line 419.
+(Font)              size <5> substituted on input line 428.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <4.015> not available
-(Font)              size <5> substituted on input line 419.
+(Font)              size <5> substituted on input line 428.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <4.015> not available
-(Font)              size <5> substituted on input line 419.
+(Font)              size <5> substituted on input line 428.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <4.015> not available
-(Font)              size <5> substituted on input line 419.
+(Font)              size <5> substituted on input line 428.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <4.015> not available
-(Font)              size <5> substituted on input line 419.
+(Font)              size <5> substituted on input line 428.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [11]
-<sim3_residual_plot.pdf, id=160, 505.89pt x 360.34625pt>
-File: sim3_residual_plot.pdf Graphic file (type pdf)
-<use sim3_residual_plot.pdf>
-Package pdftex.def Info: sim3_residual_plot.pdf  used on input line 556.
-(pdftex.def)             Requested size: 325.215pt x 231.65451pt.
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [12]
+<sim3_residual_plot.pdf, id=174, 505.89pt x 360.34625pt>
+File: sim3_residual_plot.pdf Graphic file (type pdf)
+<use sim3_residual_plot.pdf>
+Package pdftex.def Info: sim3_residual_plot.pdf  used on input line 565.
+(pdftex.def)             Requested size: 325.215pt x 231.65451pt.
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [13 <./sim3_residual_plot.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [14]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [15]
@@ -821,7 +828,16 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [17]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [18] (GOF_main_SS.aux)
+ [18]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [19]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20] (GOF_main_SS.aux)
  ***********
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-06-30>
@@ -832,20 +848,20 @@ LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.985pt have occurred.
 
 Package rerunfilecheck Info: File `GOF_main_SS.out' has not changed.
-(rerunfilecheck)             Checksum: F078149BE953765C7509363023AFA9E8;1026.
+(rerunfilecheck)             Checksum: 10BBF7F47640A8E45C4F6B903EEA3CB7;1396.
  ) 
 Here is how much of TeX's memory you used:
- 15360 strings out of 475550
- 241985 string characters out of 5772345
- 1938238 words of memory out of 5000000
- 36246 multiletter control sequences out of 15000+600000
+ 15369 strings out of 475550
+ 242089 string characters out of 5772345
+ 1937238 words of memory out of 5000000
+ 36249 multiletter control sequences out of 15000+600000
  576503 words of font info for 108 fonts, out of 8000000 for 9000
  1151 hyphenation exceptions out of 8191
- 90i,17n,117p,816b,573s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,17n,117p,816b,593s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on GOF_main_SS.pdf (18 pages, 472287 bytes).
+Output written on GOF_main_SS.pdf (20 pages, 480191 bytes).
 PDF statistics:
- 341 PDF objects out of 1000 (max. 8388607)
- 63 named destinations out of 1000 (max. 500000)
- 62 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 362 PDF objects out of 1000 (max. 8388607)
+ 69 named destinations out of 1000 (max. 500000)
+ 78 words of extra memory for PDF output out of 10000 (max. 10000000)
 
